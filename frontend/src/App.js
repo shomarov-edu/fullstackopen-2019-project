@@ -6,9 +6,9 @@ import {
   Redirect,
   withRouter
 } from 'react-router-dom'
-import axios from 'axios'
-import Header from './components/Header'
-import RecipeTitle from './components/Title'
+import recipeService from './services/recipes'
+import Login from './components/Login'
+import Recipes from './components/Recipes'
 import Recipe from './components/Recipe'
 import NewRecipeForm from './components/NewRecipeForm'
 
@@ -16,25 +16,8 @@ function App() {
   const [recipes, setRecipes] = useState([])
 
   useEffect(() => {
-    async function fetchData() {
-      const response = await axios.get('http://localhost:3001/recipes')
-      console.log(response.data)
-      setRecipes(response.data)
-    }
-    fetchData()
+    recipeService.getAll().then(allRecipes => setRecipes(allRecipes))
   }, [])
-
-  const Titles = () => {
-    return (
-      <ul>
-        {recipes.map(recipe => (
-          <Link to={`/recipes/${recipe.id}`} key={recipe.id}>
-            <RecipeTitle title={recipe.title} />
-          </Link>
-        ))}
-      </ul>
-    )
-  }
 
   const recipeById = id => recipes.find(recipe => recipe.id === Number(id))
 
@@ -57,8 +40,13 @@ function App() {
             login
           </Link>
         </div>
-        <Header />
-        <Route exact path='/recipes' render={() => <Titles />} />
+        <h1>Recipes app</h1>
+        <Route exact path='/login' render={() => <Login />} />
+        <Route
+          exact
+          path='/recipes'
+          render={() => <Recipes recipes={recipes} />}
+        />
         <Route exact path='/new' render={() => <NewRecipeForm />} />
         <Route
           exact
