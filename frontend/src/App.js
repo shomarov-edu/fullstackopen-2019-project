@@ -16,7 +16,7 @@ function App() {
   const [recipes, setRecipes] = useState([])
 
   useEffect(() => {
-    recipeService.getAll().then(allRecipes => setRecipes(allRecipes))
+    recipeService.getAll().then(data => setRecipes(data))
   }, [])
 
   const recipeById = id => recipes.find(recipe => recipe.id === Number(id))

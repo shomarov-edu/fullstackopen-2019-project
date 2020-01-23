@@ -7,3 +7,4 @@
 | 22.01 | 1    | ui planning                                |
 | 23.01 | 4    | creation of react components & ui          |
 | 24.01 | 2    | initial implementation of ui               |
+| 24.01 | 2    | backend development                        |
