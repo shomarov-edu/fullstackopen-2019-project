@@ -1,0 +1,4 @@
+FROM mongo
+WORKDIR /mongodb
+COPY ./init-mongo.js /docker-entrypoint-initdb.d/
+COPY ./populate.js /docker-entrypoint-initdb.d/

@@ -1,0 +1,39 @@
+version: "3.7"
+services:
+  database:
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./mongodb
+    container_name: mongodb
+    env_file: ./mongodb/.env
+    volumes:
+      - ./mongodb/data/db:/data/db
+    ports:
+      - 27017-27019:27017-27019
+    restart: always
+  server:
+    container_name: server
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./server
+    volumes:
+      - ./server:/server
+    ports:
+      - 5000:5000
+    env_file:
+      - ./server/.env
+    depends_on:
+      - database
+    restart: unless-stopped
+  app:
+    container_name: app
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./app
+    volumes:
+      - ./app:/app
+    ports:
+      - 3000:3000
+    depends_on:
+      - server
+    restart: unless-stopped
