@@ -3,22 +3,8 @@ const express = require('express')
 const cors = require('cors')
 const app = express()
 const bodyParser = require('body-parser')
-const mongoose = require('mongoose')
-const data = require('./db.json')
-
-const url = process.env.MONGODB_URI
-
-console.log('connecting to', url)
-
-mongoose
-  .connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
-  // eslint-disable-next-line no-unused-vars
-  .then(result => {
-    console.log('connected to MongoDB')
-  })
-  .catch(error => {
-    console.log('error connecting to MongoDB:', error.message)
-  })
+const Recipe = require('./models/recipe')
+const initialRecipes = require('./recipes')
 
 const requestLogger = (request, response, next) => {
   console.log('---')
@@ -33,18 +19,22 @@ app.use(cors())
 app.use(bodyParser.json())
 app.use(requestLogger)
 
-let recipes = data.recipes
+Recipe.collection.drop()
 
-app.get('/api/recipes', (request, response) => {
-  response.json(recipes)
+initialRecipes.forEach(async element => {
+  let recipeObject = new Recipe(element)
+  await recipeObject.save()
 })
 
-app.get('/api/recipes/:id', (request, response) => {
+app.get('/api/recipes', async (request, response) => {
+  const recipes = await Recipe.find({})
+  console.log(recipes)
+  response.json(recipes.map(recipe => recipe.toJSON()))
+})
+
+app.get('/api/recipes/:id', async (request, response) => {
   const id = Number(request.params.id)
-  const recipe = recipes.find(r => r.id === id)
-  if (!recipe) {
-    return response.status(404).json({ error: 'not found' })
-  }
+  const recipe = await Recipe.findById(id)
   response.json(recipe)
 })
 
@@ -52,10 +42,6 @@ app.post('/api/recipes', (request, response) => {
   if (!request.body.title) {
     return response.status(400).json({ error: 'content missing' })
   }
-
-  const recipe = request.body
-  recipes = recipes.concat(recipe)
-  response.json(recipe)
 })
 
 const unknownEndpoint = (request, response) => {

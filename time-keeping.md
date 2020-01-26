@@ -13,3 +13,4 @@
 | 25.01 | 1    | creation of docker-compose.yml                 |
 | 25.01 | 4    | set up mongodb docker container                |
 | 26.01 | 6    | configure everything!                          |
+| 26.01 | 1    | server-database connection                     |
