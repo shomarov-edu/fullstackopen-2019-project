@@ -1,1 +1,12 @@
-.env
+# Project root
+node_modules
+
+# API
+api/node_modules
+api/.env
+
+# MongoDB
+mongo/.env
+mongo/init-mongo.js
+mongo/populate.js
+mongo/data

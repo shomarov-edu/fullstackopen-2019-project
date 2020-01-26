@@ -1,39 +1,44 @@
-version: "3.7"
+version: '3.7'
 services:
-  database:
+  mongo:
     build:
       dockerfile: Dockerfile.dev
-      context: ./mongodb
-    container_name: mongodb
-    env_file: ./mongodb/.env
+      context: ./mongo
+    image: shomarov/mongo
+    container_name: mongo
+    env_file: ./mongo/.env
     volumes:
-      - ./mongodb/data/db:/data/db
+      - ./mongo/data/:/data/db
     ports:
       - 27017-27019:27017-27019
     restart: always
-  server:
-    container_name: server
+  api:
+    container_name: api
     build:
       dockerfile: Dockerfile.dev
-      context: ./server
+      context: ./api
+    image: shomarov/api
     volumes:
-      - ./server:/server
+      - /api/node_modules
+      - ./api:/api
     ports:
       - 5000:5000
     env_file:
-      - ./server/.env
+      - ./api/.env
     depends_on:
-      - database
+      - mongo
     restart: unless-stopped
   app:
     container_name: app
     build:
       dockerfile: Dockerfile.dev
       context: ./app
+    image: shomarov/app
     volumes:
+      - /app/node_modules
       - ./app:/app
     ports:
       - 3000:3000
     depends_on:
-      - server
+      - api
     restart: unless-stopped

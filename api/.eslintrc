@@ -6,10 +6,18 @@
   },
   "plugins": ["prettier"],
   "extends": ["eslint:recommended", "plugin:prettier/recommended"],
+  "globals": {
+    "Atomics": "readonly",
+    "SharedArrayBuffer": "readonly"
+  },
   "parserOptions": {
-    "ecmaVersion": 2018
+    "ecmaVersion": 2018,
+    "sourceType": "module"
   },
   "rules": {
+    "linebreak-style": ["error", "unix"],
+    "eqeqeq": "error",
+    "no-console": 0,
     "prettier/prettier": "error"
   }
 }

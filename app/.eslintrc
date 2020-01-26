@@ -4,7 +4,7 @@
     "es6": true,
     "jest/globals": true
   },
-  "plugins": ["react", "jest"],
+  "plugins": ["react", "jest", "prettier"],
   "extends": [
     "eslint:recommended",
     "plugin:react/recommended",
@@ -15,21 +15,15 @@
     "react": { "version": "latest" }
   },
   "parserOptions": {
+    "ecmaVersion": 2018,
     "ecmaFeatures": {
       "jsx": true
     },
-    "ecmaVersion": 2018,
     "sourceType": "module"
   },
   "rules": {
-    "indent": ["error", 2],
     "linebreak-style": ["error", "unix"],
-    "quotes": ["error", "single"],
-    "semi": ["error", "never"],
     "eqeqeq": "error",
-    "no-trailing-spaces": "error",
-    "object-curly-spacing": ["error", "always"],
-    "arrow-spacing": ["error", { "before": true, "after": true }],
     "no-console": 0,
     "react/prop-types": 0,
     "prettier/prettier": "error"
