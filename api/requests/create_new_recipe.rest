@@ -1,8 +1,7 @@
-post http://localhost:3001/api/recipes
+post http://localhost:5000/api/recipes
 Content-Type: application/json
 
 {
-    "id": 8,
     "title": "Falafel burgers",
     "description": "A healthy burger that's filling too. These are great for anyone who craves a big bite but doesn't want the calories",
     "time": "20",
