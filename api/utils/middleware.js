@@ -12,10 +12,19 @@ const unknownEndpoint = (request, response) => {
 }
 
 const errorHandler = (error, request, response, next) => {
+  console.log(error)
+
   if (error.name === 'CastError' && error.kind === 'ObjectId') {
     return response.status(400).send({ error: 'malformed id' })
-  } else if (error.name === 'ValidationError') {
-    return response.status(400).json({ error: error.message })
+  } else if (
+    error.name === 'ValidationError' &&
+    error.errors.title.kind === 'required'
+  ) {
+    return response
+      .status(400)
+      .json({ error: `${error.errors.title.path} required` })
+  } else if (error.code === 11000) {
+    return response.status(409).json({ error: 'username taken' })
   }
 
   next(error)

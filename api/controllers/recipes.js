@@ -1,5 +1,6 @@
 const recipesRouter = require('express').Router()
 const Recipe = require('../models/recipe')
+const User = require('../models/user')
 
 recipesRouter.get('/', async (request, response) => {
   const recipes = await Recipe.find({})
@@ -21,11 +22,11 @@ recipesRouter.get('/:id', async (request, response, next) => {
   }
 })
 
-recipesRouter.post('/', async (request, response) => {
+recipesRouter.post('/', async (request, response, next) => {
   const body = request.body
-  if (!body.title) {
-    return response.status(400).json({ error: 'content missing' })
-  }
+
+  console.log('userId', body.userId)
+  const user = await User.findById(body.userId)
 
   const recipe = new Recipe({
     title: body.title,
@@ -36,11 +37,18 @@ recipesRouter.post('/', async (request, response) => {
     instructions: body.instructions,
     notes: body.notes,
     source: body.source,
-    date: new Date()
+    date: new Date(),
+    user: user._id
   })
 
-  const savedRecipe = await recipe.save()
-  response.send(savedRecipe.toJSON())
+  try {
+    const savedRecipe = await recipe.save()
+    user.recipes = user.recipes.concat(savedRecipe._id)
+    await user.save()
+    response.send(savedRecipe.toJSON())
+  } catch (e) {
+    next(e)
+  }
 })
 
 recipesRouter.put('/:id', async (request, response, next) => {

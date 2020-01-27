@@ -3,7 +3,15 @@ const mongoose = require('mongoose')
 // VALIDATIONS TODO: unique username, username length, password complexity
 
 const userSchema = new mongoose.Schema({
-  username: String,
+  firstname: String,
+  lastname: String,
+  username: {
+    type: String,
+    unique: true,
+    required: true,
+    minlength: 3
+  },
+  country: String,
   passwordHash: String,
   recipes: [
     {

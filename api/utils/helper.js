@@ -198,4 +198,4 @@ let recipes = [
   }
 ]
 
-module.exports = test
+module.exports = { recipes }
