@@ -21,7 +21,12 @@ function App() {
     recipeService.getAll().then(data => setRecipes(data))
   }, [])
 
-  const recipeById = id => recipes.find(recipe => recipe.id === Number(id))
+  const recipeById = id => {
+    console.log(id)
+    const r = recipes.find(recipe => recipe.id === id)
+    console.log(r)
+    return r
+  }
 
   const padding = { padding: 5 }
 

@@ -1,4 +1,5 @@
 const recipesRouter = require('express').Router()
+const jwt = require('jsonwebtoken')
 const Recipe = require('../models/recipe')
 const User = require('../models/user')
 
@@ -22,26 +23,44 @@ recipesRouter.get('/:id', async (request, response, next) => {
   }
 })
 
+const getTokenFrom = request => {
+  const authorization = request.get('authorization')
+  console.log(authorization.substring(7))
+  if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
+    return authorization.substring(7)
+  }
+  return null
+}
+
 recipesRouter.post('/', async (request, response, next) => {
   const body = request.body
 
-  console.log('userId', body.userId)
-  const user = await User.findById(body.userId)
+  const token = getTokenFrom(request)
+  console.log(token)
 
-  const recipe = new Recipe({
-    title: body.title,
-    description: body.description,
-    time: body.time,
-    difficulty: body.difficulty,
-    ingredients: body.ingredients,
-    instructions: body.instructions,
-    notes: body.notes,
-    source: body.source,
-    date: new Date(),
-    user: user._id
-  })
+  const decodedToken = jwt.verify(token, process.env.SECRET)
+  console.log(decodedToken)
 
   try {
+    if (!token || !decodedToken.id) {
+      return response.status(401).json({ error: 'token missing or invalid' })
+    }
+
+    const user = await User.findById(decodedToken.id)
+
+    const recipe = new Recipe({
+      title: body.title,
+      description: body.description,
+      time: body.time,
+      difficulty: body.difficulty,
+      ingredients: body.ingredients,
+      instructions: body.instructions,
+      notes: body.notes,
+      source: body.source,
+      date: new Date(),
+      user: user._id
+    })
+
     const savedRecipe = await recipe.save()
     user.recipes = user.recipes.concat(savedRecipe._id)
     await user.save()

@@ -19,3 +19,4 @@
 | 27.01 | 3    | user authentication and authorization implementation |
 | 27.01 | 1    | mongoose models schema refactoring                   |
 | 27.01 | 1    | creation of rest client request                      |
+| 28.01 | 4    | react ui framework research.                         |

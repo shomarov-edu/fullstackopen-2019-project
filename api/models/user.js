@@ -1,7 +1,5 @@
 const mongoose = require('mongoose')
 
-// VALIDATIONS TODO: unique username, username length, password complexity
-
 const userSchema = new mongoose.Schema({
   firstname: String,
   lastname: String,
@@ -17,6 +15,12 @@ const userSchema = new mongoose.Schema({
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Recipe'
+    }
+  ],
+  categories: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Category'
     }
   ]
 })

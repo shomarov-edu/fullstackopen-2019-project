@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 
 const Recipes = ({ recipes }) => {
+  console.log(recipes)
   return (
     <ul>
       {recipes.map(recipe => (

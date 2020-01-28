@@ -1,6 +1,7 @@
 import React from 'react'
 
 const Recipe = ({ recipe }) => {
+  console.log('recipe', recipe)
   if (!recipe) {
     return <div>loading...</div>
   }
