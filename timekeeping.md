@@ -21,3 +21,5 @@
 | 27.01 | 1    | creation of rest client request                      |
 | 28.01 | 4    | react ui framework research                          |
 | 29.01 | 4    | ui design                                            |
+| 30.01 | 1    | material-ui installing                               |
+| 30.01 | 3    | material-ui learning & getting started               |
