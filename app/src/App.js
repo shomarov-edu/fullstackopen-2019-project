@@ -1,7 +1,9 @@
 import React from 'react'
 import { Helmet } from 'react-helmet'
+import { BrowserRouter as Router, Route } from 'react-router-dom'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import ButtonAppBar from './components/ButtonAppBar'
+import SignIn from './components/SignIn'
 
 function App() {
   return (
@@ -16,7 +18,10 @@ function App() {
       </Helmet>
       <React.Fragment>
         <CssBaseline />
-        <ButtonAppBar />
+        <Router>
+          <ButtonAppBar />
+          <Route path="/signin" render={() => <SignIn />} />
+        </Router>
       </React.Fragment>
     </div>
   )
