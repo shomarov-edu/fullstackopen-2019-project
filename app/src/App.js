@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import ButtonAppBar from './components/ButtonAppBar'
 import SignIn from './components/SignIn'
+import SignUp from './components/SignUp'
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Router>
           <ButtonAppBar />
           <Route path="/signin" render={() => <SignIn />} />
+          <Route path="/signup" render={() => <SignUp />} />
         </Router>
       </React.Fragment>
     </div>
