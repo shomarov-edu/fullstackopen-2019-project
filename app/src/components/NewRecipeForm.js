@@ -8,6 +8,7 @@ import RadioGroup from '@material-ui/core/RadioGroup'
 import FormLabel from '@material-ui/core/FormLabel'
 import { makeStyles } from '@material-ui/core/styles'
 import useField from '../hooks/useField'
+import recipeService from '../services/recipes'
 
 const useStyles = makeStyles(theme => ({
   form: {
@@ -20,7 +21,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const NewRecipeForm = () => {
+const NewRecipeForm = ({ user }) => {
   const classes = useStyles()
 
   const title = useField('text')
@@ -31,7 +32,7 @@ const NewRecipeForm = () => {
   const [instructions, setInstructions] = useState([''])
   const source = useField('url')
 
-  const handleSubmit = event => {
+  const handleSubmit = async event => {
     event.preventDefault()
 
     const recipe = {
@@ -44,7 +45,13 @@ const NewRecipeForm = () => {
       source: source.input.value
     }
 
-    console.log(recipe)
+    recipeService.setToken(user.token)
+
+    try {
+      await recipeService.createNewRecipe(recipe)
+    } catch (exception) {
+      console.log(exception)
+    }
   }
 
   return (

@@ -1,5 +1,5 @@
 post http://localhost:5000/api/recipes
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjVlMmZmMTgxZmYyZWFlMDBiNzhhNGZkMiIsImlhdCI6MTU4MDIwMTM3NH0.L3uj0AcB2aZgGVwChU8PwLvriq_32AgYrTmA2FHs13E
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJvb3RAcm9vdC5jb20iLCJpZCI6IjVlMzQyMmI4MDZlNjFkMDBjNDgxY2I5MiIsImlhdCI6MTU4MDUwMjQ0N30.NbBCr6g31BmoRgxJcDoBKTu466NegEnAgPyFhyFk-7c
 Content-Type: application/json
 
 {
@@ -31,6 +31,5 @@ Content-Type: application/json
     "notes": [
       "want this"
     ],
-    "source": "https://www.bbcgoodfood.com/recipes/falafel-burgers-0",
-    "userId": "5e2f57e581fb3f039f40c6c5"
+    "source": "https://www.bbcgoodfood.com/recipes/falafel-burgers-0"
   }

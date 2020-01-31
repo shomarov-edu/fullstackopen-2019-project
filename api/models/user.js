@@ -11,7 +11,13 @@ const userSchema = new mongoose.Schema({
     minlength: 3
   },
   country: String,
-  passwordHash: String
+  passwordHash: String,
+  recipes: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Recipe'
+    }
+  ]
 })
 
 userSchema.set('toJSON', {

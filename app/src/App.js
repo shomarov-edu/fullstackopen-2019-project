@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Helmet } from 'react-helmet'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import CssBaseline from '@material-ui/core/CssBaseline'
@@ -9,6 +9,11 @@ import NewRecipeForm from './components/NewRecipeForm'
 
 const App = () => {
   const [user, setUser] = useState(null)
+
+  useEffect(() => {
+    const user = localStorage.getItem('user')
+    if (user) setUser(user)
+  }, [])
 
   return (
     <div className="App">
@@ -24,7 +29,10 @@ const App = () => {
         <CssBaseline />
         <Router>
           <ButtonAppBar user={user} setUser={setUser} />
-          <Route path="/api/recipes/new" render={() => <NewRecipeForm />} />
+          <Route
+            path="/api/recipes/new"
+            render={() => <NewRecipeForm user={user} />}
+          />
           <Route
             path="/signin"
             render={() => <SignIn user={user} setUser={setUser} />}

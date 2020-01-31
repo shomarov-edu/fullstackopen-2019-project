@@ -57,15 +57,20 @@ const SignIn = ({ setUser, history }) => {
       password: password.input.value
     }
 
-    const user = await signinService.signin(credentials)
-    setUser(user)
+    try {
+      const user = await signinService.signin(credentials)
+      console.log(user)
+      setUser(user)
 
-    window.localStorage.setItem('user', JSON.stringify(user))
+      window.localStorage.setItem('user', JSON.stringify(user))
 
-    email.reset()
-    password.reset()
+      email.reset()
+      password.reset()
 
-    history.push('/')
+      history.push('/')
+    } catch (exception) {
+      console.log(exception)
+    }
   }
 
   return (

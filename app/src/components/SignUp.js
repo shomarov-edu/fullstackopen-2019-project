@@ -61,20 +61,24 @@ const SignUp = ({ history }) => {
       password: password.input.value
     }
 
-    const returnedUser = await signUpService.signup(user)
+    try {
+      const returnedUser = await signUpService.signup(user)
 
-    if (!returnedUser) {
-      console.log('Sign up failed')
-    } else {
-      console.log('Sign up successful')
+      if (!returnedUser) {
+        console.log('Sign up failed')
+      } else {
+        console.log('Sign up successful')
+      }
+
+      firstName.reset()
+      lastName.reset()
+      email.reset()
+      password.reset()
+
+      history.push('/')
+    } catch (exception) {
+      console.log(exception)
     }
-
-    firstName.reset()
-    lastName.reset()
-    email.reset()
-    password.reset()
-
-    history.push('/')
   }
 
   return (

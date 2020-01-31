@@ -25,7 +25,6 @@ recipesRouter.get('/:id', async (request, response, next) => {
 
 const getTokenFrom = request => {
   const authorization = request.get('authorization')
-  console.log(authorization.substring(7))
   if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
     return authorization.substring(7)
   }
@@ -36,10 +35,8 @@ recipesRouter.post('/', async (request, response, next) => {
   const body = request.body
 
   const token = getTokenFrom(request)
-  console.log(token)
 
   const decodedToken = jwt.verify(token, process.env.SECRET)
-  console.log(decodedToken)
 
   try {
     if (!token || !decodedToken.id) {
@@ -55,7 +52,6 @@ recipesRouter.post('/', async (request, response, next) => {
       difficulty: body.difficulty,
       ingredients: body.ingredients,
       instructions: body.instructions,
-      notes: body.notes,
       source: body.source,
       date: new Date(),
       user: user._id
