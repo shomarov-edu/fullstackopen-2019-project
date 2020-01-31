@@ -22,6 +22,7 @@
     "sourceType": "module"
   },
   "rules": {
+    "no-unused-vars": "off",
     "linebreak-style": ["error", "unix"],
     "eqeqeq": "error",
     "no-console": 0,
