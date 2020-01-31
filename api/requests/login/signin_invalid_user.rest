@@ -1,7 +1,7 @@
-post http://localhost:5000/login
+post http://localhost:5000/signin
 Content-Type: application/json
 
 {
-  "username": "faster",
+  "email": "faster",
   "password": "flomaster"
 }

@@ -1,5 +1,5 @@
-import React from 'react'
-import { Link as RouterLink } from 'react-router-dom'
+import React, { useState } from 'react'
+import { Link as RouterLink, withRouter } from 'react-router-dom'
 import Avatar from '@material-ui/core/Avatar'
 import Button from '@material-ui/core/Button'
 import CssBaseline from '@material-ui/core/CssBaseline'
@@ -13,8 +13,9 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 import Container from '@material-ui/core/Container'
+import signinService from '../services/signin'
 
-function Copyright() {
+const Signature = () => {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Full Stack Open Project 2019-2020'}
@@ -42,8 +43,24 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const SignIn = () => {
+const SignIn = ({ setUser, history }) => {
   const classes = useStyles()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+
+  const handleLogin = async event => {
+    event.preventDefault()
+    const credentials = { email, password }
+    const user = await signinService.signin(credentials)
+    setUser(user)
+
+    window.localStorage.setItem('user', JSON.stringify(user))
+
+    setEmail('')
+    setPassword('')
+
+    history.push('/')
+  }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -55,8 +72,10 @@ const SignIn = () => {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} noValidate onSubmit={handleLogin}>
           <TextField
+            value={email}
+            onChange={e => setEmail(e.target.value)}
             variant="outlined"
             margin="normal"
             required
@@ -68,6 +87,8 @@ const SignIn = () => {
             autoFocus
           />
           <TextField
+            value={password}
+            onChange={e => setPassword(e.target.value)}
             variant="outlined"
             margin="normal"
             required
@@ -83,6 +104,7 @@ const SignIn = () => {
             label="Remember me"
           />
           <Button
+            type="submit"
             fullWidth
             variant="contained"
             color="primary"
@@ -110,10 +132,10 @@ const SignIn = () => {
         </form>
       </div>
       <Box mt={8}>
-        <Copyright />
+        <Signature />
       </Box>
     </Container>
   )
 }
 
-export default SignIn
+export default withRouter(SignIn)

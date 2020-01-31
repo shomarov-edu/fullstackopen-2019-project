@@ -20,8 +20,14 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const ButtonAppBar = () => {
+const ButtonAppBar = ({ user, setUser }) => {
   const classes = useStyles()
+
+  const handleLogout = () => {
+    setUser(null)
+    localStorage.clear()
+    console.log('User signed out')
+  }
 
   return (
     <div className={classes.root}>
@@ -38,9 +44,15 @@ const ButtonAppBar = () => {
           <Typography variant="h6" className={classes.title}>
             Menu
           </Typography>
-          <Button color="inherit" component={RouterLink} to="/signin">
-            Login
-          </Button>
+          {user === null ? (
+            <Button color="inherit" component={RouterLink} to="/signin">
+              Login
+            </Button>
+          ) : (
+            <Button color="inherit" onClick={handleLogout}>
+              Logout
+            </Button>
+          )}
         </Toolbar>
       </AppBar>
     </div>

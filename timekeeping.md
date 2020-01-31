@@ -23,3 +23,6 @@
 | 29.01 | 4    | ui design                                            |
 | 30.01 | 1    | material-ui installing                               |
 | 30.01 | 3    | material-ui learning & getting started               |
+| 30.01 | 2    | creation of signin and signup forms                  |
+| 31.01 | 2    | creation of signin and signup forms                  |
+| 31.01 | 2    | login & logout implementation                        |

@@ -1,4 +1,4 @@
-post http://localhost:5000/api/users
+post http://localhost:5000/signin
 Content-Type: application/json
 
 {
