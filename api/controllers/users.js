@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt')
 const usersRouter = require('express').Router()
 const User = require('../models/user')
+const validator = require('validator')
 
 usersRouter.get('/', async (request, response) => {
   const users = await User.find({})
@@ -11,6 +12,10 @@ usersRouter.post('/', async (request, response, next) => {
   try {
     const body = request.body
 
+    if (!validator.isEmail(body.email)) {
+      return response.status(400).json({ error: 'invalid email' })
+    }
+
     if (body.password.length < 8) {
       return response.status(400).json({ error: 'password too short' })
     }
@@ -19,10 +24,9 @@ usersRouter.post('/', async (request, response, next) => {
     const passwordHash = await bcrypt.hash(body.password, saltRounds)
 
     const user = new User({
-      username: body.username,
       firstname: body.firstname,
       lastname: body.lastname,
-      country: body.country,
+      email: body.email,
       passwordHash
     })
 

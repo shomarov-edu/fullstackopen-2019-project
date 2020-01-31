@@ -48,7 +48,7 @@ const SignIn = ({ setUser, history }) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-  const handleLogin = async event => {
+  const handleSignIn = async event => {
     event.preventDefault()
     const credentials = { email, password }
     const user = await signinService.signin(credentials)
@@ -72,7 +72,7 @@ const SignIn = ({ setUser, history }) => {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form} noValidate onSubmit={handleLogin}>
+        <form className={classes.form} noValidate onSubmit={handleSignIn}>
           <TextField
             value={email}
             onChange={e => setEmail(e.target.value)}

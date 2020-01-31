@@ -46,11 +46,11 @@ const ButtonAppBar = ({ user, setUser }) => {
           </Typography>
           {user === null ? (
             <Button color="inherit" component={RouterLink} to="/signin">
-              Login
+              Sign in
             </Button>
           ) : (
             <Button color="inherit" onClick={handleLogout}>
-              Logout
+              Sign out
             </Button>
           )}
         </Toolbar>
