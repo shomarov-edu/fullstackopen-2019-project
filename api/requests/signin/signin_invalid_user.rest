@@ -2,6 +2,6 @@ post http://localhost:5000/signin
 Content-Type: application/json
 
 {
-  "email": "faster",
-  "password": "flomaster"
+  "email": "foo@bar.com",
+  "password": "password"
 }

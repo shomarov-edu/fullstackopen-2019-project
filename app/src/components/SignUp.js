@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Link as RouterLink, withRouter } from 'react-router-dom'
 import Avatar from '@material-ui/core/Avatar'
 import Button from '@material-ui/core/Button'
@@ -14,6 +14,7 @@ import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 import Container from '@material-ui/core/Container'
 import signUpService from '../services/signup'
+import useField from '../hooks/useField'
 
 function Copyright() {
   return (
@@ -45,19 +46,19 @@ const useStyles = makeStyles(theme => ({
 
 const SignUp = ({ history }) => {
   const classes = useStyles()
-  const [firstName, setFirstName] = useState('')
-  const [lastName, setLastName] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const firstName = useField('text')
+  const lastName = useField('text')
+  const email = useField('email')
+  const password = useField('password')
 
   const handleSignUp = async event => {
     event.preventDefault()
 
     const user = {
-      firstName,
-      lastName,
-      email,
-      password
+      firstName: firstName.input.value,
+      lastName: lastName.input.value,
+      email: email.input.value,
+      password: password.input.value
     }
 
     const returnedUser = await signUpService.signup(user)
@@ -68,10 +69,10 @@ const SignUp = ({ history }) => {
       console.log('Sign up successful')
     }
 
-    setFirstName('')
-    setLastName('')
-    setEmail('')
-    setPassword('')
+    firstName.reset()
+    lastName.reset()
+    email.reset()
+    password.reset()
 
     history.push('/')
   }
@@ -90,8 +91,7 @@ const SignUp = ({ history }) => {
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <TextField
-                value={firstName}
-                onChange={e => setFirstName(e.target.value)}
+                {...firstName.input}
                 autoComplete="fname"
                 name="firstName"
                 variant="outlined"
@@ -104,8 +104,7 @@ const SignUp = ({ history }) => {
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
-                value={lastName}
-                onChange={e => setLastName(e.target.value)}
+                {...lastName.input}
                 variant="outlined"
                 required
                 fullWidth
@@ -117,8 +116,7 @@ const SignUp = ({ history }) => {
             </Grid>
             <Grid item xs={12}>
               <TextField
-                value={email}
-                onChange={e => setEmail(e.target.value)}
+                {...email.input}
                 variant="outlined"
                 required
                 fullWidth
@@ -130,14 +128,12 @@ const SignUp = ({ history }) => {
             </Grid>
             <Grid item xs={12}>
               <TextField
-                value={password}
-                onChange={e => setPassword(e.target.value)}
+                {...password.input}
                 variant="outlined"
                 required
                 fullWidth
                 name="password"
                 label="Password"
-                type="password"
                 id="password"
                 autoComplete="current-password"
               />

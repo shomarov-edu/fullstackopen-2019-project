@@ -25,4 +25,4 @@
 | 30.01 | 3    | material-ui learning & getting started               |
 | 30.01 | 2    | creation of signin and signup forms                  |
 | 31.01 | 2    | creation of signin and signup forms                  |
-| 31.01 | 2    | login & logout implementation                        |
+| 31.01 | 2    | sign in, sign up & sign out implementation           |

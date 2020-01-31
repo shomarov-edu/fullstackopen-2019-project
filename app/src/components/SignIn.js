@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Link as RouterLink, withRouter } from 'react-router-dom'
 import Avatar from '@material-ui/core/Avatar'
 import Button from '@material-ui/core/Button'
@@ -13,6 +13,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 import Container from '@material-ui/core/Container'
+import useField from '../hooks/useField'
 import signinService from '../services/signin'
 
 const Signature = () => {
@@ -45,19 +46,24 @@ const useStyles = makeStyles(theme => ({
 
 const SignIn = ({ setUser, history }) => {
   const classes = useStyles()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const email = useField('email')
+  const password = useField('password')
 
   const handleSignIn = async event => {
     event.preventDefault()
-    const credentials = { email, password }
+
+    const credentials = {
+      email: email.input.value,
+      password: password.input.value
+    }
+
     const user = await signinService.signin(credentials)
     setUser(user)
 
     window.localStorage.setItem('user', JSON.stringify(user))
 
-    setEmail('')
-    setPassword('')
+    email.reset()
+    password.reset()
 
     history.push('/')
   }
@@ -74,8 +80,7 @@ const SignIn = ({ setUser, history }) => {
         </Typography>
         <form className={classes.form} noValidate onSubmit={handleSignIn}>
           <TextField
-            value={email}
-            onChange={e => setEmail(e.target.value)}
+            {...email.input}
             variant="outlined"
             margin="normal"
             required
@@ -87,16 +92,14 @@ const SignIn = ({ setUser, history }) => {
             autoFocus
           />
           <TextField
-            value={password}
-            onChange={e => setPassword(e.target.value)}
+            {...password.input}
             variant="outlined"
             margin="normal"
             required
             fullWidth
-            name="password"
-            label="Password"
-            type="password"
             id="password"
+            label="Password"
+            name="password"
             autoComplete="current-password"
           />
           <FormControlLabel
