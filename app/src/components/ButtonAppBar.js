@@ -26,7 +26,6 @@ const ButtonAppBar = ({ user, setUser }) => {
   const handleLogout = () => {
     setUser(null)
     localStorage.clear()
-    console.log('User signed out')
   }
 
   return (
@@ -44,8 +43,12 @@ const ButtonAppBar = ({ user, setUser }) => {
           <Typography variant="h6" className={classes.title}>
             Menu
           </Typography>
-          <Button color="inherit">My recipes</Button>
-          <Button color="inherit">Create new recipe</Button>
+          <Button color="inherit" component={RouterLink} to="/api/recipes">
+            My recipes
+          </Button>
+          <Button color="inherit" component={RouterLink} to="/api/recipes/new">
+            Create new recipe
+          </Button>
           {user === null ? (
             <Button color="inherit" component={RouterLink} to="/signin">
               Sign in

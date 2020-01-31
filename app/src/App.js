@@ -5,6 +5,7 @@ import CssBaseline from '@material-ui/core/CssBaseline'
 import ButtonAppBar from './components/ButtonAppBar'
 import SignIn from './components/SignIn'
 import SignUp from './components/SignUp'
+import NewRecipeForm from './components/NewRecipeForm'
 
 const App = () => {
   const [user, setUser] = useState(null)
@@ -23,6 +24,7 @@ const App = () => {
         <CssBaseline />
         <Router>
           <ButtonAppBar user={user} setUser={setUser} />
+          <Route path="/api/recipes/new" render={() => <NewRecipeForm />} />
           <Route
             path="/signin"
             render={() => <SignIn user={user} setUser={setUser} />}
