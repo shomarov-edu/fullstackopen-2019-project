@@ -30,6 +30,7 @@ const NewRecipeForm = ({ user }) => {
   const [difficulty, setDifficulty] = useState('')
   const [ingredients, setIngredients] = useState([''])
   const [instructions, setInstructions] = useState([''])
+  const [notes, setNotes] = useState([''])
   const source = useField('url')
 
   const handleSubmit = async event => {
@@ -164,6 +165,33 @@ const NewRecipeForm = ({ user }) => {
         })}
         <Button
           onClick={() => setInstructions(instructions.concat(''))}
+          variant="contained"
+          color="primary"
+          className={classes.submit}
+        >
+          Add
+        </Button>
+        <FormLabel component="legend">Additional notes</FormLabel>
+        {notes.map((value, index) => {
+          return (
+            <TextField
+              key={index}
+              value={value}
+              onChange={e => {
+                notes[index] = e.target.value
+                setNotes([...notes])
+              }}
+              fullWidth
+              variant="outlined"
+              margin="normal"
+              id="notes"
+              label={`Step ${index + 1}`}
+              name="notes"
+            />
+          )
+        })}
+        <Button
+          onClick={() => setNotes(notes.concat(''))}
           variant="contained"
           color="primary"
           className={classes.submit}

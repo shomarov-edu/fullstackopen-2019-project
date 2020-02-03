@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link as RouterLink } from 'react-router-dom'
+import { Link as RouterLink, withRouter } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
@@ -20,12 +20,13 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const ButtonAppBar = ({ user, setUser }) => {
+const ButtonAppBar = ({ user, setUser, history }) => {
   const classes = useStyles()
 
   const handleLogout = () => {
     setUser(null)
     localStorage.clear()
+    history.push('/')
   }
 
   return (
@@ -43,12 +44,23 @@ const ButtonAppBar = ({ user, setUser }) => {
           <Typography variant="h6" className={classes.title}>
             Menu
           </Typography>
-          <Button color="inherit" component={RouterLink} to="/api/recipes">
-            My recipes
-          </Button>
-          <Button color="inherit" component={RouterLink} to="/api/recipes/new">
-            Create new recipe
-          </Button>
+          <Button color="inherit">Highlights</Button>
+          <Button color="inherit">Articles</Button>
+          <Button color="inherit">Friends</Button>
+          {user === null ? null : (
+            <>
+              <Button color="inherit" component={RouterLink} to="/api/recipes">
+                My recipes
+              </Button>
+              <Button
+                color="inherit"
+                component={RouterLink}
+                to="/api/recipes/new"
+              >
+                Create new recipe
+              </Button>
+            </>
+          )}
           {user === null ? (
             <Button color="inherit" component={RouterLink} to="/signin">
               Sign in
@@ -64,4 +76,4 @@ const ButtonAppBar = ({ user, setUser }) => {
   )
 }
 
-export default ButtonAppBar
+export default withRouter(ButtonAppBar)

@@ -59,7 +59,6 @@ const SignIn = ({ setUser, history }) => {
 
     try {
       const user = await signinService.signin(credentials)
-      console.log(user)
       setUser(user)
 
       window.localStorage.setItem('user', JSON.stringify(user))
@@ -67,7 +66,7 @@ const SignIn = ({ setUser, history }) => {
       email.reset()
       password.reset()
 
-      history.push('/')
+      history.push('/api/recipes')
     } catch (exception) {
       console.log(exception)
     }

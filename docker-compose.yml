@@ -19,8 +19,8 @@ services:
       context: ./api
     image: shomarov/api
     volumes:
-      - ./api:/api
       - /api/node_modules
+      - ./api:/api
     ports:
       - 5000:5000
     env_file:
@@ -35,8 +35,8 @@ services:
       context: ./app
     image: shomarov/app
     volumes:
-      - ./app:/app
       - /app/node_modules
+      - ./app:/app
     ports:
       - 3000:3000
     depends_on:
