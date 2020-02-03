@@ -7,20 +7,26 @@ import SignIn from './components/SignIn'
 import SignUp from './components/SignUp'
 import NewRecipeForm from './components/NewRecipeForm'
 import recipeService from './services/recipes'
-import Recipes from './components/Recipes'
 import Recipe from './components/Recipe'
+import AllPublicRecipes from './components/AllPublicRecipes'
+import MyRecipes from './components/MyRecipes'
 
 const App = () => {
-  const [user, setUser] = useState(null)
+  const [loggedInUser, setLoggedInUser] = useState(null)
   const [recipes, setRecipes] = useState([])
 
   useEffect(() => {
-    recipeService.getAll().then(loadedRecipes => setRecipes(loadedRecipes))
-    setUser(localStorage.getItem('user'))
+    setLoggedInUser(localStorage.getItem('loggedInUser'))
   }, [])
 
-  const recipeById = id => {
-    return recipes.find(recipe => recipe.id === id)
+  useEffect(() => {
+    recipeService.getAll().then(loadedRecipes => setRecipes(loadedRecipes))
+  }, [])
+
+  const recipeById = (userId, recipeId) => {
+    return recipes
+      .filter(recipe => recipe.user === userId)
+      .find(recipe => recipe.id === recipeId)
   }
 
   return (
@@ -36,28 +42,47 @@ const App = () => {
       <React.Fragment>
         <CssBaseline />
         <Router>
-          <ButtonAppBar user={user} setUser={setUser} />
+          <ButtonAppBar
+            loggedInUser={loggedInUser}
+            setLoggedInUser={setLoggedInUser}
+          />
           <Route
             exact
-            path="/api/recipes"
-            render={() => <Recipes recipes={recipes} />}
+            path="/browse"
+            render={() => <AllPublicRecipes recipes={recipes} />}
           />
+          {loggedInUser ? (
+            <Route
+              exact
+              path={`/${loggedInUser.email}/recipes`}
+              render={() => (
+                <MyRecipes loggedInUser={loggedInUser} recipes={recipes} />
+              )}
+            />
+          ) : null}
           <Route
             exact
             path="/api/recipes/new"
-            render={() => <NewRecipeForm user={user} />}
+            render={() => <NewRecipeForm loggedInUser={loggedInUser} />}
           />
           <Route
             exact
-            path="/api/recipes/:id"
+            path="/api/recipes/:userId/:recipeId"
             render={({ match }) => (
-              <Recipe recipe={recipeById(match.params.id)} />
+              <Recipe
+                recipe={recipeById(match.params.userId, match.params.recipeId)}
+              />
             )}
           />
           <Route
             exact
             path="/signin"
-            render={() => <SignIn user={user} setUser={setUser} />}
+            render={() => (
+              <SignIn
+                loggedInUser={loggedInUser}
+                setLoggedInUser={setLoggedInUser}
+              />
+            )}
           />
           <Route path="/signup" render={() => <SignUp />} />
         </Router>

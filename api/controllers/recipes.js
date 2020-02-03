@@ -4,7 +4,12 @@ const Recipe = require('../models/recipe')
 const User = require('../models/user')
 
 recipesRouter.get('/', async (request, response) => {
-  const recipes = await Recipe.find({})
+  const recipes = await Recipe.find({ private: false })
+  response.json(recipes.map(recipe => recipe.toJSON()))
+})
+
+recipesRouter.get('/', async (request, response) => {
+  const recipes = await Recipe.find({ private: false })
   response.json(recipes.map(recipe => recipe.toJSON()))
 })
 

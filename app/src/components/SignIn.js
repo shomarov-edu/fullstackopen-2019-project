@@ -44,7 +44,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const SignIn = ({ setUser, history }) => {
+const SignIn = ({ setLoggedInUser, history }) => {
   const classes = useStyles()
   const email = useField('email')
   const password = useField('password')
@@ -59,9 +59,10 @@ const SignIn = ({ setUser, history }) => {
 
     try {
       const user = await signinService.signin(credentials)
-      setUser(user)
+      setLoggedInUser(user)
 
-      window.localStorage.setItem('user', JSON.stringify(user))
+      window.localStorage.setItem('loggedInUser', JSON.stringify(user))
+      console.log(user)
 
       email.reset()
       password.reset()

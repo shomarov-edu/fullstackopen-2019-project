@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-const Recipes = ({ recipes }) => {
+const MyRecipes = ({ recipes }) => {
   const titles = recipes.map(recipe => (
     <Link
       style={{ margin: 20 }}
@@ -15,4 +15,4 @@ const Recipes = ({ recipes }) => {
   return <h1>{titles}</h1>
 }
 
-export default Recipes
+export default MyRecipes

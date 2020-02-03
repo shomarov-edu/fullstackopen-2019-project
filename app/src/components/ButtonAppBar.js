@@ -20,11 +20,11 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const ButtonAppBar = ({ user, setUser, history }) => {
+const ButtonAppBar = ({ loggedInUser, setLoggedInUser, history }) => {
   const classes = useStyles()
 
   const handleLogout = () => {
-    setUser(null)
+    setLoggedInUser(null)
     localStorage.clear()
     history.push('/')
   }
@@ -44,12 +44,28 @@ const ButtonAppBar = ({ user, setUser, history }) => {
           <Typography variant="h6" className={classes.title}>
             Menu
           </Typography>
-          <Button color="inherit">Highlights</Button>
-          <Button color="inherit">Articles</Button>
-          <Button color="inherit">Friends</Button>
-          {user === null ? null : (
+          <Button color="inherit" component={RouterLink} to="/browse">
+            Browse
+          </Button>
+          <Button color="inherit" component={RouterLink} to="/articles">
+            Articles
+          </Button>
+          {loggedInUser ? (
+            <Button
+              color="inherit"
+              component={RouterLink}
+              to={`/${loggedInUser.email}/friends`}
+            >
+              Friends
+            </Button>
+          ) : null}
+          {loggedInUser === null ? null : (
             <>
-              <Button color="inherit" component={RouterLink} to="/api/recipes">
+              <Button
+                color="inherit"
+                component={RouterLink}
+                to={`/${loggedInUser.email}/recipes`}
+              >
                 My recipes
               </Button>
               <Button
@@ -61,7 +77,7 @@ const ButtonAppBar = ({ user, setUser, history }) => {
               </Button>
             </>
           )}
-          {user === null ? (
+          {loggedInUser === null ? (
             <Button color="inherit" component={RouterLink} to="/signin">
               Sign in
             </Button>

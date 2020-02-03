@@ -26,3 +26,4 @@
 | 30.01 | 2    | creation of signin and signup forms                      |
 | 31.01 | 2    | sign in, sign up & sign out functionality implementation |
 | 31.01 | 2    | creation of new recipe form                              |
+| 31.01 | 4    | frontend development                                     |

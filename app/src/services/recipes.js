@@ -18,7 +18,6 @@ const createNewRecipe = async recipe => {
   }
 
   const response = await axios.post(baseUrl, recipe, config)
-
   return response.data
 }
 
