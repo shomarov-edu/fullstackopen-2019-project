@@ -3,14 +3,20 @@ const usersRouter = require('express').Router()
 const User = require('../models/user')
 const jwt = require('jsonwebtoken')
 const validator = require('validator')
-const baseUrl = '/api/users/'
+const baseUrl = '/api/users'
 
 usersRouter.get(baseUrl, async (request, response) => {
-  const users = await User.find({})
+  const users = await User.find({}).populate('recipes')
   response.json(users.map(user => user.toJSON()))
 })
 
-usersRouter.post('/signup', async (request, response, next) => {
+usersRouter.get(`${baseUrl}/:username`, async (request, response) => {
+  console.log('request received')
+  const user = await User.findOne({ username: request.params.username })
+  response.json(user.toJSON())
+})
+
+usersRouter.post(baseUrl, async (request, response, next) => {
   try {
     const body = request.body
 
@@ -26,6 +32,7 @@ usersRouter.post('/signup', async (request, response, next) => {
     const passwordHash = await bcrypt.hash(body.password, saltRounds)
 
     const user = new User({
+      username: body.username,
       firstname: body.firstname,
       lastname: body.lastname,
       email: body.email,
@@ -40,10 +47,10 @@ usersRouter.post('/signup', async (request, response, next) => {
   }
 })
 
-usersRouter.post('/signin', async (request, response) => {
+usersRouter.post('/auth/signin', async (request, response) => {
   const body = request.body
 
-  const user = await User.findOne({ email: body.email })
+  const user = await User.findOne({ username: body.username })
   const passwordCorrect =
     user === null
       ? false
@@ -56,7 +63,7 @@ usersRouter.post('/signin', async (request, response) => {
   }
 
   const userForToken = {
-    email: user.email,
+    username: user.username,
     id: user._id
   }
 
@@ -64,7 +71,7 @@ usersRouter.post('/signin', async (request, response) => {
 
   response.status(200).send({
     token,
-    email: user.email
+    username: user.username
   })
 })
 

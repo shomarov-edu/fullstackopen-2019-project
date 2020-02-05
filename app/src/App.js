@@ -1,93 +1,111 @@
 import React, { useState, useEffect } from 'react'
-import { Helmet } from 'react-helmet'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
-import CssBaseline from '@material-ui/core/CssBaseline'
-import ButtonAppBar from './components/ButtonAppBar'
-import SignIn from './components/SignIn'
+import userService from './services/users'
+import recipeService from './services/recipes'
+import Navigation from './components/Navigation'
+import Login from './components/Login'
 import SignUp from './components/SignUp'
 import NewRecipeForm from './components/NewRecipeForm'
-import recipeService from './services/recipes'
-import Recipe from './components/Recipe'
-import AllPublicRecipes from './components/AllPublicRecipes'
+import UserRecipe from './components/UserRecipe'
+import AllRecipes from './components/AllRecipes'
 import MyRecipes from './components/MyRecipes'
+import UserProfile from './components/UserProfile'
+import MyProfile from './components/MyProfile'
 
 const App = () => {
   const [loggedInUser, setLoggedInUser] = useState(null)
-  const [recipes, setRecipes] = useState([])
+  const [users, setUsers] = useState([])
+  const [allRecipes, setAllRecipes] = useState([])
 
   useEffect(() => {
-    setLoggedInUser(localStorage.getItem('loggedInUser'))
+    recipeService.getAll().then(loadedRecipes => setAllRecipes(loadedRecipes))
   }, [])
 
   useEffect(() => {
-    recipeService.getAll().then(loadedRecipes => setRecipes(loadedRecipes))
+    userService.getAll().then(loadedUsers => setUsers(loadedUsers))
+    const user = JSON.parse(localStorage.getItem('loggedInUser'))
+    if (user) {
+      setLoggedInUser(user)
+    }
   }, [])
 
-  const recipeById = (userId, recipeId) => {
-    return recipes
-      .filter(recipe => recipe.user === userId)
-      .find(recipe => recipe.id === recipeId)
+  const userByUsername = username => {
+    return users.find(user => user.username === username)
   }
 
+  const recipeById = recipeId => {
+    return allRecipes.find(recipe => recipe.id === recipeId)
+  }
+
+  console.log('user', loggedInUser)
+
   return (
-    <div className="App">
-      <Helmet>
-        <meta charSet="utf-8" />
-        <title>Full Stack Open 2019-2020 Project</title>
-        <meta
-          name="viewport"
-          content="minimum-scale=1, initial-scale=1, width=device-width"
+    <React.Fragment>
+      <Router>
+        <Navigation
+          loggedInUser={loggedInUser}
+          setLoggedInUser={setLoggedInUser}
         />
-      </Helmet>
-      <React.Fragment>
-        <CssBaseline />
-        <Router>
-          <ButtonAppBar
-            loggedInUser={loggedInUser}
-            setLoggedInUser={setLoggedInUser}
-          />
-          <Route
-            exact
-            path="/browse"
-            render={() => <AllPublicRecipes recipes={recipes} />}
-          />
-          {loggedInUser ? (
-            <Route
-              exact
-              path={`/${loggedInUser.email}/recipes`}
-              render={() => (
-                <MyRecipes loggedInUser={loggedInUser} recipes={recipes} />
-              )}
+        <Route
+          exact
+          path="/browse"
+          render={() => <AllRecipes recipes={allRecipes} />}
+        />
+        <Route
+          exact
+          path="/:username"
+          render={({ match }) => {
+            if (
+              loggedInUser &&
+              loggedInUser.username === match.params.username
+            ) {
+              return <MyProfile user={userByUsername(match.params.username)} />
+            } else {
+              return (
+                <UserProfile user={userByUsername(match.params.username)} />
+              )
+            }
+          }}
+        />
+        <Route
+          exact
+          path="/:username/recipes/:recipeId"
+          render={({ match }) => (
+            <UserRecipe
+              loggedInUser={loggedInUser}
+              recipe={recipeById(match.params.recipeId)}
             />
-          ) : null}
+          )}
+        />
+        {loggedInUser ? (
           <Route
             exact
-            path="/api/recipes/new"
+            path={`/${loggedInUser.username}/recipes`}
+            render={() => (
+              <MyRecipes user={userByUsername(loggedInUser.username)} />
+            )}
+          />
+        ) : null}
+        {loggedInUser ? (
+          <Route
+            exact
+            path={`/${loggedInUser.username}/recipes/new`}
             render={() => <NewRecipeForm loggedInUser={loggedInUser} />}
           />
-          <Route
-            exact
-            path="/api/recipes/:userId/:recipeId"
-            render={({ match }) => (
-              <Recipe
-                recipe={recipeById(match.params.userId, match.params.recipeId)}
-              />
-            )}
-          />
-          <Route
-            exact
-            path="/signin"
-            render={() => (
-              <SignIn
-                loggedInUser={loggedInUser}
-                setLoggedInUser={setLoggedInUser}
-              />
-            )}
-          />
-          <Route path="/signup" render={() => <SignUp />} />
-        </Router>
-      </React.Fragment>
-    </div>
+        ) : null}
+        <Route
+          exact
+          path="/login"
+          render={() => (
+            <Login
+              loggedInUser={loggedInUser}
+              setLoggedInUser={setLoggedInUser}
+            />
+          )}
+        />
+        <Route path="/signup" render={() => <SignUp />} />
+      </Router>
+    </React.Fragment>
   )
 }
 

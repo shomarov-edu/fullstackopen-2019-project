@@ -20,10 +20,11 @@
 | 27.01 | 1    | mongoose models schema refactoring                       |
 | 27.01 | 1    | creation of rest client request                          |
 | 28.01 | 4    | react ui framework research                              |
-| 29.01 | 4    | ui design                                                |
+| 29.01 | 4    | ui design brainstorm                                     |
 | 30.01 | 1    | material-ui installing                                   |
 | 30.01 | 3    | material-ui learning & getting started                   |
 | 30.01 | 2    | creation of signin and signup forms                      |
 | 31.01 | 2    | sign in, sign up & sign out functionality implementation |
 | 31.01 | 2    | creation of new recipe form                              |
-| 31.01 | 4    | frontend development                                     |
+| 03.01 | 4    | frontend development                                     |
+| 05.01 | 8    | material-ui deletion, refactoring project to plain html  |

@@ -1,5 +1,6 @@
 # Project root
 node_modules
+.todo
 
 # API
 api/node_modules

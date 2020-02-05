@@ -1,16 +1,16 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-const MyRecipes = ({ user }) => {
-  if (!user) return null
-
+const UserRecipes = ({ user }) => {
   const titles = user.recipes.map(recipe => (
     <li key={recipe.id}>
-      <Link to={`/${user.username}/recipes/${recipe.id}`}>{recipe.title}</Link>
+      <Link style={{ margin: 20 }} to={`/${user.email}/recipes/${recipe.id}`}>
+        {recipe.title}
+      </Link>
     </li>
   ))
 
   return <ul>{titles}</ul>
 }
 
-export default MyRecipes
+export default UserRecipes

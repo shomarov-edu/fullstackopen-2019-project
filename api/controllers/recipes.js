@@ -4,12 +4,7 @@ const Recipe = require('../models/recipe')
 const User = require('../models/user')
 
 recipesRouter.get('/', async (request, response) => {
-  const recipes = await Recipe.find({ private: false })
-  response.json(recipes.map(recipe => recipe.toJSON()))
-})
-
-recipesRouter.get('/', async (request, response) => {
-  const recipes = await Recipe.find({ private: false })
+  const recipes = await Recipe.find({}).populate('author')
   response.json(recipes.map(recipe => recipe.toJSON()))
 })
 
@@ -59,7 +54,7 @@ recipesRouter.post('/', async (request, response, next) => {
       instructions: body.instructions,
       source: body.source,
       date: new Date(),
-      user: user._id
+      author: user._id
     })
 
     const savedRecipe = await recipe.save()

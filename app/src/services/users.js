@@ -6,18 +6,32 @@ const getAll = async () => {
   return response.data
 }
 
-const getOneById = async id => {
+const getUserById = async id => {
   const response = await axios.get(baseUrl, id)
   return response.data
 }
 
-const getOneByUsername = async username => {
-  const response = await axios.get(baseUrl, username)
+const getUserByUsername = async username => {
+  const response = await axios.get(`${baseUrl}/${username}`)
   return response.data
+}
+
+const login = async credentials => {
+  const response = await axios.post(
+    'http://localhost:5000/auth/signin',
+    credentials
+  )
+  return response.data
+}
+
+const signup = async user => {
+  return await axios.post('http://localhost:5000/api/users', user)
 }
 
 export default {
   getAll,
-  getOneById,
-  getOneByUsername
+  getUserById,
+  getUserByUsername,
+  login,
+  signup
 }
