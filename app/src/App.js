@@ -11,6 +11,7 @@ import AllRecipes from './components/AllRecipes'
 import MyRecipes from './components/MyRecipes'
 import UserProfile from './components/UserProfile'
 import MyProfile from './components/MyProfile'
+import MyRecipe from './components/MyRecipe'
 
 const App = () => {
   const [loggedInUser, setLoggedInUser] = useState(null)
@@ -37,8 +38,6 @@ const App = () => {
     return allRecipes.find(recipe => recipe.id === recipeId)
   }
 
-  console.log('user', loggedInUser)
-
   return (
     <React.Fragment>
       <Router>
@@ -48,7 +47,7 @@ const App = () => {
         />
         <Route
           exact
-          path="/browse"
+          path="/recipes"
           render={() => <AllRecipes recipes={allRecipes} />}
         />
         <Route
@@ -70,12 +69,23 @@ const App = () => {
         <Route
           exact
           path="/:username/recipes/:recipeId"
-          render={({ match }) => (
-            <UserRecipe
-              loggedInUser={loggedInUser}
-              recipe={recipeById(match.params.recipeId)}
-            />
-          )}
+          render={({ match }) => {
+            if (
+              loggedInUser &&
+              loggedInUser.username === match.params.username
+            ) {
+              return (
+                <MyRecipe
+                  loggedInUser={loggedInUser}
+                  recipe={recipeById(match.params.recipeId)}
+                  allRecipes={allRecipes}
+                  setAllRecipes={setAllRecipes}
+                />
+              )
+            } else {
+              return <UserRecipe recipe={recipeById(match.params.recipeId)} />
+            }
+          }}
         />
         {loggedInUser ? (
           <Route

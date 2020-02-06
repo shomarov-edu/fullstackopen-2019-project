@@ -20,7 +20,6 @@ const Login = ({ setLoggedInUser, history }) => {
       setLoggedInUser(user)
 
       window.localStorage.setItem('loggedInUser', JSON.stringify(user))
-      console.log(user)
 
       username.reset()
       password.reset()

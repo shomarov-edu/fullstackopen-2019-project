@@ -47,7 +47,7 @@ usersRouter.post(baseUrl, async (request, response, next) => {
   }
 })
 
-usersRouter.post('/auth/signin', async (request, response) => {
+usersRouter.post('/auth/login', async (request, response) => {
   const body = request.body
 
   const user = await User.findOne({ username: body.username })

@@ -1,8 +1,15 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import useField from '../hooks/useField'
 
 const AllRecipes = ({ recipes }) => {
-  const titles = recipes.map(recipe => (
+  const search = useField('text')
+
+  const filteredRecipes = recipes.filter(recipe =>
+    recipe.title.toLowerCase().includes(search.input.value)
+  )
+
+  const titles = filteredRecipes.map(recipe => (
     <li key={recipe.id}>
       <Link
         style={{ margin: 20 }}
@@ -13,7 +20,15 @@ const AllRecipes = ({ recipes }) => {
     </li>
   ))
 
-  return <ul>{titles}</ul>
+  return (
+    <React.Fragment>
+      <p>Search recipes:</p>
+      <input {...search.input}></input>
+      <br />
+      <button onClick={() => search.reset()}>clear</button>
+      <ul>{titles}</ul>
+    </React.Fragment>
+  )
 }
 
 export default AllRecipes

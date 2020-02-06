@@ -18,7 +18,7 @@ const getUserByUsername = async username => {
 
 const login = async credentials => {
   const response = await axios.post(
-    'http://localhost:5000/auth/signin',
+    'http://localhost:5000/auth/login',
     credentials
   )
   return response.data

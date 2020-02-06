@@ -21,8 +21,6 @@ const SignUp = ({ history }) => {
       password: password.input.value
     }
 
-    console.log(user)
-
     try {
       const returnedUser = await userService.signup(user)
 

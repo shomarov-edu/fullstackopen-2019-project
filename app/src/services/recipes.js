@@ -21,8 +21,20 @@ const createNewRecipe = async recipe => {
   return response.data
 }
 
+const updateRecipe = async (id, changedRecipe) => {
+  console.log(changedRecipe)
+
+  const config = {
+    headers: { Authorization: token }
+  }
+
+  const response = await axios.put(`${baseUrl}/${id}`, changedRecipe, config)
+  return response.data
+}
+
 export default {
   getAll,
   createNewRecipe,
+  updateRecipe,
   setToken
 }

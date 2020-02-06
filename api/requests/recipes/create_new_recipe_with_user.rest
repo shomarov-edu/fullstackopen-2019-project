@@ -1,35 +1,34 @@
 post http://localhost:5000/api/recipes
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJvb3RAcm9vdC5jb20iLCJpZCI6IjVlMzQyMmI4MDZlNjFkMDBjNDgxY2I5MiIsImlhdCI6MTU4MDUwMjQ0N30.NbBCr6g31BmoRgxJcDoBKTu466NegEnAgPyFhyFk-7c
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIiLCJpZCI6IjVlM2E5YjMzODJjNDJkMDAzOGZjZTA2ZiIsImlhdCI6MTU4MDk3NjMxM30.TIXTLgwxKN-2o7osbSvOagSwihUt5IahTZ5k5oFJw2o
 Content-Type: application/json
 
 {
-    "title": "Falafel burgers",
-    "description": "A healthy burger that's filling too. These are great for anyone who craves a big bite but doesn't want the calories",
-    "time": "20",
-    "difficulty": "easy",
-    "ingredients": [
-      "400g can chickpea, rinsed and drained",
-      "1 small red onion, roughly chopped",
-      "1 garlic clove, chopped",
-      "handful of flat-leaf parsley or curly parsley",
-      "1 tsp ground cumin",
-      "1 tsp ground coriander",
-      "1⁄2 tsp harissa paste or chilli powder",
-      "2 tbsp plain flour",
-      "2 tbsp sunflower oil",
-      "toasted pitta bread, to serve",
-      "200g tub tomato salsa, to serve",
-      "green salad, to serve"
-    ],
-    "instructions": [
-      "Drain a 400g can chickpeas and pat dry with kitchen paper.",
-      "Tip into a food processor along with 1 small roughly chopped red onion, 1 garlic clove, handful of flat-leaf parsley, 1 tsp ground cumin, 1 tsp ground coriander, ½ tsp harissa paste or chillli powder, 2 tbsp plain flour and a little salt.",
-      "Blend until fairly smooth, then shape into four patties with your hands.",
-      "Heat 2 tbsp sunflower oil in a non-stick frying pan, add the burgers, then quickly fry for 3 mins on each side until lightly golden.",
-      "Serve with toasted pitta bread, 200g tub tomato salsa and a green salad."
-    ],
-    "notes": [
-      "want this"
-    ],
-    "source": "https://www.bbcgoodfood.com/recipes/falafel-burgers-0"
-  }
+      "title": "4-Ingredient Easy Vegan Brownies",
+      "description": "Incredibly rich, vegan, easy brownies made with just 4 ingredients and 1 bowl! Naturally sweetened, grain- and gluten-free, and so satisfying!",
+      "time": "30",
+      "difficulty": "easy",
+      "ingredients": [
+        "400 g tightly packed dates, pitted (measured after pitting // make sure they're fresh! If dry, soak in warm water 10 minutes, drain, then add to processor)",
+        "60 ml warm water",
+        "128 g salted peanut butter* (if unsalted, add a healthy pinch of salt to the batter)",
+        "30 ml melted coconut oil* (if avoiding coconut oil, see notes)",
+        "32 g cacao or unsweetened cocoa powder",
+        "60 g dairy-free dark chocolate chips (optional // we like Enjoy Life)",
+        "60 g roughly chopped raw walnuts (optional // or other nut of choice)"
+      ],
+      "instructions": [
+        "Preheat oven to 350 degrees F (176 C) and line a standard loaf pan (or similar size pan) with parchment paper. Set aside.",
+        "Add dates to food processor and blend until small bits or a ball forms. If your food processor has a difficult time processing the dates, ensure there are no pits in the dates and that your dates are fresh and sticky. If too dry they can have a difficult time blending. (It may also be an issue of food processor strength if it has a hard time blending.)",
+        "Once blended, separate the dates into chunks using a spoon. Then add hot water and blend until a sticky date paste forms. Scrape down sides as needed.",
+        "Add peanut butter, coconut oil, and cacao powder and pulse until a sticky batter forms. It should be tacky and thick (scrape down sides as needed). Lastly add chocolate chips and walnuts (optional) and pulse to incorporate.",
+        "Transfer batter to lined loaf pan and spread into an even layer. For a smooth top, lay some parchment paper on top and use a flat-bottomed object (like a drinking glass) to press into an even layer.",
+        "Bake on the center rack for 15 minutes - the edges should be slightly dry. Remove from oven and let cool in the pan for 10 minutes. Then carefully lift out of the pan using the edges of the parchment paper and let cool on a plate or cooling rack for at least 20 minutes before slicing. The longer they cool, the firmer they will become.",
+        "Enjoy warm or cooled. Store leftovers covered at room temperature up to 3 days, in the refrigerator up to 5-6 days, or in the freezer up to 1 month (let thaw before enjoying)."
+      ],
+      "notes": [
+        "*If you're peanut-free, I think almond, cashew, or even sesame butter (tahini) would work well here.",
+        "*If you're oil-free, you could try subbing something like more nut or seed butter, or potentially applesauce.",
+        "*Nutrition information is a rough estimate calculated without optional ingredients."
+      ],
+      "source": "https://minimalistbaker.com/4-ingredient-vegan-easy-brownies/"
+    }

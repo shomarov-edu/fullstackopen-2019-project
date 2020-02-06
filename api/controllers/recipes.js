@@ -52,6 +52,7 @@ recipesRouter.post('/', async (request, response, next) => {
       difficulty: body.difficulty,
       ingredients: body.ingredients,
       instructions: body.instructions,
+      notes: body.notes,
       source: body.source,
       date: new Date(),
       author: user._id

@@ -12,7 +12,6 @@ const recipeSchema = new mongoose.Schema({
   instructions: [String],
   notes: [String],
   source: String,
-  private: Boolean,
   date: {
     type: Date,
     required: true
