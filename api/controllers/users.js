@@ -51,6 +51,8 @@ usersRouter.post('/auth/login', async (request, response) => {
   const body = request.body
 
   const user = await User.findOne({ username: body.username })
+
+  console.log(user)
   const passwordCorrect =
     user === null
       ? false
@@ -70,8 +72,9 @@ usersRouter.post('/auth/login', async (request, response) => {
   const token = jwt.sign(userForToken, process.env.SECRET)
 
   response.status(200).send({
-    token,
-    username: user.username
+    username: user.username,
+    id: user._id,
+    token
   })
 })
 

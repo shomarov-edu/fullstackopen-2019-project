@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
 import useField from '../hooks/useField'
 import recipeService from '../services/recipes'
+import Comments from '../components/Comments'
 
 const MyRecipe = ({ loggedInUser, recipe, allRecipes, setAllRecipes }) => {
   const [edit, setEdit] = useState(false)
+  const [showComments, setShowComments] = useState(false)
 
   const title = useField('text')
   const description = useField('text')
@@ -201,7 +203,7 @@ const MyRecipe = ({ loggedInUser, recipe, allRecipes, setAllRecipes }) => {
           <input {...source.input} />
           <br />
           <button onClick={() => setEdit(!edit)}>cancel</button>
-          <button type="submit">Save</button>
+          <button type="submit">save</button>
         </form>
       </div>
     )
@@ -235,6 +237,21 @@ const MyRecipe = ({ loggedInUser, recipe, allRecipes, setAllRecipes }) => {
       <p>Date added: {recipe.date}</p>
       <button onClick={() => handleEdit()}>edit recipe</button>
       <button onClick={() => handleDelete()}>delete recipe</button>
+      <br />
+      <br />
+      <button onClick={() => setShowComments(!showComments)}>
+        {showComments ? 'hide comments' : 'show comments'}
+      </button>
+      <br />
+      <br />
+      {showComments ? (
+        <Comments
+          loggedInUser={loggedInUser}
+          recipe={recipe}
+          allRecipes={allRecipes}
+          setAllRecipes={setAllRecipes}
+        />
+      ) : null}
     </React.Fragment>
   )
 }

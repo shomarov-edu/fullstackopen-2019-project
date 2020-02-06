@@ -1,6 +1,11 @@
 const mongoose = require('mongoose')
 
 const recipeSchema = new mongoose.Schema({
+  author: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
   title: {
     type: String,
     required: true
@@ -16,10 +21,16 @@ const recipeSchema = new mongoose.Schema({
     type: Date,
     required: true
   },
-  author: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
-  }
+  comments: [
+    {
+      _id: false,
+      comment: String,
+      author: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+      }
+    }
+  ]
 })
 
 recipeSchema.set('toJSON', {

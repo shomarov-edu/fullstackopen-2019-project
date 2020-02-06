@@ -71,6 +71,8 @@ recipesRouter.put('/:id', async (request, response, next) => {
   const body = request.body
   const id = request.params.id
 
+  console.log(body)
+
   const recipe = {
     title: body.title,
     description: body.description,
@@ -79,7 +81,8 @@ recipesRouter.put('/:id', async (request, response, next) => {
     ingredients: body.ingredients,
     instructions: body.instructions,
     notes: body.notes,
-    source: body.source
+    source: body.source,
+    comments: body.comments
   }
 
   try {
