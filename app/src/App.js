@@ -30,8 +30,18 @@ const App = () => {
     }
   }, [])
 
+  const userById = id => {
+    const user = users.find(user => user.id === id)
+    console.log(user)
+    return user
+  }
+
   const userByUsername = username => {
-    return users.find(user => user.username === username)
+    console.log(username)
+    console.log(users)
+    const user = users.find(user => user.username === username)
+    console.log(user)
+    return user
   }
 
   const recipeById = recipeId => {

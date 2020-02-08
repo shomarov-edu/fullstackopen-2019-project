@@ -22,8 +22,6 @@ const createNewRecipe = async recipe => {
 }
 
 const updateRecipe = async (id, changedRecipe) => {
-  console.log(changedRecipe)
-
   const config = {
     headers: { Authorization: token }
   }

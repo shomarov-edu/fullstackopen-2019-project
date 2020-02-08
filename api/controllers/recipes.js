@@ -4,7 +4,12 @@ const Recipe = require('../models/recipe')
 const User = require('../models/user')
 
 recipesRouter.get('/', async (request, response) => {
-  const recipes = await Recipe.find({}).populate('author')
+  const recipes = await Recipe.find({})
+    .populate('User')
+    .populate({
+      path: 'comments.author',
+      model: 'User'
+    })
   response.json(recipes.map(recipe => recipe.toJSON()))
 })
 
@@ -13,6 +18,11 @@ recipesRouter.get('/:id', async (request, response, next) => {
 
   try {
     const recipe = await Recipe.findById(id)
+      .populate('User')
+      .populate({
+        path: 'comments.author',
+        model: 'User'
+      })
     if (recipe) {
       response.json(recipe.toJSON())
     } else {
@@ -71,7 +81,9 @@ recipesRouter.put('/:id', async (request, response, next) => {
   const body = request.body
   const id = request.params.id
 
-  console.log(body)
+  const oldRecipe = await Recipe.findById(id)
+  console.log(oldRecipe.comments)
+  console.log(body.comments)
 
   const recipe = {
     title: body.title,
@@ -89,6 +101,11 @@ recipesRouter.put('/:id', async (request, response, next) => {
     const updatedRecipe = await Recipe.findByIdAndUpdate(id, recipe, {
       new: true
     })
+      .populate('User')
+      .populate({
+        path: 'comments.author',
+        model: 'User'
+      })
     if (updatedRecipe) {
       response.json(updatedRecipe.toJSON())
     } else {

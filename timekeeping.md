@@ -27,4 +27,7 @@
 | 31.01 | 2    | sign in, sign up & sign out functionality implementation |
 | 31.01 | 2    | creation of new recipe form                              |
 | 03.01 | 4    | frontend development                                     |
-| 05.01 | 8    | material-ui deletion, refactoring project to plain html  |
+| 05.01 | 6    | material-ui deletion, refactoring project to plain html  |
+| 06.01 | 4    | frontend development                                     |
+| 07.01 | 2    | frontend development                                     |
+| 08.01 | 2    | frontend development                                     |

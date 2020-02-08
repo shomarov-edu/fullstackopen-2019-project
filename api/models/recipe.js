@@ -23,12 +23,11 @@ const recipeSchema = new mongoose.Schema({
   },
   comments: [
     {
-      _id: false,
-      comment: String,
       author: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
-      }
+      },
+      comment: String
     }
   ]
 })

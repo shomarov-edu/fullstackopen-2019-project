@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 
 const MyRecipes = ({ user }) => {
+  console.log(user)
   if (!user) return null
 
   const titles = user.recipes.map(recipe => (
