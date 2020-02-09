@@ -6,11 +6,6 @@ const getAll = async () => {
   return response.data
 }
 
-const getUserById = async id => {
-  const response = await axios.get(baseUrl, id)
-  return response.data
-}
-
 const getUserByUsername = async username => {
   const response = await axios.get(`${baseUrl}/${username}`)
   return response.data
@@ -30,7 +25,6 @@ const signup = async user => {
 
 export default {
   getAll,
-  getUserById,
   getUserByUsername,
   login,
   signup

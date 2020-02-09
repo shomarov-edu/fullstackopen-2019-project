@@ -15,9 +15,6 @@ const Navigation = ({ loggedInUser, setLoggedInUser, history }) => {
       <Link style={padding} to="/recipes">
         Recipes
       </Link>
-      <Link style={padding} to="/articles">
-        Articles
-      </Link>
       {loggedInUser ? (
         <React.Fragment>
           <Link style={padding} to={`/${loggedInUser.username}`}>
@@ -31,9 +28,6 @@ const Navigation = ({ loggedInUser, setLoggedInUser, history }) => {
           </Link>
           <Link style={padding} to={`/${loggedInUser.username}/recipes/new`}>
             Create new recipe
-          </Link>
-          <Link style={padding} to={`/${loggedInUser.username}/articles/new`}>
-            Create new post
           </Link>
           <button onClick={handleLogout}>Sign out</button>
         </React.Fragment>

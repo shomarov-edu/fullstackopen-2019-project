@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import useField from '../hooks/useField'
 import recipeService from '../services/recipes'
 
-const NewRecipeForm = ({ loggedInUser }) => {
+const NewRecipeForm = ({ user }) => {
   const title = useField('text')
   const description = useField('text')
   const time = useField('number')
@@ -25,7 +25,7 @@ const NewRecipeForm = ({ loggedInUser }) => {
       source: source.input.value
     }
 
-    recipeService.setToken(loggedInUser.token)
+    recipeService.setToken(user.token)
 
     try {
       await recipeService.createNewRecipe(recipe)

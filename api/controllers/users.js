@@ -6,14 +6,21 @@ const validator = require('validator')
 const baseUrl = '/api/users'
 
 usersRouter.get(baseUrl, async (request, response) => {
-  const users = await User.find({}).populate('recipes')
+  const users = await User.find({})
+    .populate('recipes')
+    .populate('friends')
   response.json(users.map(user => user.toJSON()))
 })
 
 usersRouter.get(`${baseUrl}/:username`, async (request, response) => {
-  console.log('request received')
-  const user = await User.findOne({ username: request.params.username })
-  response.json(user.toJSON())
+  try {
+    const user = await User.findOne({ username: request.params.username })
+      .populate('recipes')
+      .populate('friends')
+    response.json(user.toJSON())
+  } catch (e) {
+    console.log(e)
+  }
 })
 
 usersRouter.post(baseUrl, async (request, response, next) => {

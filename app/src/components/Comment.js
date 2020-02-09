@@ -49,7 +49,6 @@ const Comment = ({
         recipe.id,
         updatedRecipe
       )
-      console.log(savedRecipe)
       setAllRecipes(allRecipes.map(r => (r.id !== recipe.id ? r : savedRecipe)))
       commentField.reset()
       toggleVisibility()

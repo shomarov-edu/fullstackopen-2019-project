@@ -31,3 +31,5 @@
 | 06.01 | 4    | frontend development                                     |
 | 07.01 | 2    | frontend development                                     |
 | 08.01 | 2    | frontend development                                     |
+| 09.01 | 2    | frontend development, refactoring                        |
+| 09.01 | 2    | frontend development, refactoring                        |

@@ -5,7 +5,6 @@ import Comment from './Comment'
 
 const Comments = ({ loggedInUser, recipe, allRecipes, setAllRecipes }) => {
   const commentField = useField('text')
-  console.log(recipe.comments)
 
   const handleSubmit = async event => {
     event.preventDefault()
@@ -15,8 +14,6 @@ const Comments = ({ loggedInUser, recipe, allRecipes, setAllRecipes }) => {
       comment: commentField.input.value
     }
 
-    console.log(newComment)
-
     recipeService.setToken(loggedInUser.token)
 
     const comments = recipe.comments.map(c => ({
@@ -24,8 +21,6 @@ const Comments = ({ loggedInUser, recipe, allRecipes, setAllRecipes }) => {
       author: c.author.id !== undefined ? c.author.id : c.author,
       comment: c.comment
     }))
-
-    console.log(comments)
 
     const updatedRecipe = {
       ...recipe,
@@ -37,7 +32,6 @@ const Comments = ({ loggedInUser, recipe, allRecipes, setAllRecipes }) => {
         recipe.id,
         updatedRecipe
       )
-      console.log(savedRecipe)
       setAllRecipes(allRecipes.map(r => (r.id !== recipe.id ? r : savedRecipe)))
       commentField.reset()
     } catch (exception) {

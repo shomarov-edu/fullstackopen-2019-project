@@ -5,7 +5,7 @@ const User = require('../models/user')
 
 recipesRouter.get('/', async (request, response) => {
   const recipes = await Recipe.find({})
-    .populate('User')
+    .populate('author')
     .populate({
       path: 'comments.author',
       model: 'User'

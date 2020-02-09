@@ -6,43 +6,50 @@ import Navigation from './components/Navigation'
 import Login from './components/Login'
 import SignUp from './components/SignUp'
 import NewRecipeForm from './components/NewRecipeForm'
-import UserRecipe from './components/UserRecipe'
+import Recipe from './components/Recipe'
 import AllRecipes from './components/AllRecipes'
-import MyRecipes from './components/MyRecipes'
-import UserProfile from './components/UserProfile'
-import MyProfile from './components/MyProfile'
-import MyRecipe from './components/MyRecipe'
+import Recipes from './components/Recipes'
+import Profile from './components/Profile'
 
 const App = () => {
+  const [localStorageUser, setLocalStorageUser] = useState(null)
   const [loggedInUser, setLoggedInUser] = useState(null)
-  const [users, setUsers] = useState([])
   const [allRecipes, setAllRecipes] = useState([])
+  const [userToFetch, setUserToFetch] = useState(null)
+  const [user, setUser] = useState(null)
 
   useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('loggedInUser'))
+    if (user) {
+      setLocalStorageUser(user)
+    }
     recipeService.getAll().then(loadedRecipes => setAllRecipes(loadedRecipes))
   }, [])
 
   useEffect(() => {
-    userService.getAll().then(loadedUsers => setUsers(loadedUsers))
-    const user = JSON.parse(localStorage.getItem('loggedInUser'))
-    if (user) {
-      setLoggedInUser(user)
+    const fetchUser = async () => {
+      if (localStorageUser) {
+        const user = await userService.getUserByUsername(
+          localStorageUser.username
+        )
+        setLoggedInUser(user)
+      }
     }
-  }, [])
 
-  const userById = id => {
-    const user = users.find(user => user.id === id)
-    console.log(user)
-    return user
-  }
+    fetchUser()
+  }, [localStorageUser])
 
-  const userByUsername = username => {
-    console.log(username)
-    console.log(users)
-    const user = users.find(user => user.username === username)
-    console.log(user)
-    return user
-  }
+  useEffect(() => {
+    const fetchUser = async () => {
+      if (userToFetch) {
+        setUser(null)
+        const loadedUser = await userService.getUserByUsername(userToFetch)
+        setUser(loadedUser)
+      }
+    }
+
+    fetchUser()
+  }, [userToFetch])
 
   const recipeById = recipeId => {
     return allRecipes.find(recipe => recipe.id === recipeId)
@@ -64,15 +71,9 @@ const App = () => {
           exact
           path="/:username"
           render={({ match }) => {
-            if (
-              loggedInUser &&
-              loggedInUser.username === match.params.username
-            ) {
-              return <MyProfile user={userByUsername(match.params.username)} />
-            } else {
-              return (
-                <UserProfile user={userByUsername(match.params.username)} />
-              )
+            if (match.params.username !== 'recipes') {
+              setUserToFetch(match.params.username)
+              return <Profile loggedInUser={loggedInUser} user={user} />
             }
           }}
         />
@@ -80,37 +81,30 @@ const App = () => {
           exact
           path="/:username/recipes/:recipeId"
           render={({ match }) => {
-            if (
-              loggedInUser &&
-              loggedInUser.username === match.params.username
-            ) {
-              return (
-                <MyRecipe
-                  loggedInUser={loggedInUser}
-                  recipe={recipeById(match.params.recipeId)}
-                  allRecipes={allRecipes}
-                  setAllRecipes={setAllRecipes}
-                />
-              )
-            } else {
-              return <UserRecipe recipe={recipeById(match.params.recipeId)} />
-            }
+            setUserToFetch(match.params.username)
+            return (
+              <Recipe
+                loggedInUser={loggedInUser}
+                user={user}
+                recipe={recipeById(match.params.recipeId)}
+                allRecipes={allRecipes}
+                setAllRecipes={setAllRecipes}
+              />
+            )
           }}
         />
         {loggedInUser ? (
           <Route
             exact
             path={`/${loggedInUser.username}/recipes`}
-            render={() => (
-              <MyRecipes user={userByUsername(loggedInUser.username)} />
-            )}
+            render={() => <Recipes user={loggedInUser} />}
           />
         ) : null}
         {loggedInUser ? (
           <Route
             exact
             path={`/${loggedInUser.username}/recipes/new`}
-            render={() => <NewRecipeForm loggedInUser={loggedInUser} />}
+            render={() => <NewRecipeForm user={loggedInUser} />}
           />
         ) : null}
         <Route
@@ -119,7 +113,7 @@ const App = () => {
           render={() => (
             <Login
               loggedInUser={loggedInUser}
-              setLoggedInUser={setLoggedInUser}
+              setLocalStorageUser={setLocalStorageUser}
             />
           )}
         />

@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
 import useField from '../hooks/useField'
 import recipeService from '../services/recipes'
-import Comments from '../components/Comments'
+import Comments from './Comments'
 
-const MyRecipe = ({ loggedInUser, recipe, allRecipes, setAllRecipes }) => {
+const Recipe = ({ loggedInUser, user, recipe, allRecipes, setAllRecipes }) => {
   const [edit, setEdit] = useState(false)
   const [showComments, setShowComments] = useState(false)
 
@@ -16,7 +17,7 @@ const MyRecipe = ({ loggedInUser, recipe, allRecipes, setAllRecipes }) => {
   const [notes, setNotes] = useState([])
   const source = useField('text')
 
-  if (!recipe) return null
+  if (!recipe || !loggedInUser || !user) return null
 
   const handleEdit = () => {
     setEdit(!edit)
@@ -211,6 +212,12 @@ const MyRecipe = ({ loggedInUser, recipe, allRecipes, setAllRecipes }) => {
 
   return (
     <React.Fragment>
+      <p>
+        {`Author: `}
+        <Link to={`/${recipe.author.username}`}>
+          {recipe.author.firstname} {recipe.author.lastname}
+        </Link>
+      </p>
       <p>{recipe.title}</p>
       <p>{recipe.description}</p>
       <p>Cooking time: {recipe.time}</p>
@@ -235,8 +242,12 @@ const MyRecipe = ({ loggedInUser, recipe, allRecipes, setAllRecipes }) => {
       </ul>
       <p>Source: {recipe.source}</p>
       <p>Date added: {recipe.date}</p>
-      <button onClick={() => handleEdit()}>edit recipe</button>
-      <button onClick={() => handleDelete()}>delete recipe</button>
+      {loggedInUser.username === user.username ? (
+        <React.Fragment>
+          <button onClick={() => handleEdit()}>edit recipe</button>
+          <button onClick={() => handleDelete()}>delete recipe</button>
+        </React.Fragment>
+      ) : null}
       <br />
       <br />
       <button onClick={() => setShowComments(!showComments)}>
@@ -256,4 +267,4 @@ const MyRecipe = ({ loggedInUser, recipe, allRecipes, setAllRecipes }) => {
   )
 }
 
-export default MyRecipe
+export default Recipe

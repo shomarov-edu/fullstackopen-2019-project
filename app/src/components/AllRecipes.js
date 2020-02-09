@@ -6,7 +6,7 @@ const AllRecipes = ({ recipes }) => {
   const search = useField('text')
 
   const filteredRecipes = recipes.filter(recipe =>
-    recipe.title.toLowerCase().includes(search.input.value)
+    recipe.title.toLowerCase().includes(search.input.value.toLowerCase())
   )
 
   const titles = filteredRecipes.map(recipe => (
@@ -24,6 +24,7 @@ const AllRecipes = ({ recipes }) => {
     <React.Fragment>
       <p>Search recipes:</p>
       <input {...search.input}></input>
+      <br />
       <br />
       <button onClick={() => search.reset()}>clear</button>
       <ul>{titles}</ul>

@@ -1,29 +1,40 @@
 import React, { useState } from 'react'
-import UserRecipes from './UserRecipes'
+import Recipes from './Recipes'
 
-const UserProfile = ({ user }) => {
+const Profile = ({ loggedInUser, user }) => {
   const [recipesVisible, setRecipesVisible] = useState(false)
-  const toggleVisibility = () => setRecipesVisible(!recipesVisible)
-
-  const recipeVisibility = { display: recipesVisible ? '' : 'none' }
 
   if (!user) return null
+
+  const toggleVisibility = () => setRecipesVisible(!recipesVisible)
+  const recipeVisibility = { display: recipesVisible ? '' : 'none' }
+
+  const sendFriendRequestButton = () => {
+    if (loggedInUser && loggedInUser.username !== user.username) {
+      return (
+        <p>
+          <button>send friend request</button>
+        </p>
+      )
+    }
+  }
 
   return (
     <React.Fragment>
       <p>
         {user.firstname} {user.lastname}
       </p>
+      {sendFriendRequestButton()}
       {recipesVisible ? (
         <button onClick={toggleVisibility}>hide recipes</button>
       ) : (
         <button onClick={toggleVisibility}>show recipes</button>
       )}
       <div style={recipeVisibility}>
-        <UserRecipes user={user} />
+        <Recipes user={user} />
       </div>
     </React.Fragment>
   )
 }
 
-export default UserProfile
+export default Profile
