@@ -3,8 +3,9 @@ const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
 const cors = require('cors')
-const usersRouter = require('./controllers/users')
-const recipesRouter = require('./controllers/recipes')
+const authRouter = require('./api/authAPI')
+const usersRouter = require('./api/usersAPI')
+const recipesRouter = require('./api/recipesAPI')
 const middleware = require('./utils/middleware')
 const mongoose = require('mongoose')
 
@@ -16,7 +17,6 @@ mongoose
     useUnifiedTopology: true,
     useFindAndModify: false
   })
-  // eslint-disable-next-line no-unused-vars
   .then(result => {
     console.log('connected to MongoDB')
   })
@@ -28,10 +28,11 @@ app.use(cors())
 app.use(bodyParser.json())
 app.use(middleware.requestLogger)
 
-app.use(usersRouter)
-app.use('/api/recipes/', recipesRouter)
+app.use('/auth', authRouter)
+app.use('/api/users', usersRouter)
+app.use('/api/recipes', recipesRouter)
 
-app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
+app.use(middleware.unknownEndpoint)
 
 module.exports = app

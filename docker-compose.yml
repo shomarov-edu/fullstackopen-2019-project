@@ -12,19 +12,19 @@ services:
     ports:
       - 27017-27019:27017-27019
     restart: always
-  api:
-    container_name: api
+  server:
+    container_name: server
     build:
       dockerfile: Dockerfile.dev
-      context: ./api
-    image: shomarov/api
+      context: ./server
+    image: shomarov/server
     volumes:
-      - /api/node_modules
-      - ./api:/api
+      - /server/node_modules
+      - ./server:/server
     ports:
       - 5000:5000
     env_file:
-      - ./api/.env
+      - ./server/.env
     depends_on:
       - mongo
     restart: unless-stopped
@@ -40,5 +40,5 @@ services:
     ports:
       - 3000:3000
     depends_on:
-      - api
+      - server
     restart: unless-stopped

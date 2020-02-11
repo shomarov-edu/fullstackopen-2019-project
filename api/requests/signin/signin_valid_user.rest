@@ -1,7 +1,0 @@
-post http://localhost:5000/signin
-Content-Type: application/json
-
-{
-  "email": "root@root.com",
-  "password": "password"
-}
