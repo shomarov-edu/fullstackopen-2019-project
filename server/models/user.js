@@ -9,7 +9,10 @@ const userSchema = new mongoose.Schema({
     minlength: 3
   },
   email: {
-    type: String,
+    type: {
+      address: String,
+      private: true
+    },
     required: true,
     unique: true,
     minlength: 3
@@ -17,25 +20,19 @@ const userSchema = new mongoose.Schema({
   firstname: String,
   lastname: String,
   passwordHash: String,
-  recipes: [
+  myRecipes: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Recipe'
     }
   ],
-  friendRequestsSent: [
+  savedRecipes: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User'
+      ref: 'Recipe'
     }
   ],
-  friendRequestsReceived: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User'
-    }
-  ],
-  friends: [
+  following: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User'

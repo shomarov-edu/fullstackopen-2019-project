@@ -11,11 +11,12 @@ const recipeSchema = new mongoose.Schema({
     required: true
   },
   description: String,
-  time: Number,
+  cookTime: Number,
   difficulty: String,
   ingredients: [String],
-  instructions: [String],
+  method: [String],
   notes: [String],
+  tags: [String],
   source: String,
   date: {
     type: Date,
@@ -29,7 +30,15 @@ const recipeSchema = new mongoose.Schema({
       },
       comment: String
     }
-  ]
+  ],
+  likes: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    }
+  ],
+  coverPhoto: String,
+  photos: [String]
 })
 
 recipeSchema.set('toJSON', {
