@@ -17,6 +17,7 @@ const Login = ({ setLocalStorageUser, history }) => {
 
     try {
       const fetchedUser = await userService.login(credentials)
+      console.log(fetchedUser)
       setLocalStorageUser(fetchedUser)
 
       window.localStorage.setItem('loggedInUser', JSON.stringify(fetchedUser))

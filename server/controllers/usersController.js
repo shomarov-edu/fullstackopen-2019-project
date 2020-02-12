@@ -1,14 +1,9 @@
-const bcrypt = require('bcrypt')
-const usersRouter = require('express').Router()
-const User = require('../models/user')
 const usersService = require('../services/usersService')
-const jwt = require('jsonwebtoken')
 const validator = require('validator')
-const baseUrl = '/api/users'
 
 const getAll = async (request, response) => {
   try {
-    const users = usersService.getAll()
+    const users = await usersService.getAll()
     response.json(users)
   } catch (e) {
     console.log(e)
@@ -17,8 +12,7 @@ const getAll = async (request, response) => {
 
 const getOne = async (request, response) => {
   try {
-    const user = usersService.getOne(request.params.username)
-
+    const user = await usersService.getOne(request.params.username)
     response.json(user)
   } catch (e) {
     console.log(e)
@@ -26,9 +20,9 @@ const getOne = async (request, response) => {
 }
 
 const create = async (request, response, next) => {
-  try {
-    const { userData } = request.body
+  const userData = request.body
 
+  try {
     if (!validator.isEmail(userData.email)) {
       return response.status(400).json({ error: 'invalid email' })
     }
@@ -45,8 +39,36 @@ const create = async (request, response, next) => {
   }
 }
 
-const update = async (request, response, next) => {}
+const update = async (request, response, next) => {
+  if (request.params.username !== request.user.username) {
+    return response.status(403).end()
+  }
 
-const deleteOne = async (request, response, next) => {}
+  try {
+    const userData = request.body
+
+    console.log(request.user)
+
+    const user = await usersService.update(request.user.id, userData)
+
+    response.status(200).send(user)
+  } catch (e) {
+    next(e)
+  }
+}
+
+const deleteOne = async (request, response, next) => {
+  if (request.params.username !== request.user.username) {
+    return response.status(403).end()
+  }
+
+  try {
+    await usersService.deleteOne(request.user.id)
+
+    response.status(204).end()
+  } catch (e) {
+    next(e)
+  }
+}
 
 module.exports = { getAll, getOne, create, update, deleteOne }

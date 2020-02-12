@@ -20,6 +20,7 @@ const App = () => {
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('loggedInUser'))
+    console.log('user', user)
     if (user) {
       setLocalStorageUser(user)
     }
@@ -29,9 +30,11 @@ const App = () => {
   useEffect(() => {
     const fetchUser = async () => {
       if (localStorageUser) {
+        console.log('localStorageUser', localStorageUser)
         const user = await userService.getUserByUsername(
           localStorageUser.username
         )
+        console.log('user2', user)
         setLoggedInUser(user)
       }
     }
@@ -71,7 +74,10 @@ const App = () => {
           exact
           path="/:username"
           render={({ match }) => {
-            if (match.params.username !== 'recipes') {
+            if (
+              match.params.username !== 'recipes' &&
+              match.params.username !== 'login'
+            ) {
               setUserToFetch(match.params.username)
               return <Profile loggedInUser={loggedInUser} user={user} />
             }

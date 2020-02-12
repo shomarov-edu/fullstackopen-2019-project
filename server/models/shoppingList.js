@@ -1,7 +1,11 @@
 const mongoose = require('mongoose')
-const uniqueValidator = require('mongoose-unique-validator')
+const shortid = require('shortid')
 
 const shoppingListSchema = new mongoose.Schema({
+  shortid: {
+    type: String,
+    default: shortid.generate
+  },
   title: {
     type: String,
     required: true
@@ -27,7 +31,5 @@ shoppingListSchema.set('toJSON', {
     delete returnedObject.__v
   }
 })
-
-shoppingListSchema.plugin(uniqueValidator)
 
 module.exports = mongoose.model('shoppingListSchema', shoppingListSchema)

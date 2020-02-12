@@ -30,9 +30,11 @@ const getOne = async id => {
   }
 }
 
-const create = async (decodedToken, recipeData) => {
+const create = async (auth, recipeData) => {
   try {
-    const user = await User.findById(decodedToken.id)
+    const user = await User.findById(auth.id)
+
+    console.log(auth)
 
     const recipe = new Recipe({
       author: user._id,
@@ -41,7 +43,7 @@ const create = async (decodedToken, recipeData) => {
       cookTime: recipeData.time,
       difficulty: recipeData.difficulty,
       ingredients: recipeData.ingredients,
-      method: recipeData.instructions,
+      method: recipeData.method,
       notes: recipeData.notes,
       tags: recipeData.tags,
       source: recipeData.source,
@@ -49,11 +51,13 @@ const create = async (decodedToken, recipeData) => {
     })
 
     const savedRecipe = await recipe.save()
+    console.log(savedRecipe)
     user.recipes = user.recipes.concat(savedRecipe._id)
     await user.save()
     return savedRecipe
   } catch (e) {
     console.log(e)
+    throw e
   }
 }
 
@@ -65,11 +69,13 @@ const update = async (id, recipeData) => {
       cookTime: recipeData.time,
       difficulty: recipeData.difficulty,
       ingredients: recipeData.ingredients,
-      method: recipeData.instructions,
+      method: recipeData.method,
       notes: recipeData.notes,
       tags: recipeData.tags,
       source: recipeData.source,
-      comments: recipeData.comments
+      comments: recipeData.comments,
+      likes: recipe.likes,
+      ratings: recipe.ratings
     }
 
     const updatedRecipe = await Recipe.findByIdAndUpdate(id, recipe, {

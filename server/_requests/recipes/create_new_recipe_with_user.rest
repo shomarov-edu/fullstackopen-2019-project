@@ -1,11 +1,11 @@
 post http://localhost:5000/api/recipes
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIiLCJpZCI6IjVlM2E5YjMzODJjNDJkMDAzOGZjZTA2ZiIsImlhdCI6MTU4MDk3NjMxM30.TIXTLgwxKN-2o7osbSvOagSwihUt5IahTZ5k5oFJw2o
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlNDNmYWUxNzlkYWM5MDA5YWUyYjc1YyIsInVzZXJuYW1lIjoidXNlciIsImlhdCI6MTU4MTUxMzQ1Mn0.ELMK-A5GGeYEF2xdC4LzTdKfFgMV2y3WoS6OkB-gQB4
 Content-Type: application/json
 
 {
       "title": "4-Ingredient Easy Vegan Brownies",
       "description": "Incredibly rich, vegan, easy brownies made with just 4 ingredients and 1 bowl! Naturally sweetened, grain- and gluten-free, and so satisfying!",
-      "time": "30",
+      "cookTime": "30",
       "difficulty": "easy",
       "ingredients": [
         "400 g tightly packed dates, pitted (measured after pitting // make sure they're fresh! If dry, soak in warm water 10 minutes, drain, then add to processor)",
@@ -16,7 +16,7 @@ Content-Type: application/json
         "60 g dairy-free dark chocolate chips (optional // we like Enjoy Life)",
         "60 g roughly chopped raw walnuts (optional // or other nut of choice)"
       ],
-      "instructions": [
+      "method": [
         "Preheat oven to 350 degrees F (176 C) and line a standard loaf pan (or similar size pan) with parchment paper. Set aside.",
         "Add dates to food processor and blend until small bits or a ball forms. If your food processor has a difficult time processing the dates, ensure there are no pits in the dates and that your dates are fresh and sticky. If too dry they can have a difficult time blending. (It may also be an issue of food processor strength if it has a hard time blending.)",
         "Once blended, separate the dates into chunks using a spoon. Then add hot water and blend until a sticky date paste forms. Scrape down sides as needed.",
@@ -30,5 +30,6 @@ Content-Type: application/json
         "*If you're oil-free, you could try subbing something like more nut or seed butter, or potentially applesauce.",
         "*Nutrition information is a rough estimate calculated without optional ingredients."
       ],
+      "tags": ["sweet", "choco", "dessert"],
       "source": "https://minimalistbaker.com/4-ingredient-vegan-easy-brownies/"
     }

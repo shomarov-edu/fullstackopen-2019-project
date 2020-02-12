@@ -2,6 +2,9 @@ post http://localhost:5000/api/users
 Content-Type: application/json
 
 {
-  "email": "root@root.com",
-  "password": "password"
+  "username": "user",
+  "password": "password",
+  "email": "user@user.com",
+  "firstname": "User",
+  "lastname": "Usersson"
 }
