@@ -34,3 +34,5 @@
 | 09.01 | 2    | frontend development, refactoring                        |
 | 10.01 | 6    | backend rebuilding                                       |
 | 11.01 | 8    | backend rebuilding                                       |
+| 11.01 | 8    | backend development                                      |
+| 12.01 | 6    | backend development                                      |

@@ -13,7 +13,7 @@ const Recipe = ({ loggedInUser, user, recipe, allRecipes, setAllRecipes }) => {
   const time = useField('number')
   const [difficulty, setDifficulty] = useState('')
   const [ingredients, setIngredients] = useState([])
-  const [instructions, setInstructions] = useState([])
+  const [method, setMethod] = useState([])
   const [notes, setNotes] = useState([])
   const source = useField('text')
 
@@ -26,7 +26,7 @@ const Recipe = ({ loggedInUser, user, recipe, allRecipes, setAllRecipes }) => {
     time.setValue(recipe.time)
     setDifficulty(recipe.difficulty)
     setIngredients(recipe.ingredients)
-    setInstructions(recipe.instructions)
+    setMethod(recipe.method)
     setNotes(recipe.notes)
     source.setValue(recipe.source)
   }
@@ -40,7 +40,7 @@ const Recipe = ({ loggedInUser, user, recipe, allRecipes, setAllRecipes }) => {
       time: time.input.value,
       difficulty,
       ingredients,
-      instructions,
+      method,
       notes,
       source: source.input.value
     }
@@ -140,23 +140,23 @@ const Recipe = ({ loggedInUser, user, recipe, allRecipes, setAllRecipes }) => {
           >
             Add
           </button>
-          <p>Instructions:</p>
-          {instructions.map((value, index) => {
+          <p>method:</p>
+          {method.map((value, index) => {
             return (
               <div key={index}>
                 Step {index + 1}:
                 <input
                   value={value}
                   onChange={e => {
-                    instructions[index] = e.target.value
-                    setInstructions([...instructions])
+                    method[index] = e.target.value
+                    setMethod([...method])
                   }}
                 />
                 <button
                   type="button"
                   onClick={e => {
-                    instructions.splice(index, 1)
-                    setInstructions([...instructions])
+                    method.splice(index, 1)
+                    setMethod([...method])
                   }}
                 >
                   delete
@@ -165,10 +165,7 @@ const Recipe = ({ loggedInUser, user, recipe, allRecipes, setAllRecipes }) => {
               </div>
             )
           })}
-          <button
-            type="button"
-            onClick={() => setInstructions(instructions.concat(''))}
-          >
+          <button type="button" onClick={() => setMethod(method.concat(''))}>
             Add
           </button>
           <p>Additional notes:</p>
@@ -228,9 +225,9 @@ const Recipe = ({ loggedInUser, user, recipe, allRecipes, setAllRecipes }) => {
           <li key={i}>{i}</li>
         ))}
       </ul>
-      Instructions:
+      method:
       <ol>
-        {recipe.instructions.map(i => (
+        {recipe.method.map(i => (
           <li key={i}>{i}</li>
         ))}
       </ol>

@@ -2,6 +2,22 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const User = require('../models/user')
 
+const encryptPassword = async password => {
+  const saltRounds = 10
+  return await bcrypt.hash(password, saltRounds)
+}
+
+const comparePasswords = async (password1, password2) => {
+  try {
+    const passwordCorrect = await bcrypt.compare(password1, password2)
+    console.log(passwordCorrect)
+    return passwordCorrect
+  } catch (e) {
+    console.log(e)
+    throw e
+  }
+}
+
 const login = async credentials => {
   try {
     const user = await User.findOne({ username: credentials.username })
@@ -9,25 +25,53 @@ const login = async credentials => {
     const passwordCorrect =
       user === null
         ? false
-        : await bcrypt.compare(credentials.password, user.passwordHash)
+        : await comparePasswords(credentials.password, user.passwordHash)
 
     if (!(user && passwordCorrect)) {
-      const error = new Error('invalid username or password')
-      error.status = 404
-      throw error
+      throw new Error('invalid username or password')
     }
 
     const userForToken = {
+      id: user.id,
       username: user.username
     }
 
     const token = jwt.sign(userForToken, process.env.SECRET)
 
-    return { username: user.username, token }
+    return { id: user.id, username: user.username, token }
   } catch (e) {
     console.log(e)
     throw e
   }
 }
 
-module.exports = { login }
+const changePassword = async (id, oldPassword, newPassword) => {
+  try {
+    const user = await User.findById(id)
+    console.log(user)
+
+    console.log(oldPassword)
+    console.log(user.passwordHash)
+
+    const passwordCorrect =
+      user === null
+        ? false
+        : await comparePasswords(oldPassword, user.passwordHash)
+
+    if (!(user && passwordCorrect)) {
+      throw new Error('wrong password')
+    }
+
+    user.passwordHash = await encryptPassword(newPassword)
+
+    const updatedUser = await User.findByIdAndUpdate(id, user, {
+      new: true
+    }).populate('recipes')
+    console.log(updatedUser)
+  } catch (e) {
+    console.log(e)
+    throw e
+  }
+}
+
+module.exports = { encryptPassword, comparePasswords, login, changePassword }

@@ -1,0 +1,13 @@
+POST http://localhost:5000/api/users/user
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlNDQwMGYzYjcxZDE3MDIzMGI5ZTcxNyIsInVzZXJuYW1lIjoidXNlciIsImlhdCI6MTU4MTUzOTc5Nn0.8zE4xGdOZeTGWUxi96oEEOmNUJdTauJd8oAr9jepy0w
+Content-Type: application/json
+
+{
+  "recipes": [],
+  "bookmarks": [],
+  "following": [],
+  "username": "user",
+  "firstname": "User",
+  "lastname": "Usersson",
+  "email": "user@user.com"
+}

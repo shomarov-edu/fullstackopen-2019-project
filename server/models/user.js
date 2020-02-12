@@ -9,10 +9,7 @@ const userSchema = new mongoose.Schema({
     minlength: 3
   },
   email: {
-    type: {
-      address: String,
-      private: true
-    },
+    type: String,
     required: true,
     unique: true,
     minlength: 3
@@ -20,13 +17,13 @@ const userSchema = new mongoose.Schema({
   firstname: String,
   lastname: String,
   passwordHash: String,
-  myRecipes: [
+  recipes: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Recipe'
     }
   ],
-  savedRecipes: [
+  bookmarks: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Recipe'
@@ -37,7 +34,8 @@ const userSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User'
     }
-  ]
+  ],
+  photo: String
 })
 
 userSchema.set('toJSON', {

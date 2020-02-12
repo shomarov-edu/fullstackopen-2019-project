@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import Recipes from './Recipes'
 
 const Profile = ({ loggedInUser, user }) => {
+  console.log('profile', user)
   const [recipesVisible, setRecipesVisible] = useState(false)
 
   if (!user) return null

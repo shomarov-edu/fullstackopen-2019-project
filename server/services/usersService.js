@@ -1,27 +1,10 @@
 const bcrypt = require('bcrypt')
+const authService = require('../services/authService')
 const User = require('../models/user')
 
 const getAll = async () => {
   try {
-    const users = await User.aggregate([
-      { $match: {} },
-      {
-        $project: {
-          name: 1,
-          firstname: 1,
-          lastname: 1,
-          email: {
-            $cond: {
-              if: { $eq: [true, '$email.private'] },
-              then: '$$REMOVE',
-              else: '$email.address'
-            }
-          }
-        }
-      }
-    ])
-
-    return users
+    return await User.find({})
   } catch (e) {
     console.log(e)
   }
@@ -29,25 +12,7 @@ const getAll = async () => {
 
 const getOne = async username => {
   try {
-    const user = await User.aggregate([
-      { $match: { username } },
-      {
-        $project: {
-          name: 1,
-          firstname: 1,
-          lastname: 1,
-          email: {
-            $cond: {
-              if: { $eq: [true, '$email.private'] },
-              then: '$$REMOVE',
-              else: '$email.address'
-            }
-          }
-        }
-      }
-    ])
-
-    return user
+    return await User.findOne({ username })
   } catch (e) {
     console.log(e)
   }
@@ -74,8 +39,38 @@ const create = async userData => {
   }
 }
 
-const update = async () => {}
+const update = async (id, userData) => {
+  try {
+    const user = {
+      username: userData.username,
+      firstname: userData.firstname,
+      lastname: userData.lastname,
+      email: userData.email,
+      recipes: userData.recipes,
+      bookmarks: userData.bookmarks,
+      following: userData.following
+    }
 
-const deleteOne = async () => {}
+    const updatedUser = await User.findByIdAndUpdate(id, user, {
+      new: true
+    }).populate('recipes')
+
+    console.log(updatedUser)
+
+    return updatedUser
+  } catch (e) {
+    console.log(e)
+    throw e
+  }
+}
+
+const deleteOne = async id => {
+  try {
+    await User.findByIdAndDelete(id)
+  } catch (e) {
+    console.log(e)
+    throw e
+  }
+}
 
 module.exports = { getAll, getOne, create, update, deleteOne }
