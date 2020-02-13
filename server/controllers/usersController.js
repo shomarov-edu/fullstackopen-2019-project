@@ -59,13 +59,13 @@ const update = async (request, response, next) => {
 
 const deleteOne = async (request, response, next) => {
   if (request.params.username !== request.user.username) {
-    return response.status(403).end()
+    return response.sendStatus(403)
   }
 
   try {
     await usersService.deleteOne(request.user.id)
 
-    response.status(204).end()
+    response.sendStatus(204)
   } catch (e) {
     next(e)
   }

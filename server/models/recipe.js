@@ -1,12 +1,7 @@
 const mongoose = require('mongoose')
 const uniqueValidator = require('mongoose-unique-validator')
-const shortid = require('shortid')
 
 const recipeSchema = new mongoose.Schema({
-  shortid: {
-    type: String,
-    default: shortid.generate
-  },
   author: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
@@ -50,7 +45,11 @@ const recipeSchema = new mongoose.Schema({
         ref: 'User',
         unique: true
       },
-      score: Number
+      score: {
+        type: Number,
+        min: 1,
+        max: 5
+      }
     }
   ],
   coverPhoto: String,

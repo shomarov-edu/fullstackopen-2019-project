@@ -7,6 +7,16 @@ const requestLogger = (request, response, next) => {
   next()
 }
 
+const allowedMethods = ['GET', 'HEAD', 'POST', 'DELETE']
+
+const restrictMethods = (request, response, next) => {
+  if (!allowedMethods.includes(request.method)) {
+    return response.sendStatus(405)
+  }
+
+  next()
+}
+
 const getTokenFrom = (request, next) => {
   const authorization = request.get('authorization')
   if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
@@ -34,6 +44,7 @@ const unknownEndpoint = (request, response) => {
 
 module.exports = {
   requestLogger,
+  restrictMethods,
   getTokenFrom,
   errorHandler,
   unknownEndpoint

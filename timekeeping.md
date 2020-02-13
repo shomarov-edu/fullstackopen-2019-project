@@ -36,3 +36,4 @@
 | 11.01 | 8    | backend rebuilding                                       |
 | 11.01 | 8    | backend development                                      |
 | 12.01 | 6    | backend development                                      |
+| 13.01 | 4    | backend development                                      |

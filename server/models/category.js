@@ -1,11 +1,10 @@
 const mongoose = require('mongoose')
 const uniqueValidator = require('mongoose-unique-validator')
-const shortid = require('shortid')
 
 const categorySchema = new mongoose.Schema({
-  shortid: {
-    type: String,
-    default: shortid.generate
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
   },
   title: {
     type: String,

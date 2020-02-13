@@ -7,9 +7,9 @@ const encryptPassword = async password => {
   return await bcrypt.hash(password, saltRounds)
 }
 
-const comparePasswords = async (password1, password2) => {
+const comparePasswords = async (password, hash) => {
   try {
-    const passwordCorrect = await bcrypt.compare(password1, password2)
+    const passwordCorrect = await bcrypt.compare(password, hash)
     console.log(passwordCorrect)
     return passwordCorrect
   } catch (e) {

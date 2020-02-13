@@ -1,6 +1,7 @@
 const jwt = require('express-jwt')
 const recipesRouter = require('express').Router()
 const recipesController = require('../controllers/recipesController')
+const cors = require('cors')
 
 recipesRouter.get('/', recipesController.getAll)
 recipesRouter.get('/:recipeId', recipesController.getOne)
