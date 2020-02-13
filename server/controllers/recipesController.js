@@ -30,7 +30,7 @@ const create = async (request, response, next) => {
 
   try {
     const savedRecipe = await recipesService.create(request.user, recipeData)
-    response.send(savedRecipe)
+    response.json(savedRecipe)
   } catch (e) {
     next(e)
   }
@@ -44,14 +44,14 @@ const update = async (request, response, next) => {
     const recipe = await Recipe.findById(request.id)
 
     if (recipe.author.toString() !== request.user.id) {
-      return response.status(403).end()
+      response.sendStatus(403)
     }
 
     const updatedRecipe = await recipesService.update(id, recipeData)
     if (updatedRecipe) {
       response.json(updatedRecipe.toJSON())
     } else {
-      response.sendStatus(404).send()
+      response.sendStatus(404)
     }
   } catch (e) {
     next(e)

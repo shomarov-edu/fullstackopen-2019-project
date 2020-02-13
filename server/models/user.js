@@ -23,6 +23,12 @@ const userSchema = new mongoose.Schema({
       ref: 'Recipe'
     }
   ],
+  categories: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Category'
+    }
+  ],
   bookmarks: [
     {
       type: mongoose.Schema.Types.ObjectId,
@@ -33,6 +39,12 @@ const userSchema = new mongoose.Schema({
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User'
+    }
+  ],
+  shoppingLists: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'ShoppingList'
     }
   ],
   photo: String

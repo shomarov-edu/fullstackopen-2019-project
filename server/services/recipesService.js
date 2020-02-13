@@ -3,15 +3,15 @@ const User = require('../models/user')
 
 const getAll = async () => {
   try {
-    const allRecipes = await Recipe.find({})
+    return await Recipe.find({})
       .populate('author')
       .populate({
         path: 'comments.author',
         model: 'User'
       })
-    return allRecipes
   } catch (e) {
     console.log(e)
+    throw e
   }
 }
 
@@ -27,6 +27,7 @@ const getOne = async id => {
     return recipe
   } catch (e) {
     console.log(e)
+    throw e
   }
 }
 
@@ -50,7 +51,7 @@ const create = async (auth, recipeData) => {
       date: new Date()
     })
 
-    const savedRecipe = await recipe.save()
+    const savedRecipe = await recipe.save().populate('author')
     console.log(savedRecipe)
     user.recipes = user.recipes.concat(savedRecipe._id)
     await user.save()
@@ -90,6 +91,7 @@ const update = async (id, recipeData) => {
     return updatedRecipe
   } catch (e) {
     console.log(e)
+    throw e
   }
 }
 
@@ -97,7 +99,8 @@ const deleteOne = async id => {
   try {
     await Recipe.findByIdAndDelete(id)
   } catch (e) {
-    return e
+    console.log(e)
+    throw e
   }
 }
 

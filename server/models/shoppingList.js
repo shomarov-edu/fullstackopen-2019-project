@@ -1,21 +1,14 @@
 const mongoose = require('mongoose')
-const shortid = require('shortid')
 
 const shoppingListSchema = new mongoose.Schema({
-  shortid: {
-    type: String,
-    default: shortid.generate
+  owner: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
   },
   title: {
     type: String,
     required: true
   },
-  owners: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User'
-    }
-  ],
   items: [
     {
       name: String,
