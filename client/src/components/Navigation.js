@@ -1,14 +1,14 @@
-import React from 'react'
-import { Link, withRouter } from 'react-router-dom'
+import React from 'react';
+import { Link, withRouter } from 'react-router-dom';
 
 const Navigation = ({ loggedInUser, setLoggedInUser, history }) => {
-  const padding = { padding: 5 }
+  const padding = { padding: 5 };
 
   const handleLogout = () => {
-    setLoggedInUser(null)
-    localStorage.clear()
-    history.push('/login')
-  }
+    setLoggedInUser(null);
+    localStorage.clear();
+    history.push('/login');
+  };
 
   return (
     <div>
@@ -37,7 +37,7 @@ const Navigation = ({ loggedInUser, setLoggedInUser, history }) => {
         </Link>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default withRouter(Navigation)
+export default withRouter(Navigation);

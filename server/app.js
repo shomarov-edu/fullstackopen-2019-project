@@ -1,43 +1,46 @@
-const config = require('./utils/config')
-const express = require('express')
-const app = express()
-const bodyParser = require('body-parser')
-const cors = require('cors')
-const authRouter = require('./api/authAPI')
-const usersRouter = require('./api/usersAPI')
-const recipesRouter = require('./api/recipesAPI')
-const categoriesRouter = require('./api/categoriesAPI')
-const middleware = require('./utils/middleware')
-const mongoose = require('mongoose')
+require('dotenv').config();
+const express = require('express');
+const app = express();
+const bodyParser = require('body-parser');
+const cors = require('cors');
+const authRouter = require('./api/authAPI');
+const usersRouter = require('./api/usersAPI');
+const recipesRouter = require('./api/recipesAPI');
+const categoriesRouter = require('./api/categoriesAPI');
+const errorHandler = require('./middleware/errorHandler');
+const middleware = require('./middleware/middleware');
+const mongoose = require('mongoose');
+const morgan = require('morgan');
 
-app.use(cors())
+app.use(cors());
 
-console.log('connecting to', config.MONGODB_URI)
+console.log('connecting to', process.env.MONGODB_URI);
 
-mongoose
-  .connect(config.MONGODB_URI, {
+try {
+  mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false
-  })
-  .then(result => {
-    console.log('connected to MongoDB')
-  })
-  .catch(error => {
-    console.log('error connecting to MongoDB:', error.message)
-  })
+  });
+  console.log('connected to MongoDB');
+} catch (error) {
+  console.log('error connecting to MongoDB:', error.message);
+}
 
-app.use(middleware.restrictMethods)
+mongoose.connection.on('error', error => {
+  console.log(error);
+});
 
-app.use(bodyParser.json())
-app.use(middleware.requestLogger)
+app.use(morgan('dev'));
+app.use(middleware.restrictMethods);
+app.use(bodyParser.json());
 
-app.use('/auth', authRouter)
-app.use('/api/users', usersRouter)
-app.use('/api/recipes', recipesRouter)
-app.use('/api/categories', categoriesRouter)
+app.use('/auth', authRouter);
+app.use('/api/users', usersRouter);
+app.use('/api/recipes', recipesRouter);
+app.use('/api/categories', categoriesRouter);
 
-app.use(middleware.errorHandler)
-app.use(middleware.unknownEndpoint)
+app.use(errorHandler);
+app.use(middleware.unknownEndpoint);
 
-module.exports = app
+module.exports = app;

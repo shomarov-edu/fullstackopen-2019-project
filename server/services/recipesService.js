@@ -1,5 +1,5 @@
-const Recipe = require('../models/recipe')
-const User = require('../models/user')
+const Recipe = require('../models/recipe');
+const User = require('../models/user');
 
 const getAll = async () => {
   try {
@@ -8,12 +8,12 @@ const getAll = async () => {
       .populate({
         path: 'comments.author',
         model: 'User'
-      })
-  } catch (e) {
-    console.log(e)
-    throw e
+      });
+  } catch (error) {
+    console.log(error);
+    throw error;
   }
-}
+};
 
 const getOne = async id => {
   try {
@@ -22,20 +22,20 @@ const getOne = async id => {
       .populate({
         path: 'comments.author',
         model: 'User'
-      })
+      });
 
-    return recipe
-  } catch (e) {
-    console.log(e)
-    throw e
+    return recipe;
+  } catch (error) {
+    console.log(error);
+    throw error;
   }
-}
+};
 
 const create = async (auth, recipeData) => {
   try {
-    const user = await User.findById(auth.id)
+    const user = await User.findById(auth.id);
 
-    console.log(auth)
+    console.log(auth);
 
     const recipe = new Recipe({
       author: user._id,
@@ -49,18 +49,18 @@ const create = async (auth, recipeData) => {
       tags: recipeData.tags,
       source: recipeData.source,
       date: new Date()
-    })
+    });
 
-    const savedRecipe = await recipe.save().populate('author')
-    console.log(savedRecipe)
-    user.recipes = user.recipes.concat(savedRecipe._id)
-    await user.save()
-    return savedRecipe
-  } catch (e) {
-    console.log(e)
-    throw e
+    const savedRecipe = await recipe.save().populate('author');
+    console.log(savedRecipe);
+    user.recipes = user.recipes.concat(savedRecipe._id);
+    await user.save();
+    return savedRecipe;
+  } catch (error) {
+    console.log(error);
+    throw error;
   }
-}
+};
 
 const update = async (id, recipeData) => {
   try {
@@ -77,7 +77,7 @@ const update = async (id, recipeData) => {
       comments: recipeData.comments,
       likes: recipe.likes,
       ratings: recipe.ratings
-    }
+    };
 
     const updatedRecipe = await Recipe.findByIdAndUpdate(id, recipe, {
       new: true
@@ -86,22 +86,22 @@ const update = async (id, recipeData) => {
       .populate({
         path: 'comments.author',
         model: 'User'
-      })
+      });
 
-    return updatedRecipe
-  } catch (e) {
-    console.log(e)
-    throw e
+    return updatedRecipe;
+  } catch (error) {
+    console.log(error);
+    throw error;
   }
-}
+};
 
 const deleteOne = async id => {
   try {
-    await Recipe.findByIdAndDelete(id)
-  } catch (e) {
-    console.log(e)
-    throw e
+    await Recipe.findByIdAndDelete(id);
+  } catch (error) {
+    console.log(error);
+    throw error;
   }
-}
+};
 
-module.exports = { getAll, getOne, create, update, deleteOne }
+module.exports = { getAll, getOne, create, update, deleteOne };

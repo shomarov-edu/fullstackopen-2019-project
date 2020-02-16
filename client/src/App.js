@@ -1,62 +1,62 @@
-import React, { useState, useEffect } from 'react'
-import { BrowserRouter as Router, Route } from 'react-router-dom'
-import userService from './services/users'
-import recipeService from './services/recipes'
-import Navigation from './components/Navigation'
-import Login from './components/Login'
-import SignUp from './components/SignUp'
-import NewRecipeForm from './components/NewRecipeForm'
-import Recipe from './components/Recipe'
-import AllRecipes from './components/AllRecipes'
-import Recipes from './components/Recipes'
-import Profile from './components/Profile'
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+import userService from './services/users';
+import recipeService from './services/recipes';
+import Navigation from './components/Navigation';
+import Login from './components/Login';
+import SignUp from './components/SignUp';
+import NewRecipeForm from './components/NewRecipeForm';
+import Recipe from './components/Recipe';
+import AllRecipes from './components/AllRecipes';
+import Recipes from './components/Recipes';
+import Profile from './components/Profile';
 
 const App = () => {
-  const [localStorageUser, setLocalStorageUser] = useState(null)
-  const [loggedInUser, setLoggedInUser] = useState(null)
-  const [allRecipes, setAllRecipes] = useState([])
-  const [userToFetch, setUserToFetch] = useState(null)
-  const [user, setUser] = useState(null)
+  const [localStorageUser, setLocalStorageUser] = useState(null);
+  const [loggedInUser, setLoggedInUser] = useState(null);
+  const [allRecipes, setAllRecipes] = useState([]);
+  const [userToFetch, setUserToFetch] = useState(null);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('loggedInUser'))
-    console.log('user', user)
+    const user = JSON.parse(localStorage.getItem('loggedInUser'));
+    console.log('user', user);
     if (user) {
-      setLocalStorageUser(user)
+      setLocalStorageUser(user);
     }
-    recipeService.getAll().then(loadedRecipes => setAllRecipes(loadedRecipes))
-  }, [])
+    recipeService.getAll().then(loadedRecipes => setAllRecipes(loadedRecipes));
+  }, []);
 
   useEffect(() => {
     const fetchUser = async () => {
       if (localStorageUser) {
-        console.log('localStorageUser', localStorageUser)
+        console.log('localStorageUser', localStorageUser);
         const user = await userService.getUserByUsername(
           localStorageUser.username
-        )
-        console.log('user2', user)
-        setLoggedInUser(user)
+        );
+        console.log('user2', user);
+        setLoggedInUser(user);
       }
-    }
+    };
 
-    fetchUser()
-  }, [localStorageUser])
+    fetchUser();
+  }, [localStorageUser]);
 
   useEffect(() => {
     const fetchUser = async () => {
       if (userToFetch) {
-        setUser(null)
-        const loadedUser = await userService.getUserByUsername(userToFetch)
-        setUser(loadedUser)
+        setUser(null);
+        const loadedUser = await userService.getUserByUsername(userToFetch);
+        setUser(loadedUser);
       }
-    }
+    };
 
-    fetchUser()
-  }, [userToFetch])
+    fetchUser();
+  }, [userToFetch]);
 
   const recipeById = recipeId => {
-    return allRecipes.find(recipe => recipe.id === recipeId)
-  }
+    return allRecipes.find(recipe => recipe.id === recipeId);
+  };
 
   return (
     <React.Fragment>
@@ -78,8 +78,8 @@ const App = () => {
               match.params.username !== 'recipes' &&
               match.params.username !== 'login'
             ) {
-              setUserToFetch(match.params.username)
-              return <Profile loggedInUser={loggedInUser} user={user} />
+              setUserToFetch(match.params.username);
+              return <Profile loggedInUser={loggedInUser} user={user} />;
             }
           }}
         />
@@ -87,7 +87,7 @@ const App = () => {
           exact
           path="/:username/recipes/:recipeId"
           render={({ match }) => {
-            setUserToFetch(match.params.username)
+            setUserToFetch(match.params.username);
             return (
               <Recipe
                 loggedInUser={loggedInUser}
@@ -96,7 +96,7 @@ const App = () => {
                 allRecipes={allRecipes}
                 setAllRecipes={setAllRecipes}
               />
-            )
+            );
           }}
         />
         {loggedInUser ? (
@@ -126,7 +126,7 @@ const App = () => {
         <Route path="/signup" render={() => <SignUp />} />
       </Router>
     </React.Fragment>
-  )
-}
+  );
+};
 
-export default App
+export default App;

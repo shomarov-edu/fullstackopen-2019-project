@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
-import useField from '../hooks/useField'
-import recipeService from '../services/recipes'
+import React, { useState } from 'react';
+import useField from '../hooks/useField';
+import recipeService from '../services/recipes';
 
 const Comment = ({
   loggedInUser,
@@ -9,23 +9,23 @@ const Comment = ({
   allRecipes,
   setAllRecipes
 }) => {
-  const commentField = useField('text')
-  const [editing, setEditing] = useState(false)
+  const commentField = useField('text');
+  const [editing, setEditing] = useState(false);
 
-  const showWhenEditing = { display: editing ? '' : 'none' }
-  const hideWhenEditing = { display: editing ? 'none' : '' }
+  const showWhenEditing = { display: editing ? '' : 'none' };
+  const hideWhenEditing = { display: editing ? 'none' : '' };
 
   const toggleVisibility = () => {
-    setEditing(!editing)
-    commentField.setValue(comment.comment)
-  }
+    setEditing(!editing);
+    commentField.setValue(comment.comment);
+  };
 
   const handleEdit = async () => {
     const newComment = {
       _id: comment._id,
       author: loggedInUser.id,
       comment: commentField.input.value
-    }
+    };
 
     const updatedComments = recipe.comments.map(c =>
       c._id !== comment._id
@@ -35,27 +35,29 @@ const Comment = ({
             comment: c.comment
           }
         : newComment
-    )
+    );
 
     const updatedRecipe = {
       ...recipe,
       comments: updatedComments
-    }
+    };
 
-    recipeService.setToken(loggedInUser.token)
+    recipeService.setToken(loggedInUser.token);
 
     try {
       const savedRecipe = await recipeService.updateRecipe(
         recipe.id,
         updatedRecipe
-      )
-      setAllRecipes(allRecipes.map(r => (r.id !== recipe.id ? r : savedRecipe)))
-      commentField.reset()
-      toggleVisibility()
+      );
+      setAllRecipes(
+        allRecipes.map(r => (r.id !== recipe.id ? r : savedRecipe))
+      );
+      commentField.reset();
+      toggleVisibility();
     } catch (exception) {
-      console.log(exception)
+      console.log(exception);
     }
-  }
+  };
 
   const handleDelete = async () => {
     const updatedComments = recipe.comments
@@ -64,26 +66,28 @@ const Comment = ({
         _id: c._id,
         author: c.author.id !== undefined ? c.author.id : c.author,
         comment: c.comment
-      }))
+      }));
 
     const updatedRecipe = {
       ...recipe,
       comments: updatedComments
-    }
+    };
 
-    recipeService.setToken(loggedInUser.token)
+    recipeService.setToken(loggedInUser.token);
 
     try {
       const savedRecipe = await recipeService.updateRecipe(
         recipe.id,
         updatedRecipe
-      )
-      setAllRecipes(allRecipes.map(r => (r.id !== recipe.id ? r : savedRecipe)))
-      commentField.reset()
+      );
+      setAllRecipes(
+        allRecipes.map(r => (r.id !== recipe.id ? r : savedRecipe))
+      );
+      commentField.reset();
     } catch (exception) {
-      console.log(exception)
+      console.log(exception);
     }
-  }
+  };
 
   return (
     <React.Fragment>
@@ -120,7 +124,7 @@ const Comment = ({
         <button>like</button>
       )}
     </React.Fragment>
-  )
-}
+  );
+};
 
-export default Comment
+export default Comment;

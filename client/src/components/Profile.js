@@ -1,14 +1,14 @@
-import React, { useState } from 'react'
-import Recipes from './Recipes'
+import React, { useState } from 'react';
+import Recipes from './Recipes';
 
 const Profile = ({ loggedInUser, user }) => {
-  console.log('profile', user)
-  const [recipesVisible, setRecipesVisible] = useState(false)
+  console.log('profile', user);
+  const [recipesVisible, setRecipesVisible] = useState(false);
 
-  if (!user) return null
+  if (!user) return null;
 
-  const toggleVisibility = () => setRecipesVisible(!recipesVisible)
-  const recipeVisibility = { display: recipesVisible ? '' : 'none' }
+  const toggleVisibility = () => setRecipesVisible(!recipesVisible);
+  const recipeVisibility = { display: recipesVisible ? '' : 'none' };
 
   const sendFriendRequestButton = () => {
     if (loggedInUser && loggedInUser.username !== user.username) {
@@ -16,9 +16,9 @@ const Profile = ({ loggedInUser, user }) => {
         <p>
           <button>send friend request</button>
         </p>
-      )
+      );
     }
-  }
+  };
 
   return (
     <React.Fragment>
@@ -35,7 +35,7 @@ const Profile = ({ loggedInUser, user }) => {
         <Recipes user={user} />
       </div>
     </React.Fragment>
-  )
-}
+  );
+};
 
-export default Profile
+export default Profile;

@@ -1,17 +1,17 @@
-import React from 'react'
-import { Link, withRouter } from 'react-router-dom'
-import useField from '../hooks/useField'
-import userService from '../services/users'
+import React from 'react';
+import { Link, withRouter } from 'react-router-dom';
+import useField from '../hooks/useField';
+import userService from '../services/users';
 
 const SignUp = ({ history }) => {
-  const username = useField('text')
-  const firstname = useField('text')
-  const lastname = useField('text')
-  const email = useField('email')
-  const password = useField('password')
+  const username = useField('text');
+  const firstname = useField('text');
+  const lastname = useField('text');
+  const email = useField('email');
+  const password = useField('password');
 
   const handleSignUp = async event => {
-    event.preventDefault()
+    event.preventDefault();
 
     const user = {
       username: username.input.value,
@@ -19,28 +19,28 @@ const SignUp = ({ history }) => {
       lastname: lastname.input.value,
       email: email.input.value,
       password: password.input.value
-    }
+    };
 
     try {
-      const returnedUser = await userService.signup(user)
+      const returnedUser = await userService.signup(user);
 
       if (!returnedUser) {
-        console.log('Sign up failed')
+        console.log('Sign up failed');
       } else {
-        console.log('Sign up successful')
+        console.log('Sign up successful');
       }
 
-      username.reset()
-      firstname.reset()
-      lastname.reset()
-      email.reset()
-      password.reset()
+      username.reset();
+      firstname.reset();
+      lastname.reset();
+      email.reset();
+      password.reset();
 
-      history.push('/')
+      history.push('/');
     } catch (exception) {
-      console.log(exception)
+      console.log(exception);
     }
-  }
+  };
 
   return (
     <div>
@@ -66,7 +66,7 @@ const SignUp = ({ history }) => {
         <Link to="/signin">Already have an account? Sign in</Link>
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default withRouter(SignUp)
+export default withRouter(SignUp);

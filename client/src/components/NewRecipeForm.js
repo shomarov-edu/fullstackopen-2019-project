@@ -1,19 +1,19 @@
-import React, { useState } from 'react'
-import useField from '../hooks/useField'
-import recipeService from '../services/recipes'
+import React, { useState } from 'react';
+import useField from '../hooks/useField';
+import recipeService from '../services/recipes';
 
 const NewRecipeForm = ({ user }) => {
-  const title = useField('text')
-  const description = useField('text')
-  const time = useField('number')
-  const [difficulty, setDifficulty] = useState('')
-  const [ingredients, setIngredients] = useState([''])
-  const [instructions, setInstructions] = useState([''])
-  const [notes, setNotes] = useState([''])
-  const source = useField('text')
+  const title = useField('text');
+  const description = useField('text');
+  const time = useField('number');
+  const [difficulty, setDifficulty] = useState('');
+  const [ingredients, setIngredients] = useState(['']);
+  const [instructions, setInstructions] = useState(['']);
+  const [notes, setNotes] = useState(['']);
+  const source = useField('text');
 
   const handleSubmit = async event => {
-    event.preventDefault()
+    event.preventDefault();
 
     const recipe = {
       title: title.input.value,
@@ -23,16 +23,16 @@ const NewRecipeForm = ({ user }) => {
       ingredients,
       instructions,
       source: source.input.value
-    }
+    };
 
-    recipeService.setToken(user.token)
+    recipeService.setToken(user.token);
 
     try {
-      await recipeService.createNewRecipe(recipe)
+      await recipeService.createNewRecipe(recipe);
     } catch (exception) {
-      console.log(exception)
+      console.log(exception);
     }
-  }
+  };
 
   return (
     <div>
@@ -85,13 +85,13 @@ const NewRecipeForm = ({ user }) => {
               <input
                 value={value}
                 onChange={e => {
-                  ingredients[index] = e.target.value
-                  setIngredients([...ingredients])
+                  ingredients[index] = e.target.value;
+                  setIngredients([...ingredients]);
                 }}
               />
               <br />
             </div>
-          )
+          );
         })}
         <button
           type="button"
@@ -107,13 +107,13 @@ const NewRecipeForm = ({ user }) => {
               <input
                 value={value}
                 onChange={e => {
-                  instructions[index] = e.target.value
-                  setInstructions([...instructions])
+                  instructions[index] = e.target.value;
+                  setInstructions([...instructions]);
                 }}
               />
               <br />
             </div>
-          )
+          );
         })}
         <button
           type="button"
@@ -129,13 +129,13 @@ const NewRecipeForm = ({ user }) => {
               <input
                 value={value}
                 onChange={e => {
-                  notes[index] = e.target.value
-                  setNotes([...notes])
+                  notes[index] = e.target.value;
+                  setNotes([...notes]);
                 }}
               />
               <br />
             </div>
-          )
+          );
         })}
         <button type="button" onClick={() => setNotes(notes.concat(''))}>
           Add
@@ -147,7 +147,7 @@ const NewRecipeForm = ({ user }) => {
         <button type="submit">Save</button>
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default NewRecipeForm
+export default NewRecipeForm;

@@ -15,7 +15,7 @@
     "start": "docker-compose up",
     "build": "docker-compose up --build",
     "lint": "eslint .",
-    "prettier": "prettier --write \"**/*.+(js|jsx|json|yml|css|md)\"",
+    "prettier": "prettier --write '**/*.+(js|jsx|json|yml|css|md)'",
     "pretty-quick": "pretty-quick"
   },
   "eslintConfig": {

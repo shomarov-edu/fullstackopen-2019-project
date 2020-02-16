@@ -1,9 +1,10 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
 const shoppingListSchema = new mongoose.Schema({
   owner: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
+    ref: 'User',
+    required: true
   },
   title: {
     type: String,
@@ -14,15 +15,21 @@ const shoppingListSchema = new mongoose.Schema({
       name: String,
       crossedOut: Boolean
     }
+  ],
+  sharedWith: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    }
   ]
-})
+});
 
 shoppingListSchema.set('toJSON', {
   transform: (document, returnedObject) => {
-    returnedObject.id = returnedObject._id
-    delete returnedObject._id
-    delete returnedObject.__v
+    returnedObject.id = returnedObject._id;
+    delete returnedObject._id;
+    delete returnedObject.__v;
   }
-})
+});
 
-module.exports = mongoose.model('shoppingListSchema', shoppingListSchema)
+module.exports = mongoose.model('shoppingListSchema', shoppingListSchema);

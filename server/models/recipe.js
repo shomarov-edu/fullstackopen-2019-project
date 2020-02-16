@@ -1,5 +1,5 @@
-const mongoose = require('mongoose')
-const uniqueValidator = require('mongoose-unique-validator')
+const mongoose = require('mongoose');
+const uniqueValidator = require('mongoose-unique-validator');
 
 const recipeSchema = new mongoose.Schema({
   author: {
@@ -11,14 +11,30 @@ const recipeSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  description: String,
+  description: {
+    type: String,
+    required: true
+  },
   cookTime: Number,
-  difficulty: String,
-  ingredients: [String],
-  method: [String],
+  difficulty: {
+    type: String,
+    required: true
+  },
+  ingredients: {
+    type: [String],
+    required: true
+  },
+  method: {
+    type: [String],
+    required: true
+  },
   notes: [String],
   tags: [String],
   source: String,
+  private: {
+    type: Boolean,
+    required: true
+  },
   date: {
     type: Date,
     required: true
@@ -35,7 +51,8 @@ const recipeSchema = new mongoose.Schema({
   likes: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User'
+      ref: 'User',
+      unique: true
     }
   ],
   ratings: [
@@ -54,16 +71,16 @@ const recipeSchema = new mongoose.Schema({
   ],
   coverPhoto: String,
   photos: [String]
-})
+});
 
 recipeSchema.set('toJSON', {
   transform: (document, returnedObject) => {
-    returnedObject.id = returnedObject._id.toString()
-    delete returnedObject._id
-    delete returnedObject.__v
+    returnedObject.id = returnedObject._id.toString();
+    delete returnedObject._id;
+    delete returnedObject.__v;
   }
-})
+});
 
-recipeSchema.plugin(uniqueValidator)
+recipeSchema.plugin(uniqueValidator);
 
-module.exports = mongoose.model('Recipe', recipeSchema)
+module.exports = mongoose.model('Recipe', recipeSchema);

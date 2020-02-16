@@ -1,0 +1,60 @@
+{"message":{"httpStatusCode":401,"description":"invalid username or password"},"level":"info"}
+{"message":{"httpStatusCode":401,"description":"invalid username or password"},"level":"info"}
+{"message":{"httpStatusCode":401,"description":"invalid username or password"},"level":"info"}
+{"message":{"httpStatusCode":401,"description":"invalid username or password"},"level":"error"}
+{"message":{"httpStatusCode":401,"description":"invalid username or password","level":"http"},"level":"error"}
+{"message":{"httpStatusCode":401,"description":"invalid username or password","level":"http"},"level":"warn"}
+{"message":{"httpStatusCode":401,"description":"invalid username or password","level":"http"},"level":"info"}
+{"message":{"httpStatusCode":401,"description":"invalid username or password","level":"http"},"level":"error"}
+{"message":{"httpStatusCode":401,"description":"invalid username or password","level":"http"},"level":"warn"}
+{"message":{"httpStatusCode":401,"description":"invalid username or password","level":"http"},"level":"info"}
+{"message":{"httpStatusCode":401,"description":"invalid username or password","level":"http"},"level":"error"}
+{"message":{"httpStatusCode":401,"description":"invalid username or password","level":"http"},"level":"warn"}
+{"message":{"httpStatusCode":401,"description":"invalid username or password","level":"http"},"level":"info"}
+{"message":{"httpStatusCode":401,"description":"invalid username or password","level":"http"},"level":"error"}
+{"message":{"httpStatusCode":401,"description":"invalid username or password","level":"http"},"level":"warn"}
+{"message":{"httpStatusCode":401,"description":"invalid username or password","level":"http"},"level":"info"}
+{"level":"http","message":"test"}
+{"httpStatusCode":401,"description":"invalid username or password","level":"http"}
+{"message":{"httpStatusCode":401,"description":"invalid username or password","level":"http"},"level":"error"}
+{"message":{"httpStatusCode":401,"description":"invalid username or password","level":"http"},"level":"warn"}
+{"message":{"httpStatusCode":401,"description":"invalid username or password","level":"http"},"level":"info"}
+{"message":{"httpStatusCode":401,"description":"invalid username or password","level":"http"},"level":"http"}
+{"message":{"httpStatusCode":401,"description":"invalid username or password","level":"http"},"level":"verbose"}
+{"message":{"httpStatusCode":401,"description":"invalid username or password","level":"http"},"level":"debug"}
+{"message":{"httpStatusCode":401,"description":"invalid username or password","level":"http"},"level":"silly"}
+{"message":"silly","level":"silly"}
+{"message":{"httpStatusCode":401,"description":"invalid username or password","level":"http"},"level":"http"}
+undefined
+undefined
+undefined
+undefined
+undefined
+undefined
+undefined
+undefined
+undefined
+undefined
+undefined
+[32mhttp[39m: test
+[32mhttp[39m:  {"httpStatusCode":401,"description":"invalid username or password"}
+[31merror[39m: Error
+[33mwarn[39m: Error
+[32minfo[39m: Error
+[32mhttp[39m: Error
+[36mverbose[39m: Error
+[34mdebug[39m: Error
+[35msilly[39m: Error
+[35msilly[39m: silly
+[32mhttp[39m: Error
+[32mhttp[39m: test
+[32mhttp[39m:  {"httpStatusCode":401,"description":"invalid username or password"}
+[31merror[39m: Error
+[33mwarn[39m: Error
+[32minfo[39m: Error
+[32mhttp[39m: Error
+[36mverbose[39m: Error
+[34mdebug[39m: Error
+[35msilly[39m: Error
+[35msilly[39m: silly
+[32mhttp[39m: Error

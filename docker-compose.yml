@@ -1,14 +1,16 @@
 version: '3.7'
+volumes:
+  mongodb:
 services:
-  mongo:
+  mongodb:
     build:
       dockerfile: Dockerfile.dev
-      context: ./mongo
-    image: shomarov/mongo
-    container_name: mongo
-    env_file: ./mongo/.env
+      context: ./mongodb
+    image: shomarov/mongodb
+    container_name: mongodb
+    env_file: ./mongodb/.env
     volumes:
-      - ./mongo/data/:/data/db
+      - mongodb:/data/db
     ports:
       - 27017-27019:27017-27019
     restart: always
@@ -26,17 +28,17 @@ services:
     env_file:
       - ./server/.env
     depends_on:
-      - mongo
+      - mongodb
     restart: unless-stopped
-  app:
-    container_name: app
+  client:
+    container_name: client
     build:
       dockerfile: Dockerfile.dev
-      context: ./app
-    image: shomarov/app
+      context: ./client
+    image: shomarov/client
     volumes:
-      - /app/node_modules
-      - ./app:/app
+      - /client/node_modules
+      - ./client:/client
     ports:
       - 3000:3000
     depends_on:

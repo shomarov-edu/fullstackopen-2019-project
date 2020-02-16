@@ -1,5 +1,5 @@
-const mongoose = require('mongoose')
-const uniqueValidator = require('mongoose-unique-validator')
+const mongoose = require('mongoose');
+const uniqueValidator = require('mongoose-unique-validator');
 
 const categorySchema = new mongoose.Schema({
   user: {
@@ -17,16 +17,16 @@ const categorySchema = new mongoose.Schema({
       ref: 'Recipe'
     }
   ]
-})
+});
 
 categorySchema.set('toJSON', {
   transform: (document, returnedObject) => {
-    returnedObject.id = returnedObject._id.toString()
-    delete returnedObject._id
-    delete returnedObject.__v
+    returnedObject.id = returnedObject._id.toString();
+    delete returnedObject._id;
+    delete returnedObject.__v;
   }
-})
+});
 
-categorySchema.plugin(uniqueValidator)
+categorySchema.plugin(uniqueValidator);
 
-module.exports = mongoose.model('Category', categorySchema)
+module.exports = mongoose.model('Category', categorySchema);
