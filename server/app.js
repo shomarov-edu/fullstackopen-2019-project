@@ -10,7 +10,10 @@ const categoriesRouter = require('./api/categoriesAPI');
 const errorHandler = require('./middleware/errorHandler');
 const middleware = require('./middleware/middleware');
 const mongoose = require('mongoose');
-const morgan = require('morgan');
+const morganMiddleware = require('./utils/morgan');
+const chalk = require('chalk');
+
+console.log(chalk.blue('Hello world!'));
 
 app.use(cors());
 
@@ -31,8 +34,8 @@ mongoose.connection.on('error', error => {
   console.log(error);
 });
 
-app.use(morgan('dev'));
-app.use(middleware.restrictMethods);
+app.use(morganMiddleware);
+
 app.use(bodyParser.json());
 
 app.use('/auth', authRouter);

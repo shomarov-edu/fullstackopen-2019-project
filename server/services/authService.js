@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
-const AppError = require('../utils/AppError');
+const AppError = require('../helpers/AppError');
 const logger = require('../utils/winston');
 
 const encryptPassword = async password => {
@@ -55,10 +55,6 @@ const login = async credentials => {
 const changePassword = async (id, oldPassword, newPassword) => {
   try {
     const user = await User.findById(id);
-    console.log(user);
-
-    console.log(oldPassword);
-    console.log(user.passwordHash);
 
     const passwordCorrect =
       user === null
@@ -74,7 +70,6 @@ const changePassword = async (id, oldPassword, newPassword) => {
     const updatedUser = await User.findByIdAndUpdate(id, user, {
       new: true
     }).populate('recipes');
-    console.log(updatedUser);
   } catch (error) {
     console.log(error);
   }

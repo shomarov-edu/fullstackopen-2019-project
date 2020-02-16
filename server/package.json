@@ -19,7 +19,7 @@
     "express-jwt": "^5.3.1",
     "morgan": "^1.9.1",
     "winston": "^3.2.1",
-    "app-root-path": "^3.0.0"
+    "chalk": "^3.0.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.2"
