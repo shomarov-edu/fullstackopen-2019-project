@@ -12,7 +12,7 @@
 | 25.01 | 1    | set up of docker images for frontend & backend           |
 | 25.01 | 1    | creation of docker-compose.yml                           |
 | 25.01 | 4    | set up mongodb docker container                          |
-| 26.01 | 6    | configure everything!                                    |
+| 26.01 | 6    | configure everything                                     |
 | 26.01 | 1    | server-database connection                               |
 | 27.01 | 2    | backend development                                      |
 | 27.01 | 1    | refactoring                                              |
@@ -37,3 +37,6 @@
 | 11.01 | 8    | backend development                                      |
 | 12.01 | 6    | backend development                                      |
 | 13.01 | 4    | backend development                                      |
+| 14.01 | 4    | learning                                                 |
+| 15.01 | 2    | learning                                                 |
+| 16.01 | 2    | learning                                                 |
