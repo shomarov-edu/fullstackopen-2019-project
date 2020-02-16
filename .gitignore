@@ -2,11 +2,6 @@
 node_modules
 .todo
 
-# Server
-server/node_modules
-server/.env
-server/logs
-
 # MongoDB
 mongodb/.env
 mongodb/init-mongo.js
