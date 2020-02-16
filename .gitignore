@@ -2,12 +2,13 @@
 node_modules
 .todo
 
-# API
-api/node_modules
-api/.env
+# Server
+server/node_modules
+server/.env
+server/logs
 
 # MongoDB
-mongo/.env
-mongo/init-mongo.js
-mongo/populate.js
-mongo/data
+mongodb/.env
+mongodb/init-mongo.js
+mongodb/populate.js
+mongodb/data

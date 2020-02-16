@@ -834,3 +834,14 @@ http: Error
 [35msilly[39m: Error
 [35msilly[39m: silly
 [32mhttp[39m: Error
+[32mhttp[39m: test
+[32mhttp[39m:  {"httpStatusCode":401,"description":"invalid username or password"}
+[31merror[39m: Error
+[33mwarn[39m: Error
+[32minfo[39m: Error
+[32mhttp[39m: Error
+[36mverbose[39m: Error
+[34mdebug[39m: Error
+[35msilly[39m: Error
+[35msilly[39m: silly
+[32mhttp[39m: Error
