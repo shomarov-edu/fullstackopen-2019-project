@@ -1,9 +1,1 @@
-# Project root
 node_modules
-.todo
-
-# MongoDB
-mongodb/.env
-mongodb/init-mongo.js
-mongodb/populate.js
-mongodb/data
