@@ -35,8 +35,6 @@ const create = async (auth, recipeData) => {
   try {
     const user = await User.findById(auth.id);
 
-    console.log(auth);
-
     const recipe = new Recipe({
       author: user._id,
       title: recipeData.title,
@@ -48,7 +46,7 @@ const create = async (auth, recipeData) => {
       notes: recipeData.notes,
       tags: recipeData.tags,
       source: recipeData.source,
-      date: new Date()
+      created: new Date()
     });
 
     const savedRecipe = await recipe.save().populate('author');
@@ -74,8 +72,8 @@ const update = async (id, recipeData) => {
       notes: recipeData.notes,
       tags: recipeData.tags,
       source: recipeData.source,
-      comments: recipeData.comments,
       likes: recipe.likes,
+      comments: recipeData.comments,
       ratings: recipe.ratings
     };
 

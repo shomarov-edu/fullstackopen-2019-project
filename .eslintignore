@@ -1,13 +1,11 @@
-# server
-api/node_modules
-api/.env
-
 # client
-app/node_modules
-app/build
+client/node_modules
+client/build
 
-# mongo
-mongo
+# server
+server/node_modules
+server/.env
+server/graphql/typeDefs
 
-# misc
-recipes.js
+# mongodb
+mongodb

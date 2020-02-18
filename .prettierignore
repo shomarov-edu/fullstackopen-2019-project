@@ -1,8 +1,9 @@
-api/node_modules
-api/.env
+client/node_modules
+client/build
 
-app/node_modules
-app/build
+server/node_modules
+server/.env
+server/graphql/typeDefs
 
 mongo/data
 
