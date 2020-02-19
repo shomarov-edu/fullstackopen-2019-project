@@ -38,11 +38,3 @@ const server = new ApolloServer({
 server.listen().then(({ url }) => {
   console.log(`🚀  Server ready at ${url}`);
 });
-
-var glob = require('glob'),
-  path = require('path');
-
-glob.sync('./typeDefs/*.js').forEach(function(file) {
-  console.log(file);
-  require(path.resolve(file));
-});

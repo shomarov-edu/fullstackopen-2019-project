@@ -33,6 +33,7 @@ const userType = gql`
   }
 
   type UserPayload {
+    id: ID!
     username: String!
     email: String!
     firstname: String!
@@ -50,13 +51,17 @@ const userType = gql`
     patch: UserInput!
   }
 
+  input UsernameInput {
+    username: String!
+  }
+
   input UpdateUsernameInput {
     password: String!
-    newUsername: String!
+    patch: UsernameInput!
   }
 
   input UpdatePasswordInput {
-    oldPassword: String!
+    password: String!
     newPassword: String!
   }
 `;

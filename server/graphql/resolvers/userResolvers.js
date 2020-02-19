@@ -20,11 +20,9 @@ const resolvers = {
       try {
         const { password, ...userInput } = args.input;
 
-        const encryptedPassword = encryptPassword(password);
-
         const user = new User({
           ...userInput,
-          encryptedPassword
+          passwordHash: await encryptPassword(password)
         });
 
         const savedUser = await user.save();
@@ -60,7 +58,7 @@ const resolvers = {
     updateUsername: async (root, { input }, { currentUser }) => {
       if (!currentUser) throw new AuthenticationError();
 
-      const { password, newUsername } = input;
+      const { password, patch } = input;
 
       const passwordCorrect = await bcrypt.compare(
         password,
@@ -71,13 +69,9 @@ const resolvers = {
         throw new AuthenticationError('invalid username or password');
 
       try {
-        return await User.findByIdAndUpdate(
-          currentUser.id,
-          { username: newUsername },
-          {
-            new: true
-          }
-        );
+        return await User.findByIdAndUpdate(currentUser.id, patch, {
+          new: true
+        });
       } catch (error) {
         logger.error(error);
       }
@@ -86,10 +80,10 @@ const resolvers = {
     updatePassword: async (root, { input }, { currentUser }) => {
       if (!currentUser) throw new AuthenticationError();
 
-      const { oldPassword, newPassword } = input;
+      const { password, newPassword } = input;
 
       const passwordCorrect = await bcrypt.compare(
-        oldPassword,
+        password,
         currentUser.passwordHash
       );
 
@@ -97,14 +91,16 @@ const resolvers = {
         throw new AuthenticationError('invalid username or password');
       }
 
+      const patch = {
+        passwordHash: await encryptPassword(newPassword)
+      };
+
+      console.log(patch);
+
       try {
-        await User.findByIdAndUpdate(
-          currentUser.id,
-          { passwordHash: await encryptPassword(newPassword) },
-          {
-            new: true
-          }
-        );
+        await User.findByIdAndUpdate(currentUser.id, patch, {
+          new: true
+        });
         return true;
       } catch (error) {
         logger.error(error);

@@ -1,5 +1,5 @@
 const { GraphQLScalarType, Kind } = require('graphql');
-const { AuthenticationError } = require('apollo-server');
+const { AuthenticationError, ForbiddenError } = require('apollo-server');
 const bcrypt = require('bcrypt');
 const Recipe = require('../../models/recipe');
 const User = require('../../models/user');
@@ -40,31 +40,32 @@ const recipeResolvers = {
   }),
 
   Query: {
-    getRecipes: async (root, args, context) => await Recipe.find({}),
-    getRecipe: async (root, args, context) => await Recipe.findById(args.id),
-    recipeCount: async (root, args, context) =>
-      await Recipe.collection.countDocuments()
+    getRecipes: async (root, args) => await Recipe.find({}),
+    getRecipe: async (root, args) => await Recipe.findById(args.id),
+    recipeCount: async (root, args) => await Recipe.collection.countDocuments(),
+    myRecipes: async (root, args, context) => context.currentUser.recipes,
+    myRecipeCount: (root, args, context) => context.currentUser.recipes.length
   },
 
   Mutation: {
     createRecipe: async (root, args, { currentUser }) => {
-      const user = await fetchUser(currentUser.id);
-
-      const recipe = new Recipe({
-        author: args.author,
-        title: args.title,
-        description: args.description,
-        cookTime: args.time,
-        difficulty: args.difficulty,
-        ingredients: args.ingredients,
-        method: args.method,
-        notes: args.notes,
-        tags: args.tags,
-        source: args.source,
-        created: new Date()
-      });
-
       try {
+        const user = await fetchUser(currentUser.id);
+
+        const recipe = new Recipe({
+          author: args.author,
+          title: args.title,
+          description: args.description,
+          cookTime: args.time,
+          difficulty: args.difficulty,
+          ingredients: args.ingredients,
+          method: args.method,
+          notes: args.notes,
+          tags: args.tags,
+          source: args.source,
+          created: new Date()
+        });
+
         await recipe.save();
         user.recipes = user.recipes.concat(recipe._id);
         await user.save();
@@ -75,50 +76,49 @@ const recipeResolvers = {
     },
 
     updateRecipe: async (root, { input }, { currentUser }) => {
-      if (!currentUser) return new AuthenticationError('must authenticate');
-
-      const { id, patch } = input;
-
       try {
+        const { id, patch } = input;
+        if (!currentUser) {
+          return new AuthenticationError('must authenticate');
+        } else if (!currentUser.recipes.contains(id)) {
+          return new ForbiddenError('forbidden');
+        }
+
         return await Recipe.findByIdAndUpdate(id, patch, { new: true });
       } catch (error) {
         logger.error(error);
       }
     },
 
-    commentRecipe: async (root, args, context) => {
+    commentRecipe: async (root, { input }, context) => {
       try {
-        const recipe = await Recipe.findById(args.id);
+        const { id, author, content } = input;
+        const recipe = await Recipe.findById(id);
 
-        const comment = {
-          author: args.author,
-          comment: args.comment
-        };
+        const comment = { author, content };
 
-        recipe.comments = recipe.comments.concat(comment);
+        const patch = { comments: recipe.comments.concat(comment) };
+        return await Recipe.findByIdAndUpdate(id, patch, { new: true });
+      } catch (error) {
+        logger.error(error);
+      }
+    },
+
+    likeRecipe: async (root, { recipeId, userId }, context) => {
+      try {
+        const recipe = await Recipe.findById(recipeId);
+        recipe.likes = recipe.likes.concat(userId);
         return await recipe.save();
       } catch (error) {
         logger.error(error);
       }
     },
 
-    likeRecipe: async (root, args, context) => {
+    unlikeRecipe: async (root, { recipeId, userId }, context) => {
       try {
-        const recipe = await Recipe.findById(args.id);
+        const recipe = await Recipe.findById(recipeId);
 
-        recipe.likes = recipe.likes.concat(args.user);
-
-        return await recipe.save();
-      } catch (error) {
-        logger.error(error);
-      }
-    },
-
-    unlikeRecipe: async (root, args, context) => {
-      try {
-        const recipe = await Recipe.findById(args.id);
-
-        recipe.likes = recipe.likes.filter(like => like.user !== args.user);
+        recipe.likes = recipe.likes.filter(like => like.user !== userId);
 
         return await recipe.save();
       } catch (error) {
@@ -142,8 +142,13 @@ const recipeResolvers = {
       }
     },
 
-    deleteRecipe: async (root, { id }, context) => {
+    deleteRecipe: async (root, { id }, { currentUser }) => {
       try {
+        if (!currentUser) {
+          return new AuthenticationError('must authenticate');
+        } else if (!currentUser.recipes.contains(id)) {
+          return new ForbiddenError('forbidden');
+        }
         await Recipe.findByIdAndRemove(id);
         return true;
       } catch (error) {

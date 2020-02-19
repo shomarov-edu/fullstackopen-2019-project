@@ -11,27 +11,33 @@ const resolvers = {
 
   Mutation: {
     login: async (root, { input }) => {
-      const { username, password } = input;
+      try {
+        console.log(input);
+        const { username, password } = input;
+        const user = await User.findOne({ username });
 
-      const user = await User.findOne({ username });
+        console.log(username, password);
 
-      const passwordCorrect =
-        user === null
-          ? false
-          : await bcrypt.compare(password, user.passwordHash);
+        const passwordCorrect =
+          user === null
+            ? false
+            : await bcrypt.compare(password, user.passwordHash);
 
-      if (!(user && passwordCorrect)) {
-        throw new UserInputError('invalid username or password');
+        if (!(user && passwordCorrect)) {
+          throw new UserInputError('invalid username or password');
+        }
+
+        const userForToken = {
+          id: user.id,
+          username: user.username
+        };
+
+        const token = jwt.sign(userForToken, process.env.SECRET);
+
+        return { value: token };
+      } catch (error) {
+        logger.error(error);
       }
-
-      const userForToken = {
-        id: user.id,
-        username: user.username
-      };
-
-      const token = jwt.sign(userForToken, process.env.SECRET);
-
-      return { value: token };
     }
   }
 };

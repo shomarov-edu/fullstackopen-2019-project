@@ -30,7 +30,7 @@ const recipeType = gql`
   type Comment {
     id: ID!
     author: User!
-    comment: String!
+    content: String!
   }
 
   type Grade {
@@ -43,18 +43,18 @@ const recipeType = gql`
     getRecipes: [Recipe]!
     getRecipe(id: ID!): Recipe
     recipeCount: Int!
+    myRecipes: [Recipe]!
+    myRecipeCount: Int!
   }
 
   extend type Mutation {
     createRecipe(recipe: CreateRecipeInput): RecipePayload
-
     updateRecipe(input: UpdateRecipeInput): Recipe
-
-    commentRecipe(id: String!, author: String!, comment: String!): Recipe
-    likeRecipe(id: String!, user: String!): Recipe
-    unlikeRecipe(id: String!, user: String!): Recipe
-    rateRecipe(id: String!, user: String!, grade: Int!): Recipe
-    deleteRecipe(id: String!): Boolean
+    commentRecipe(input: CommentRecipeInput): Recipe
+    likeRecipe(input: LikeRecipeInput): Recipe
+    unlikeRecipe(input: UnlikeRecipeInput): Recipe
+    rateRecipe(input: RateRecipeInput): Recipe
+    deleteRecipe(input: DeleteRecipeInput!): Boolean
   }
 
   type RecipePayload {
@@ -66,13 +66,13 @@ const recipeType = gql`
     difficulty: Difficulty!
     ingredients: [String!]!
     method: [String!]!
-    notes: [String]
-    tags: [String]
-    source: String
-    created: Date
-    likes: [User]
-    comments: [Comment]
-    ratings: [Grade]
+    notes: [String]!
+    tags: [String]!
+    source: String!
+    created: Date!
+    likes: [User]!
+    comments: [Comment]!
+    ratings: [Grade]!
   }
 
   input CreateRecipeInput {
@@ -102,6 +102,28 @@ const recipeType = gql`
   input UpdateRecipeInput {
     id: ID!
     patch: RecipeInput
+  }
+
+  input CommentRecipeInput {
+    id: ID!
+    message: String!
+  }
+
+  input LikeRecipeInput {
+    id: ID!
+  }
+
+  input UnlikeRecipeInput {
+    id: ID!
+  }
+
+  input RateRecipeInput {
+    user: ID!
+    grade: Int!
+  }
+
+  input DeleteRecipeInput {
+    id: ID!
   }
 `;
 
