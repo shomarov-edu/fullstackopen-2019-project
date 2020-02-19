@@ -14,7 +14,7 @@ const comparePasswords = async (password, hash) => {
     const passwordCorrect = await bcrypt.compare(password, hash);
     return passwordCorrect;
   } catch (error) {
-    console.log(error);
+    logger.error(error);
   }
 };
 
@@ -71,7 +71,7 @@ const changePassword = async (id, oldPassword, newPassword) => {
       new: true
     }).populate('recipes');
   } catch (error) {
-    console.log(error);
+    logger.error(error);
   }
 };
 

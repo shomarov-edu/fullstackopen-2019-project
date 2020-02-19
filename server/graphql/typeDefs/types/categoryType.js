@@ -9,8 +9,8 @@ const categoryType = gql`
   }
 
   extend type Query {
-    allCategories: [Category]!
-    findCategory(title: String): Category
+    getCategories: [Category]!
+    getCategory(id: String): Category
   }
 
   extend type Mutation {

@@ -1,0 +1,2 @@
+GET http://localhost:5000/api/categories
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlNDQwMGYzYjcxZDE3MDIzMGI5ZTcxNyIsInVzZXJuYW1lIjoidXNlciIsImlhdCI6MTU4MTU4MjcwN30.6cZckj5F40YxQ1b1sAkc2siyoxOsaKsHSEImuIYKtus

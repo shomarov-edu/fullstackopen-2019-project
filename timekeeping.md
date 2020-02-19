@@ -42,3 +42,4 @@
 | 16.01 | 2    | learning                                                 |
 | 17.01 | 6    | switch to graphql                                        |
 | 18.01 | 4    | graphql development                                      |
+| 19.01 | 8    | graphql development                                      |

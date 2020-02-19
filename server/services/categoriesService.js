@@ -1,11 +1,12 @@
 const Category = require('../models/category');
 const User = require('../models/user');
+const logger = require('../../config/winston');
 
 const getAll = async userId => {
   try {
     return await Category.find({ user: userId }).populate('recipes');
   } catch (error) {
-    console.log(error);
+    logger.error(error);
     throw error;
   }
 };
@@ -14,7 +15,7 @@ const getOne = async id => {
   try {
     return await Category.findById(id).populate('recipes');
   } catch (error) {
-    console.log(error);
+    logger.error(error);
     throw error;
   }
 };
@@ -30,7 +31,7 @@ const create = async (userId, categoryData) => {
     await user.save();
     return savedCategory;
   } catch (error) {
-    console.log(error);
+    logger.error(error);
     throw error;
   }
 };
@@ -47,7 +48,7 @@ const update = async (id, categoryData) => {
     }).populate('recipes');
     return updatedCategory;
   } catch (error) {
-    console.log(error);
+    logger.error(error);
     throw error;
   }
 };
@@ -56,7 +57,7 @@ const remove = async id => {
   try {
     await Category.findByIdAndRemove(id);
   } catch (error) {
-    console.log(error);
+    logger.error(error);
     throw error;
   }
 };

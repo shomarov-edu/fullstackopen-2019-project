@@ -40,41 +40,68 @@ const recipeType = gql`
   }
 
   extend type Query {
-    allRecipes: [Recipe]!
-    findRecipe(id: ID!): Recipe
+    getRecipes: [Recipe]!
+    getRecipe(id: ID!): Recipe
+    recipeCount: Int!
   }
 
   extend type Mutation {
-    createRecipe(
-      author: String!
-      title: String!
-      description: String!
-      cookTime: Int!
-      difficulty: Difficulty!
-      ingredients: [String!]!
-      method: [String!]!
-      notes: [String]!
-      tags: [String]
-      source: String
-    ): Recipe
+    createRecipe(recipe: CreateRecipeInput): RecipePayload
 
-    updateRecipe(
-      id: ID!
-      author: String!
-      title: String!
-      description: String!
-      cookTime: Int!
-      difficulty: Difficulty!
-      ingredients: [String!]!
-      method: [String!]!
-      notes: [String]!
-      tags: [String]
-      source: String
-      created: Date!
-      likes: [ID]
-      comments: [ID]
-      ratings: [ID]
-    ): Recipe
+    updateRecipe(input: UpdateRecipeInput): Recipe
+
+    commentRecipe(id: String!, author: String!, comment: String!): Recipe
+    likeRecipe(id: String!, user: String!): Recipe
+    unlikeRecipe(id: String!, user: String!): Recipe
+    rateRecipe(id: String!, user: String!, grade: Int!): Recipe
+    deleteRecipe(id: String!): Boolean
+  }
+
+  type RecipePayload {
+    id: ID!
+    author: User!
+    title: String!
+    description: String!
+    cookTime: Int!
+    difficulty: Difficulty!
+    ingredients: [String!]!
+    method: [String!]!
+    notes: [String]
+    tags: [String]
+    source: String
+    created: Date
+    likes: [User]
+    comments: [Comment]
+    ratings: [Grade]
+  }
+
+  input CreateRecipeInput {
+    title: String!
+    description: String!
+    cookTime: Int!
+    difficulty: Difficulty!
+    ingredients: [String!]!
+    method: [String!]!
+    notes: [String]
+    tags: [String]
+    source: String
+  }
+
+  input RecipeInput {
+    title: String
+    description: String
+    cookTime: Int
+    difficulty: Difficulty
+    ingredients: [String]
+    method: [String]
+    notes: [String]
+    tags: [String]
+    source: String
+  }
+
+  input UpdateRecipeInput {
+    id: ID!
+    patch: RecipeInput
   }
 `;
 

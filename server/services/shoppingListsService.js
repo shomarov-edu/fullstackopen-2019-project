@@ -1,11 +1,12 @@
 const ShoppingList = require('../models/shoppingList');
 const User = require('../models/user');
+const logger = require('../../config/winston');
 
 const getAll = async () => {
   try {
     return await ShoppingList.find({}).populate('owner');
   } catch (error) {
-    console.log(error);
+    logger.error(error);
     throw error;
   }
 };
@@ -14,7 +15,7 @@ const getOne = async id => {
   try {
     return await ShoppingList.findById(id).populate('owner');
   } catch (error) {
-    console.log(error);
+    logger.error(error);
     throw error;
   }
 };
@@ -35,7 +36,7 @@ const create = async (userId, shoppingListData) => {
     await user.save();
     return savedShoppingList;
   } catch (error) {
-    console.log(error);
+    logger.error(error);
     throw error;
   }
 };
@@ -54,7 +55,7 @@ const update = async (id, shoppingListData) => {
 
     return updatedShoppingList;
   } catch (error) {
-    console.log(error);
+    logger.error(error);
     throw error;
   }
 };
@@ -63,7 +64,7 @@ const remove = async id => {
   try {
     await ShoppingList.findByIdAndRemove(id);
   } catch (error) {
-    console.log(error);
+    logger.error(error);
     throw error;
   }
 };

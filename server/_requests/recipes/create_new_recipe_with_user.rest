@@ -1,0 +1,35 @@
+post http://localhost:5000/api/recipes
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlNDNmYWUxNzlkYWM5MDA5YWUyYjc1YyIsInVzZXJuYW1lIjoidXNlciIsImlhdCI6MTU4MTUxMzQ1Mn0.ELMK-A5GGeYEF2xdC4LzTdKfFgMV2y3WoS6OkB-gQB4
+Content-Type: application/json
+
+{
+      "title": "4-Ingredient Easy Vegan Brownies",
+      "description": "Incredibly rich, vegan, easy brownies made with just 4 ingredients and 1 bowl! Naturally sweetened, grain- and gluten-free, and so satisfying!",
+      "cookTime": "30",
+      "difficulty": "easy",
+      "ingredients": [
+        "400 g tightly packed dates, pitted (measured after pitting // make sure they're fresh! If dry, soak in warm water 10 minutes, drain, then add to processor)",
+        "60 ml warm water",
+        "128 g salted peanut butter* (if unsalted, add a healthy pinch of salt to the batter)",
+        "30 ml melted coconut oil* (if avoiding coconut oil, see notes)",
+        "32 g cacao or unsweetened cocoa powder",
+        "60 g dairy-free dark chocolate chips (optional // we like Enjoy Life)",
+        "60 g roughly chopped raw walnuts (optional // or other nut of choice)"
+      ],
+      "method": [
+        "Preheat oven to 350 degrees F (176 C) and line a standard loaf pan (or similar size pan) with parchment paper. Set aside.",
+        "Add dates to food processor and blend until small bits or a ball forms. If your food processor has a difficult time processing the dates, ensure there are no pits in the dates and that your dates are fresh and sticky. If too dry they can have a difficult time blending. (It may also be an issue of food processor strength if it has a hard time blending.)",
+        "Once blended, separate the dates into chunks using a spoon. Then add hot water and blend until a sticky date paste forms. Scrape down sides as needed.",
+        "Add peanut butter, coconut oil, and cacao powder and pulse until a sticky batter forms. It should be tacky and thick (scrape down sides as needed). Lastly add chocolate chips and walnuts (optional) and pulse to incorporate.",
+        "Transfer batter to lined loaf pan and spread into an even layer. For a smooth top, lay some parchment paper on top and use a flat-bottomed object (like a drinking glass) to press into an even layer.",
+        "Bake on the center rack for 15 minutes - the edges should be slightly dry. Remove from oven and let cool in the pan for 10 minutes. Then carefully lift out of the pan using the edges of the parchment paper and let cool on a plate or cooling rack for at least 20 minutes before slicing. The longer they cool, the firmer they will become.",
+        "Enjoy warm or cooled. Store leftovers covered at room temperature up to 3 days, in the refrigerator up to 5-6 days, or in the freezer up to 1 month (let thaw before enjoying)."
+      ],
+      "notes": [
+        "*If you're peanut-free, I think almond, cashew, or even sesame butter (tahini) would work well here.",
+        "*If you're oil-free, you could try subbing something like more nut or seed butter, or potentially applesauce.",
+        "*Nutrition information is a rough estimate calculated without optional ingredients."
+      ],
+      "tags": ["sweet", "choco", "dessert"],
+      "source": "https://minimalistbaker.com/4-ingredient-vegan-easy-brownies/"
+    }

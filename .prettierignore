@@ -3,7 +3,6 @@ client/build
 
 server/node_modules
 server/.env
-server/graphql/typeDefs
 
 mongo/data
 
