@@ -32,9 +32,7 @@ const resolvers = {
           username: user.username
         };
 
-        const token = jwt.sign(userForToken, process.env.SECRET);
-
-        return { value: token };
+        return { token: jwt.sign(userForToken, process.env.SECRET) };
       } catch (error) {
         logger.error(error);
       }

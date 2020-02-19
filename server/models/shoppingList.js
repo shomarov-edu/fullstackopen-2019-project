@@ -6,14 +6,14 @@ const shoppingListSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   },
-  title: {
+  name: {
     type: String,
     required: true
   },
   items: [
     {
-      name: String,
-      crossedOut: Boolean
+      content: String,
+      checked: Boolean
     }
   ],
   sharedWith: [
