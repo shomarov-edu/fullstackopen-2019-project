@@ -1,0 +1,5 @@
+mutation {
+  login(input: { username: "user", password: "password" }) {
+    token
+  }
+}

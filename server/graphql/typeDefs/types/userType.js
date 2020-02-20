@@ -8,6 +8,11 @@ const userType = gql`
     firstname: String!
     lastname: String!
     passwordHash: String!
+    recipes: [Recipe]!
+    categories: [Category]!
+    likes: [Recipe]!
+    following: [User]!
+    shoppingLists: [ShoppingList]!
   }
 
   extend type Query {
@@ -21,6 +26,7 @@ const userType = gql`
     updateUser(input: UpdateUserInput!): UserPayload
     updateUsername(input: UpdateUsernameInput!): UserPayload
     updatePassword(input: UpdatePasswordInput!): Boolean
+    followUser(input: FollowUserInput!): UserPayload
     deleteUser(password: String!): Boolean
   }
 
@@ -51,18 +57,18 @@ const userType = gql`
     patch: UserInput!
   }
 
-  input UsernameInput {
-    username: String!
-  }
-
   input UpdateUsernameInput {
     password: String!
-    patch: UsernameInput!
+    username: String!
   }
 
   input UpdatePasswordInput {
     password: String!
     newPassword: String!
+  }
+
+  input FollowUserInput {
+    user: ID!
   }
 `;
 

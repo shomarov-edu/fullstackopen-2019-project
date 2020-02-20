@@ -1,0 +1,15 @@
+query {
+  getShoppingLists {
+    owner {
+      username
+    }
+    name
+    items {
+      content
+      checked
+    }
+    sharedWith {
+      username
+    }
+  }
+}

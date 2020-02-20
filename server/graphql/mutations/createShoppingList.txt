@@ -1,0 +1,13 @@
+mutation {
+  createShoppingList(input: { name: "My third shopping list" }) {
+    id
+    owner {
+      username
+    }
+    name
+    items {content checked}
+    sharedWith {
+      username
+    }
+  }
+}

@@ -1,6 +1,6 @@
-const User = require('../../models/user');
 const bcrypt = require('bcrypt');
-const { AuthenticationError } = require('apollo-server');
+const { AuthenticationError, UserInputError } = require('apollo-server');
+const User = require('../../models/user');
 const logger = require('../../config/winston');
 
 const encryptPassword = async password => {
@@ -9,6 +9,17 @@ const encryptPassword = async password => {
 };
 
 const resolvers = {
+  User: {
+    shoppingLists: async ({ id }) => {
+      try {
+        const user = await User.findById(id).populate('shoppingLists');
+        return user.shoppingLists;
+      } catch (error) {
+        logger.error(error);
+      }
+    }
+  },
+
   Query: {
     getUsers: () => User.find({}),
     getUser: (root, args) => User.findOne({ username: args.username }),
@@ -25,9 +36,7 @@ const resolvers = {
           passwordHash: await encryptPassword(password)
         });
 
-        const savedUser = await user.save();
-
-        return savedUser;
+        return await user.save();
       } catch (error) {
         logger.error(error);
       }
@@ -105,6 +114,27 @@ const resolvers = {
       } catch (error) {
         logger.error(error);
         return false;
+      }
+    },
+
+    followUser: async (root, { input }, { currentUser }) => {
+      if (!currentUser) throw new AuthenticationError();
+
+      const { user } = input;
+
+      if (currentUser.following.includes(user))
+        throw new UserInputError('already following');
+
+      try {
+        currentUser.following = currentUser.following.concat(user);
+
+        const patch = { following: currentUser.following };
+
+        return await User.findByIdAndUpdate(currentUser.id, patch, {
+          new: true
+        });
+      } catch (error) {
+        logger.error(error);
       }
     },
 

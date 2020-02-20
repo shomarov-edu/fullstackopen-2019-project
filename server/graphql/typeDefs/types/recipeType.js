@@ -51,6 +51,8 @@ const recipeType = gql`
     createRecipe(recipe: CreateRecipeInput): RecipePayload
     updateRecipe(input: UpdateRecipeInput): Recipe
     commentRecipe(input: CommentRecipeInput): Recipe
+    updateComment(input: CommentRecipeInput): Recipe
+    deleteComment(input: CommentRecipeInput): Recipe
     likeRecipe(input: LikeRecipeInput): Recipe
     unlikeRecipe(input: UnlikeRecipeInput): Recipe
     rateRecipe(input: RateRecipeInput): Recipe
@@ -88,42 +90,52 @@ const recipeType = gql`
   }
 
   input RecipeInput {
-    title: String
-    description: String
-    cookTime: Int
-    difficulty: Difficulty
+    title: String!
+    description: String!
+    cookTime: Int!
+    difficulty: Difficulty!
     ingredients: [String]
-    method: [String]
+    method: [String]!
     notes: [String]
     tags: [String]
     source: String
   }
 
   input UpdateRecipeInput {
-    id: ID!
+    recipeId: ID!
     patch: RecipeInput
   }
 
   input CommentRecipeInput {
-    id: ID!
-    message: String!
+    recipeId: ID!
+    content: String!
+  }
+
+  input UpdateCommentInput {
+    recipeId: ID!
+    content: String!
+  }
+
+  input DeleteCommentInput {
+    recipeId: ID!
+    content: String!
   }
 
   input LikeRecipeInput {
-    id: ID!
+    recipeId: ID!
   }
 
   input UnlikeRecipeInput {
-    id: ID!
+    recipeId: ID!
   }
 
   input RateRecipeInput {
-    user: ID!
+    recipeId: ID!
     grade: Int!
   }
 
   input DeleteRecipeInput {
-    id: ID!
+    recipeId: ID!
   }
 `;
 

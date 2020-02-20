@@ -1,6 +1,9 @@
 const { GraphQLScalarType, Kind } = require('graphql');
-const { AuthenticationError, ForbiddenError } = require('apollo-server');
-const bcrypt = require('bcrypt');
+const {
+  AuthenticationError,
+  ForbiddenError,
+  UserInputError
+} = require('apollo-server');
 const Recipe = require('../../models/recipe');
 const User = require('../../models/user');
 const logger = require('../../config/winston');
@@ -40,15 +43,20 @@ const recipeResolvers = {
   }),
 
   Query: {
-    getRecipes: async (root, args) => await Recipe.find({}),
-    getRecipe: async (root, args) => await Recipe.findById(args.id),
-    recipeCount: async (root, args) => await Recipe.collection.countDocuments(),
+    getRecipes: async (root, args, context) => await Recipe.find({}),
+    getRecipe: async (root, { id }, context) => await Recipe.findById(id),
+    recipeCount: async (root, args, context) =>
+      await Recipe.collection.countDocuments(),
     myRecipes: async (root, args, context) => context.currentUser.recipes,
     myRecipeCount: (root, args, context) => context.currentUser.recipes.length
   },
 
   Mutation: {
     createRecipe: async (root, args, { currentUser }) => {
+      if (!currentUser) {
+        return new AuthenticationError('must authenticate');
+      }
+
       try {
         const user = await fetchUser(currentUser.id);
 
@@ -90,66 +98,135 @@ const recipeResolvers = {
       }
     },
 
-    commentRecipe: async (root, { input }, context) => {
-      try {
-        const { id, author, content } = input;
-        const recipe = await Recipe.findById(id);
+    commentRecipe: async (root, { input }, { currentUser }) => {
+      if (!currentUser) {
+        return new AuthenticationError('must authenticate');
+      }
 
-        const comment = { author, content };
+      try {
+        const { recipeId, content } = input;
+        const recipe = await Recipe.findById(recipeId);
+
+        const comment = { author: currentUser.id, content };
 
         const patch = { comments: recipe.comments.concat(comment) };
-        return await Recipe.findByIdAndUpdate(id, patch, { new: true });
+        return await Recipe.findByIdAndUpdate(recipeId, patch, { new: true });
       } catch (error) {
         logger.error(error);
       }
     },
 
-    likeRecipe: async (root, { recipeId, userId }, context) => {
-      try {
-        const recipe = await Recipe.findById(recipeId);
-        recipe.likes = recipe.likes.concat(userId);
-        return await recipe.save();
-      } catch (error) {
-        logger.error(error);
+    updateComment: async (root, { input }, { currentUser }) => {
+      if (!currentUser) {
+        return new AuthenticationError('must authenticate');
       }
-    },
 
-    unlikeRecipe: async (root, { recipeId, userId }, context) => {
       try {
+        const { recipeId, content } = input;
         const recipe = await Recipe.findById(recipeId);
 
-        recipe.likes = recipe.likes.filter(like => like.user !== userId);
+        const comment = { author: currentUser.id, content };
 
-        return await recipe.save();
+        const patch = { comments: recipe.comments.concat(comment) };
+        return await Recipe.findByIdAndUpdate(recipeId, patch, { new: true });
       } catch (error) {
         logger.error(error);
       }
     },
 
-    rateRecipe: async (root, args, context) => {
-      try {
-        const recipe = await Recipe.findById(args.id);
+    deleteComment: async (root, { input }, { currentUser }) => {
+      if (!currentUser) {
+        return new AuthenticationError('must authenticate');
+      }
 
-        const grade = {
-          user: args.user,
-          grade: args.grade
+      try {
+        const { recipeId, content } = input;
+        const recipe = await Recipe.findById(recipeId);
+
+        const comment = { author: currentUser.id, content };
+
+        const patch = { comments: recipe.comments.concat(comment) };
+        return await Recipe.findByIdAndUpdate(recipeId, patch, { new: true });
+      } catch (error) {
+        logger.error(error);
+      }
+    },
+
+    likeRecipe: async (root, { recipeId, userId }, { currentUser }) => {
+      if (!currentUser) {
+        return new AuthenticationError('must authenticate');
+      }
+
+      try {
+        const recipe = await Recipe.findById(recipeId);
+        if (recipe.likes.includes(userId)) {
+          return new UserInputError('operation not permitted');
+        }
+
+        const patch = { likes: recipe.likes.concat(userId) };
+        return await Recipe.findByIdAndUpdate(recipeId, patch, { new: true });
+      } catch (error) {
+        logger.error(error);
+      }
+    },
+
+    unlikeRecipe: async (root, { recipeId, userId }, { currentUser }) => {
+      if (!currentUser) {
+        return new AuthenticationError('must authenticate');
+      }
+
+      try {
+        const recipe = await Recipe.findById(recipeId);
+        if (!recipe.likes.includes(userId)) {
+          return new UserInputError('operation not permitted');
+        }
+
+        const patch = {
+          likes: recipe.likes.filter(like => like.user !== userId)
         };
 
-        recipe.ratings = recipe.ratings.concat(grade);
-        return await recipe.save();
+        return await Recipe.findByIdAndUpdate(recipeId, patch, { new: true });
       } catch (error) {
         logger.error(error);
       }
     },
 
-    deleteRecipe: async (root, { id }, { currentUser }) => {
+    rateRecipe: async (root, { recipeId, grade }, { currentUser }) => {
+      if (!currentUser) {
+        return new AuthenticationError('must authenticate');
+      }
+
       try {
-        if (!currentUser) {
-          return new AuthenticationError('must authenticate');
-        } else if (!currentUser.recipes.contains(id)) {
+        const recipe = await Recipe.findById(recipeId);
+
+        const grade = {
+          user: currentUser.id,
+          grade: grade
+        };
+
+        const updatedRatings = recipe.ratings
+          .filter(rating => rating.user !== currentUser.id)
+          .concat(grade);
+
+        const patch = { ratings: updatedRatings };
+        return await Recipe.findByIdAndUpdate(recipeId, patch, { new: true });
+      } catch (error) {
+        logger.error(error);
+      }
+    },
+
+    deleteRecipe: async (root, { recipeId }, { currentUser }) => {
+      if (!currentUser) {
+        return new AuthenticationError('must authenticate');
+      }
+
+      try {
+        const recipe = await Recipe.findById(recipeId);
+
+        if (!recipe.author !== currentUser.id) {
           return new ForbiddenError('forbidden');
         }
-        await Recipe.findByIdAndRemove(id);
+        await Recipe.findByIdAndRemove(recipeId);
         return true;
       } catch (error) {
         logger.error(error);

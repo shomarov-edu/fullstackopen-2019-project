@@ -24,4 +24,4 @@ const shoppingListSchema = new mongoose.Schema({
   ]
 });
 
-module.exports = mongoose.model('shoppingListSchema', shoppingListSchema);
+module.exports = mongoose.model('ShoppingList', shoppingListSchema);

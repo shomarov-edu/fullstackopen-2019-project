@@ -10,8 +10,8 @@ const categoryType = gql`
 
   extend type Query {
     getCategories: [Category]!
-    getCategory(id: ID!): Category
-    getCategoryRecipes(id: ID!): [Recipe]
+    getCategory(categoryId: ID!): Category
+    getCategoryRecipes(categoryId: ID!): [Recipe]
   }
 
   extend type Mutation {
@@ -19,7 +19,7 @@ const categoryType = gql`
     renameCategory(input: RenameCategoryInput): Category!
     addRecipe(input: AddRecipeInput): Category!
     removeRecipe(input: RemoveRecipeInput): Category!
-    deleteCategory(id: ID!): Boolean!
+    deleteCategory(input: DeleteCategoryInput): Boolean!
   }
 
   input CreateCategoryInput {

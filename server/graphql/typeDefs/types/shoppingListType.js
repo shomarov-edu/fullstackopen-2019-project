@@ -18,17 +18,18 @@ const shoppingListType = gql`
   extend type Query {
     getShoppingLists: [ShoppingList]!
     getShoppingList(input: ID!): ShoppingList
+    getShoppingListItems(input: ID!): [Item]
   }
 
   extend type Mutation {
     createShoppingList(input: CreateShoppingListInput): ShoppingListPayload
-    addItem(input: AddNewItemInput): ShoppingListPayload!
-    checkItem(input: CheckItemInput): ShoppingListPayload!
-    uncheckItem(input: UncheckItemInput): ShoppingListPayload!
-    checkAllItems(input: CheckAllItemsInput): ShoppingListPayload!
-    shareShoppingList(input: ShareShoppingListInput): ShareShoppingListPayload!
-    deleteItem(input: DeleteItemInput): ShoppingListPayload!
-    deleteShoppingList(input: DeleteShoppingListInput): Boolean!
+    addItem(input: AddNewItemInput): ShoppingListPayload
+    checkItem(input: CheckItemInput): ShoppingListPayload
+    uncheckItem(input: UncheckItemInput): ShoppingListPayload
+    checkAllItems(input: CheckAllItemsInput): ShoppingListPayload
+    shareShoppingList(input: ShareShoppingListInput): ShareShoppingListPayload
+    deleteItem(input: DeleteItemInput): ShoppingListPayload
+    deleteShoppingList(input: DeleteShoppingListInput): Boolean
   }
 
   input CreateShoppingListInput {
@@ -44,7 +45,7 @@ const shoppingListType = gql`
   }
 
   input ShareShoppingListInput {
-    user: ID!
+    username: String!
   }
 
   type ShareShoppingListPayload {
@@ -56,11 +57,12 @@ const shoppingListType = gql`
   }
 
   input AddNewItemInput {
+    shoppingListId: ID!
     content: String!
   }
 
   input CheckItemInput {
-    item: ID!
+    itemId: ID!
   }
 
   input UncheckItemInput {
