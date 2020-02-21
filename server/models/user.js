@@ -16,6 +16,12 @@ const userSchema = new mongoose.Schema({
   firstname: String,
   lastname: String,
   passwordHash: String,
+  roles: [
+    {
+      type: String,
+      required: true
+    }
+  ],
   recipes: [
     {
       type: mongoose.Schema.Types.ObjectId,

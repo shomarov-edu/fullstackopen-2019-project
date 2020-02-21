@@ -43,8 +43,6 @@ const recipeType = gql`
     getRecipes: [Recipe]!
     getRecipe(id: ID!): Recipe
     recipeCount: Int!
-    myRecipes: [Recipe]!
-    myRecipeCount: Int!
   }
 
   extend type Mutation {

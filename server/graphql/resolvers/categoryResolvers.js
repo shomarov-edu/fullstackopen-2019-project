@@ -1,7 +1,7 @@
 const { AuthenticationError, ForbiddenError } = require('apollo-server');
 const Category = require('../../models/category');
 const User = require('../../models/user');
-const logger = require('../../config/winston');
+const errorHandler = require('../../helpers/errorHandler');
 
 const resolvers = {
   Query: {
@@ -14,7 +14,7 @@ const resolvers = {
   Mutation: {
     createCategory: async (root, { input }, { currentUser }) => {
       if (!currentUser) {
-        throw new AuthenticationError('must authenticate');
+        throw new AuthenticationError('you must be logged in');
       }
 
       try {
@@ -31,7 +31,7 @@ const resolvers = {
           new: true
         });
       } catch (error) {
-        logger.error(error);
+        errorHandler.handleError(error);
       }
     },
 
@@ -39,7 +39,7 @@ const resolvers = {
       const { categoryId, name } = input;
 
       if (!currentUser) {
-        throw new AuthenticationError('must authenticate');
+        throw new AuthenticationError('you must be logged in');
       } else if (!currentUser.categories.includes(categoryId)) {
         throw new ForbiddenError('forbidden');
       }
@@ -47,7 +47,7 @@ const resolvers = {
       try {
         return Category.findByIdAndUpdate(categoryId, { name }, { new: true });
       } catch (error) {
-        logger.error(error);
+        errorHandler.handleError(error);
       }
     },
 
@@ -55,7 +55,7 @@ const resolvers = {
       const { categoryId, recipeId } = input;
 
       if (!currentUser) {
-        throw new AuthenticationError('must authenticate');
+        throw new AuthenticationError('you must be logged in');
       } else if (!currentUser.categories.includes(categoryId)) {
         throw new ForbiddenError('forbidden');
       }
@@ -67,7 +67,7 @@ const resolvers = {
 
         return Category.findByIdAndUpdate(categoryId, patch, { new: true });
       } catch (error) {
-        logger.error(error);
+        errorHandler.handleError(error);
       }
     },
 
@@ -75,7 +75,7 @@ const resolvers = {
       const { categoryId, recipeId } = input;
 
       if (!currentUser) {
-        throw new AuthenticationError('must authenticate');
+        throw new AuthenticationError('you must be logged in');
       } else if (!currentUser.categories.includes(categoryId)) {
         throw new ForbiddenError('forbidden');
       }
@@ -89,7 +89,7 @@ const resolvers = {
 
         return Category.findByIdAndUpdate(categoryId, patch, { new: true });
       } catch (error) {
-        logger.error(error);
+        errorHandler.handleError(error);
       }
     },
 
@@ -97,7 +97,7 @@ const resolvers = {
       const { categoryId } = input;
 
       if (!currentUser) {
-        throw new AuthenticationError('must authenticate');
+        throw new AuthenticationError('you must be logged in');
       } else if (!currentUser.categories.includes(input.categoryId)) {
         throw new ForbiddenError('forbidden');
       }
@@ -106,7 +106,7 @@ const resolvers = {
         Category.findByIdAndRemove(categoryId);
         return true;
       } catch (error) {
-        logger.error(error);
+        errorHandler.handleError(error);
       }
     }
   }

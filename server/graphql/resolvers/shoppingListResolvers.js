@@ -1,7 +1,7 @@
 const { AuthenticationError, ForbiddenError } = require('apollo-server');
 const ShoppingList = require('../../models/shoppingList');
 const User = require('../../models/user');
-const logger = require('../../config/winston');
+const errorHandler = require('../../helpers/errorHandler');
 
 const resolvers = {
   ShoppingList: {
@@ -9,7 +9,7 @@ const resolvers = {
       try {
         return await User.findById(root.owner);
       } catch (error) {
-        logger.error(error);
+        errorHandler.handleError(error);
       }
     },
 
@@ -20,7 +20,7 @@ const resolvers = {
         );
         return shoppingList.sharedWith;
       } catch (error) {
-        logger.error(error);
+        errorHandler.handleError(error);
       }
     }
   },
@@ -30,7 +30,7 @@ const resolvers = {
       try {
         return await User.findById(root.owner);
       } catch (error) {
-        logger.error(error);
+        errorHandler.handleError(error);
       }
     },
 
@@ -41,7 +41,7 @@ const resolvers = {
         );
         return shoppingList.sharedWith;
       } catch (error) {
-        logger.error(error);
+        errorHandler.handleError(error);
       }
     }
   },
@@ -60,7 +60,7 @@ const resolvers = {
   Mutation: {
     createShoppingList: async (root, { input }, { currentUser }) => {
       if (!currentUser) {
-        throw new AuthenticationError('must authenticate');
+        throw new AuthenticationError('you must be logged in');
       }
 
       const shoppingList = new ShoppingList({
@@ -81,13 +81,13 @@ const resolvers = {
 
         return await shoppingList.save();
       } catch (error) {
-        logger.error(error);
+        errorHandler.handleError(error);
       }
     },
 
     addItem: async (root, { input }, { currentUser }) => {
       if (!currentUser) {
-        throw new AuthenticationError('must authenticate');
+        throw new AuthenticationError('you must be logged in');
       } else if (!currentUser.shoppingLists.find(s => s.id === input.id)) {
         throw new ForbiddenError('forbidden');
       }
@@ -105,13 +105,13 @@ const resolvers = {
           { new: true }
         );
       } catch (error) {
-        logger.error(error);
+        errorHandler.handleError(error);
       }
     },
 
     checkItem: async (root, { input }, { currentUser }) => {
       if (!currentUser) {
-        throw new AuthenticationError('must authenticate');
+        throw new AuthenticationError('you must be logged in');
       } else if (!currentUser.shoppingLists.find(s => s.id === input.id)) {
         throw new ForbiddenError('forbidden');
       }
@@ -119,7 +119,7 @@ const resolvers = {
 
     uncheckItem: async (root, { input }, { currentUser }) => {
       if (!currentUser) {
-        throw new AuthenticationError('must authenticate');
+        throw new AuthenticationError('you must be logged in');
       } else if (!currentUser.shoppingLists.find(s => s.id === input.id)) {
         throw new ForbiddenError('forbidden');
       }
@@ -127,7 +127,7 @@ const resolvers = {
 
     checkAllItems: async (root, { input }, { currentUser }) => {
       if (!currentUser) {
-        throw new AuthenticationError('must authenticate');
+        throw new AuthenticationError('you must be logged in');
       } else if (!currentUser.shoppingLists.find(s => s.id === input.id)) {
         throw new ForbiddenError('forbidden');
       }
@@ -135,7 +135,7 @@ const resolvers = {
 
     deleteItem: async (root, { input }, { currentUser }) => {
       if (!currentUser) {
-        throw new AuthenticationError('must authenticate');
+        throw new AuthenticationError('you must be logged in');
       } else if (!currentUser.shoppingLists.find(s => s.id === input.id)) {
         throw new ForbiddenError('forbidden');
       }
@@ -143,7 +143,7 @@ const resolvers = {
 
     deleteShoppingList: async (root, { input }, { currentUser }) => {
       if (!currentUser) {
-        throw new AuthenticationError('must authenticate');
+        throw new AuthenticationError('you must be logged in');
       } else if (!currentUser.shoppingLists.find(s => s.id === input.id)) {
         throw new ForbiddenError('forbidden');
       }

@@ -1,42 +1,14 @@
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const { UserInputError } = require('apollo-server');
-const User = require('../../models/user');
-const logger = require('../../config/winston');
-
 const resolvers = {
   Query: {
-    currentUser: (root, args, { currentUser }) => currentUser
+    me: (root, args, { currentUser }) => currentUser
   },
 
   Mutation: {
-    login: async (root, { input }) => {
-      try {
-        console.log(input);
-        const { username, password } = input;
-        const user = await User.findOne({ username });
+    signup: async (root, { input }, context) =>
+      await context.services.auth.signup(input),
 
-        console.log(username, password);
-
-        const passwordCorrect =
-          user === null
-            ? false
-            : await bcrypt.compare(password, user.passwordHash);
-
-        if (!(user && passwordCorrect)) {
-          throw new UserInputError('invalid username or password');
-        }
-
-        const userForToken = {
-          id: user.id,
-          username: user.username
-        };
-
-        return { token: jwt.sign(userForToken, process.env.SECRET) };
-      } catch (error) {
-        logger.error(error);
-      }
-    }
+    login: async (root, { input }, context) =>
+      await context.services.auth.login(input)
   }
 };
 

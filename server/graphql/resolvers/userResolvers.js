@@ -1,161 +1,30 @@
-const bcrypt = require('bcrypt');
-const { AuthenticationError, UserInputError } = require('apollo-server');
-const User = require('../../models/user');
-const logger = require('../../config/winston');
-
-const encryptPassword = async password => {
-  const saltRounds = 10;
-  return await bcrypt.hash(password, saltRounds);
-};
-
 const resolvers = {
-  User: {
-    shoppingLists: async ({ id }) => {
-      try {
-        const user = await User.findById(id).populate('shoppingLists');
-        return user.shoppingLists;
-      } catch (error) {
-        logger.error(error);
-      }
-    }
-  },
-
   Query: {
-    getUsers: () => User.find({}),
-    getUser: (root, args) => User.findOne({ username: args.username }),
-    userCount: () => User.collection.countDocuments()
+    getUsers: async (root, args, context) =>
+      await context.services.users.getAll(),
+
+    getUser: async (root, args, context) =>
+      await context.services.users.getUser(),
+
+    userCount: async (root, args, context) =>
+      await context.services.users.userCount()
   },
 
   Mutation: {
-    createUser: async (root, args) => {
-      try {
-        const { password, ...userInput } = args.input;
+    updateUser: async (root, { input }, context) =>
+      await context.services.users.updateUser(input, context.currentUser),
 
-        const user = new User({
-          ...userInput,
-          passwordHash: await encryptPassword(password)
-        });
+    updateUsername: async (root, { input }, context) =>
+      await context.services.users.updateUsername(input, context.currentUser),
 
-        return await user.save();
-      } catch (error) {
-        logger.error(error);
-      }
-    },
+    updatePassword: async (root, { input }, context) =>
+      await context.services.users.updatePassword(input, context.currentUser),
 
-    updateUser: async (root, { input }, { currentUser }) => {
-      if (!currentUser) return new AuthenticationError('must authenticate');
+    followUser: async (root, { input }, context) =>
+      await context.services.users.followUser(input, context.currentUser),
 
-      const { password, patch } = input;
-
-      const passwordCorrect = await bcrypt.compare(
-        password,
-        currentUser.passwordHash
-      );
-
-      if (!passwordCorrect)
-        throw new AuthenticationError('invalid username or password');
-
-      try {
-        return await User.findByIdAndUpdate(currentUser.id, patch, {
-          new: true
-        });
-      } catch (error) {
-        logger.error(error);
-      }
-    },
-
-    updateUsername: async (root, { input }, { currentUser }) => {
-      if (!currentUser) throw new AuthenticationError();
-
-      const { password, patch } = input;
-
-      const passwordCorrect = await bcrypt.compare(
-        password,
-        currentUser.passwordHash
-      );
-
-      if (!passwordCorrect)
-        throw new AuthenticationError('invalid username or password');
-
-      try {
-        return await User.findByIdAndUpdate(currentUser.id, patch, {
-          new: true
-        });
-      } catch (error) {
-        logger.error(error);
-      }
-    },
-
-    updatePassword: async (root, { input }, { currentUser }) => {
-      if (!currentUser) throw new AuthenticationError();
-
-      const { password, newPassword } = input;
-
-      const passwordCorrect = await bcrypt.compare(
-        password,
-        currentUser.passwordHash
-      );
-
-      if (!passwordCorrect) {
-        throw new AuthenticationError('invalid username or password');
-      }
-
-      const patch = {
-        passwordHash: await encryptPassword(newPassword)
-      };
-
-      console.log(patch);
-
-      try {
-        await User.findByIdAndUpdate(currentUser.id, patch, {
-          new: true
-        });
-        return true;
-      } catch (error) {
-        logger.error(error);
-        return false;
-      }
-    },
-
-    followUser: async (root, { input }, { currentUser }) => {
-      if (!currentUser) throw new AuthenticationError();
-
-      const { user } = input;
-
-      if (currentUser.following.includes(user))
-        throw new UserInputError('already following');
-
-      try {
-        currentUser.following = currentUser.following.concat(user);
-
-        const patch = { following: currentUser.following };
-
-        return await User.findByIdAndUpdate(currentUser.id, patch, {
-          new: true
-        });
-      } catch (error) {
-        logger.error(error);
-      }
-    },
-
-    deleteUser: async (root, { password }, { currentUser }) => {
-      if (!currentUser) throw new AuthenticationError();
-
-      const passwordCorrect = await bcrypt.compare(
-        password,
-        currentUser.passwordHash
-      );
-
-      if (!passwordCorrect)
-        throw new AuthenticationError('invalid username or password');
-
-      try {
-        await User.findByIdAndDelete(currentUser.id);
-      } catch (error) {
-        logger.error(error);
-        throw error;
-      }
-    }
+    deleteUser: async (root, { password }, context) =>
+      await context.services.users.deleteUser(password)
   }
 };
 

@@ -1,5 +1,17 @@
 const mongoose = require('mongoose');
 
+const commentSchema = new mongoose.Schema({
+  author: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
+  content: {
+    type: String,
+    required: true
+  },
+  added: Date
+});
+
 const recipeSchema = new mongoose.Schema({
   author: {
     type: mongoose.Schema.Types.ObjectId,
@@ -41,15 +53,6 @@ const recipeSchema = new mongoose.Schema({
       unique: true
     }
   ],
-  comments: [
-    {
-      author: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-      },
-      comment: String
-    }
-  ],
   ratings: [
     {
       rater: {
@@ -63,7 +66,8 @@ const recipeSchema = new mongoose.Schema({
         max: 5
       }
     }
-  ]
+  ],
+  comments: [commentSchema]
 });
 
 module.exports = mongoose.model('Recipe', recipeSchema);

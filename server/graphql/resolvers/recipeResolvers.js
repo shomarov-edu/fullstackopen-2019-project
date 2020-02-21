@@ -5,31 +5,14 @@ const {
   UserInputError
 } = require('apollo-server');
 const Recipe = require('../../models/recipe');
-const User = require('../../models/user');
-const logger = require('../../config/winston');
-
-const fetchUser = async id => {
-  try {
-    return await User.findById(id);
-  } catch (error) {
-    logger.error(error);
-  }
-};
+const errorHandler = require('../../helpers/errorHandler');
 
 const recipeResolvers = {
-  Recipe: {
-    author: async root => await fetchUser(root.author)
-  },
-
-  Comment: {
-    author: async root => await fetchUser(root.author)
-  },
-
   Date: new GraphQLScalarType({
     name: 'Date',
     description: 'Date custom scalar type',
     parseValue(value) {
-      return new Date(value);
+      throw new Date(value);
     },
     serialize(value) {
       return value.getTime();
@@ -42,197 +25,54 @@ const recipeResolvers = {
     }
   }),
 
+  Recipe: {
+    author: async ({ author }, args, context) =>
+      await context.services.users(author)
+  },
+
+  Comment: {
+    author: async ({ author }, args, context) =>
+      await context.services.users(author)
+  },
+
   Query: {
-    getRecipes: async (root, args, context) => await Recipe.find({}),
-    getRecipe: async (root, { id }, context) => await Recipe.findById(id),
+    getRecipes: async (root, args, context) =>
+      await context.services.recipes.getRecipes(),
+
+    getRecipe: async (root, { id }, context) =>
+      await context.services.recipes.getRecipe(id),
+
     recipeCount: async (root, args, context) =>
-      await Recipe.collection.countDocuments(),
-    myRecipes: async (root, args, context) => context.currentUser.recipes,
-    myRecipeCount: (root, args, context) => context.currentUser.recipes.length
+      await context.services.recipes.recipeCount()
   },
 
   Mutation: {
-    createRecipe: async (root, args, { currentUser }) => {
-      if (!currentUser) {
-        return new AuthenticationError('must authenticate');
-      }
+    createRecipe: async (root, { input }, context) =>
+      await context.services.recipes.createRecipe(input),
 
-      try {
-        const user = await fetchUser(currentUser.id);
+    updateRecipe: async (root, { input }, context) =>
+      await context.services.recipes.updateRecipe(input),
 
-        const recipe = new Recipe({
-          author: args.author,
-          title: args.title,
-          description: args.description,
-          cookTime: args.time,
-          difficulty: args.difficulty,
-          ingredients: args.ingredients,
-          method: args.method,
-          notes: args.notes,
-          tags: args.tags,
-          source: args.source,
-          created: new Date()
-        });
+    commentRecipe: async (root, { input }, context) =>
+      await context.services.recipes.commentRecipe(input),
 
-        await recipe.save();
-        user.recipes = user.recipes.concat(recipe._id);
-        await user.save();
-        return recipe;
-      } catch (error) {
-        logger.error(error);
-      }
-    },
+    updateComment: async (root, { input }, context) =>
+      await context.services.recipes.updateComment(input),
 
-    updateRecipe: async (root, { input }, { currentUser }) => {
-      try {
-        const { id, patch } = input;
-        if (!currentUser) {
-          return new AuthenticationError('must authenticate');
-        } else if (!currentUser.recipes.contains(id)) {
-          return new ForbiddenError('forbidden');
-        }
+    deleteComment: async (root, { input }, context) =>
+      await context.services.recipes.deleteComment(input),
 
-        return await Recipe.findByIdAndUpdate(id, patch, { new: true });
-      } catch (error) {
-        logger.error(error);
-      }
-    },
+    likeRecipe: async (root, { input }, context) =>
+      await context.services.recipes.likeRecipe(input),
 
-    commentRecipe: async (root, { input }, { currentUser }) => {
-      if (!currentUser) {
-        return new AuthenticationError('must authenticate');
-      }
+    unlikeRecipe: async (root, { input }, context) =>
+      await context.services.recipes.unlikeRecipe(input),
 
-      try {
-        const { recipeId, content } = input;
-        const recipe = await Recipe.findById(recipeId);
+    rateRecipe: async (root, { input }, context) =>
+      await context.services.recipes.rateRecipe(input),
 
-        const comment = { author: currentUser.id, content };
-
-        const patch = { comments: recipe.comments.concat(comment) };
-        return await Recipe.findByIdAndUpdate(recipeId, patch, { new: true });
-      } catch (error) {
-        logger.error(error);
-      }
-    },
-
-    updateComment: async (root, { input }, { currentUser }) => {
-      if (!currentUser) {
-        return new AuthenticationError('must authenticate');
-      }
-
-      try {
-        const { recipeId, content } = input;
-        const recipe = await Recipe.findById(recipeId);
-
-        const comment = { author: currentUser.id, content };
-
-        const patch = { comments: recipe.comments.concat(comment) };
-        return await Recipe.findByIdAndUpdate(recipeId, patch, { new: true });
-      } catch (error) {
-        logger.error(error);
-      }
-    },
-
-    deleteComment: async (root, { input }, { currentUser }) => {
-      if (!currentUser) {
-        return new AuthenticationError('must authenticate');
-      }
-
-      try {
-        const { recipeId, content } = input;
-        const recipe = await Recipe.findById(recipeId);
-
-        const comment = { author: currentUser.id, content };
-
-        const patch = { comments: recipe.comments.concat(comment) };
-        return await Recipe.findByIdAndUpdate(recipeId, patch, { new: true });
-      } catch (error) {
-        logger.error(error);
-      }
-    },
-
-    likeRecipe: async (root, { recipeId, userId }, { currentUser }) => {
-      if (!currentUser) {
-        return new AuthenticationError('must authenticate');
-      }
-
-      try {
-        const recipe = await Recipe.findById(recipeId);
-        if (recipe.likes.includes(userId)) {
-          return new UserInputError('operation not permitted');
-        }
-
-        const patch = { likes: recipe.likes.concat(userId) };
-        return await Recipe.findByIdAndUpdate(recipeId, patch, { new: true });
-      } catch (error) {
-        logger.error(error);
-      }
-    },
-
-    unlikeRecipe: async (root, { recipeId, userId }, { currentUser }) => {
-      if (!currentUser) {
-        return new AuthenticationError('must authenticate');
-      }
-
-      try {
-        const recipe = await Recipe.findById(recipeId);
-        if (!recipe.likes.includes(userId)) {
-          return new UserInputError('operation not permitted');
-        }
-
-        const patch = {
-          likes: recipe.likes.filter(like => like.user !== userId)
-        };
-
-        return await Recipe.findByIdAndUpdate(recipeId, patch, { new: true });
-      } catch (error) {
-        logger.error(error);
-      }
-    },
-
-    rateRecipe: async (root, { recipeId, grade }, { currentUser }) => {
-      if (!currentUser) {
-        return new AuthenticationError('must authenticate');
-      }
-
-      try {
-        const recipe = await Recipe.findById(recipeId);
-
-        const grade = {
-          user: currentUser.id,
-          grade: grade
-        };
-
-        const updatedRatings = recipe.ratings
-          .filter(rating => rating.user !== currentUser.id)
-          .concat(grade);
-
-        const patch = { ratings: updatedRatings };
-        return await Recipe.findByIdAndUpdate(recipeId, patch, { new: true });
-      } catch (error) {
-        logger.error(error);
-      }
-    },
-
-    deleteRecipe: async (root, { recipeId }, { currentUser }) => {
-      if (!currentUser) {
-        return new AuthenticationError('must authenticate');
-      }
-
-      try {
-        const recipe = await Recipe.findById(recipeId);
-
-        if (!recipe.author !== currentUser.id) {
-          return new ForbiddenError('forbidden');
-        }
-        await Recipe.findByIdAndRemove(recipeId);
-        return true;
-      } catch (error) {
-        logger.error(error);
-        return false;
-      }
-    }
+    deleteRecipe: async (root, input, context) =>
+      await context.services.recipes.deleteRecipe(input.recipeId)
   }
 };
 

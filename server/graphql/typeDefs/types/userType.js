@@ -16,26 +16,17 @@ const userType = gql`
   }
 
   extend type Query {
-    getUsers: [User!]!
+    getUsers: [User]
     getUser(username: String!): User
     userCount: Int!
   }
 
   extend type Mutation {
-    createUser(input: CreateUserInput!): UserPayload
     updateUser(input: UpdateUserInput!): UserPayload
     updateUsername(input: UpdateUsernameInput!): UserPayload
     updatePassword(input: UpdatePasswordInput!): Boolean
     followUser(input: FollowUserInput!): UserPayload
     deleteUser(password: String!): Boolean
-  }
-
-  input CreateUserInput {
-    firstname: String!
-    lastname: String!
-    email: String!
-    username: String!
-    password: String!
   }
 
   type UserPayload {
@@ -68,7 +59,7 @@ const userType = gql`
   }
 
   input FollowUserInput {
-    user: ID!
+    userId: ID!
   }
 `;
 
