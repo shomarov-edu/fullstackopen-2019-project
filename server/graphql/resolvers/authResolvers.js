@@ -4,11 +4,11 @@ const resolvers = {
   },
 
   Mutation: {
-    signup: async (root, { input }, context) =>
-      await context.services.auth.signup(input),
+    signup: async (root, { input }, { services }) =>
+      await services.auth.signup(input),
 
-    login: async (root, { input }, context) =>
-      await context.services.auth.login(input)
+    login: async (root, { input }, { services }) =>
+      await services.auth.login(input)
   }
 };
 

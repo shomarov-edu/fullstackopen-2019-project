@@ -1,11 +1,4 @@
 const { GraphQLScalarType, Kind } = require('graphql');
-const {
-  AuthenticationError,
-  ForbiddenError,
-  UserInputError
-} = require('apollo-server');
-const Recipe = require('../../models/recipe');
-const errorHandler = require('../../helpers/errorHandler');
 
 const recipeResolvers = {
   Date: new GraphQLScalarType({
@@ -26,53 +19,53 @@ const recipeResolvers = {
   }),
 
   Recipe: {
-    author: async ({ author }, args, context) =>
-      await context.services.users(author)
+    author: async ({ author }, args, { services }) =>
+      await services.users.getUser(author)
   },
 
   Comment: {
-    author: async ({ author }, args, context) =>
-      await context.services.users(author)
+    author: async ({ author }, args, { services }) =>
+      await services.users.getUser(author)
   },
 
   Query: {
-    getRecipes: async (root, args, context) =>
-      await context.services.recipes.getRecipes(),
+    getRecipes: async (root, args, { services }) =>
+      await services.recipes.getRecipes(),
 
-    getRecipe: async (root, { id }, context) =>
-      await context.services.recipes.getRecipe(id),
+    getRecipe: async (root, { id }, { services }) =>
+      await services.recipes.getRecipe(id),
 
-    recipeCount: async (root, args, context) =>
-      await context.services.recipes.recipeCount()
+    recipeCount: async (root, args, { services }) =>
+      await services.recipes.recipeCount()
   },
 
   Mutation: {
-    createRecipe: async (root, { input }, context) =>
-      await context.services.recipes.createRecipe(input),
+    createRecipe: async (root, { input }, { services }) =>
+      await services.recipes.createRecipe(input),
 
-    updateRecipe: async (root, { input }, context) =>
-      await context.services.recipes.updateRecipe(input),
+    updateRecipe: async (root, { input }, { services }) =>
+      await services.recipes.updateRecipe(input),
 
-    commentRecipe: async (root, { input }, context) =>
-      await context.services.recipes.commentRecipe(input),
+    commentRecipe: async (root, { input }, { services }) =>
+      await services.recipes.commentRecipe(input),
 
-    updateComment: async (root, { input }, context) =>
-      await context.services.recipes.updateComment(input),
+    updateComment: async (root, { input }, { services }) =>
+      await services.recipes.updateComment(input),
 
-    deleteComment: async (root, { input }, context) =>
-      await context.services.recipes.deleteComment(input),
+    deleteComment: async (root, { input }, { services }) =>
+      await services.recipes.deleteComment(input),
 
-    likeRecipe: async (root, { input }, context) =>
-      await context.services.recipes.likeRecipe(input),
+    likeRecipe: async (root, { input }, { services }) =>
+      await services.recipes.likeRecipe(input),
 
-    unlikeRecipe: async (root, { input }, context) =>
-      await context.services.recipes.unlikeRecipe(input),
+    unlikeRecipe: async (root, { input }, { services }) =>
+      await services.recipes.unlikeRecipe(input),
 
-    rateRecipe: async (root, { input }, context) =>
-      await context.services.recipes.rateRecipe(input),
+    rateRecipe: async (root, { input }, { services }) =>
+      await services.recipes.rateRecipe(input),
 
-    deleteRecipe: async (root, input, context) =>
-      await context.services.recipes.deleteRecipe(input.recipeId)
+    deleteRecipe: async (root, input, { services }) =>
+      await services.recipes.deleteRecipe(input.recipeId)
   }
 };
 

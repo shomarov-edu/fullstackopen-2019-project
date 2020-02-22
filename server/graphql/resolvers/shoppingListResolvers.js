@@ -1,153 +1,46 @@
-const { AuthenticationError, ForbiddenError } = require('apollo-server');
-const ShoppingList = require('../../models/shoppingList');
-const User = require('../../models/user');
-const errorHandler = require('../../helpers/errorHandler');
-
 const resolvers = {
   ShoppingList: {
-    owner: async root => {
-      try {
-        return await User.findById(root.owner);
-      } catch (error) {
-        errorHandler.handleError(error);
-      }
-    },
+    owner: async ({ owner }, args, { services }) =>
+      await services.users.getUser(owner),
 
-    sharedWith: async ({ id }) => {
-      try {
-        const shoppingList = await ShoppingList.findById(id).populate(
-          'sharedWith'
-        );
-        return shoppingList.sharedWith;
-      } catch (error) {
-        errorHandler.handleError(error);
-      }
-    }
+    sharedWith: async ({ shoppingListId }, args, { services }) =>
+      await services.shoppingListService.sharedWith(shoppingListId)
   },
 
   ShoppingListPayload: {
-    owner: async root => {
-      try {
-        return await User.findById(root.owner);
-      } catch (error) {
-        errorHandler.handleError(error);
-      }
-    },
+    owner: async ({ owner }, args, { services }) =>
+      await services.users.getUser(owner),
 
-    sharedWith: async ({ id }) => {
-      try {
-        const shoppingList = await ShoppingList.findById(id).populate(
-          'sharedWith'
-        );
-        return shoppingList.sharedWith;
-      } catch (error) {
-        errorHandler.handleError(error);
-      }
-    }
+    sharedWith: async ({ shoppingListId }, args, { services }) =>
+      await services.shoppingListService.sharedWith(shoppingListId)
   },
 
   Query: {
-    getShoppingLists: async (root, args, context) =>
-      await ShoppingList.find({}),
-    getShoppingList: async (root, id, context) =>
-      await ShoppingList.findById(id),
-    getShoppingListItems: async (root, id, context) => {
-      const shoppingList = await ShoppingList.findById(id);
-      return shoppingList.items;
-    }
+    getShoppingLists: async (root, args, { services }) =>
+      await services.shoppingListService.getShoppingLists(),
+
+    getShoppingList: async (root, shoppingListId, { services }) =>
+      await services.shoppingListService.getShoppingList(shoppingListId)
   },
 
   Mutation: {
-    createShoppingList: async (root, { input }, { currentUser }) => {
-      if (!currentUser) {
-        throw new AuthenticationError('you must be logged in');
-      }
+    createShoppingList: async (root, { input }, { services }) =>
+      await services.shoppingListService.createShoppingList(input),
 
-      const shoppingList = new ShoppingList({
-        owner: currentUser.id,
-        name: input.name
-      });
+    addItem: async (root, { input }, { services }) =>
+      await services.shoppingListService.addItem(input),
 
-      currentUser.shoppingLists = currentUser.shoppingLists.concat(
-        shoppingList
-      );
+    checkUncheckItem: async (root, { input }, { services }) =>
+      await services.shoppingListService.checkItem(input),
 
-      try {
-        await User.findByIdAndUpdate(
-          currentUser.id,
-          { shoppingLists: currentUser.shoppingLists },
-          { new: true }
-        );
+    checkAllItems: async (root, { input }, { services }) =>
+      await services.shoppingListService.checkAllItems(input),
 
-        return await shoppingList.save();
-      } catch (error) {
-        errorHandler.handleError(error);
-      }
-    },
+    deleteItem: async (root, { input }, { services }) =>
+      await services.shoppingListService.deleteItem(input),
 
-    addItem: async (root, { input }, { currentUser }) => {
-      if (!currentUser) {
-        throw new AuthenticationError('you must be logged in');
-      } else if (!currentUser.shoppingLists.find(s => s.id === input.id)) {
-        throw new ForbiddenError('forbidden');
-      }
-
-      const { shoppingListId, content } = input;
-
-      const newItem = { content, checked: false };
-
-      try {
-        const shoppingList = await ShoppingList.findById(shoppingListId);
-        shoppingList.items = shoppingList.items.concat(newItem);
-        return await ShoppingList.findByIdAndUpdate(
-          shoppingListId,
-          { items: shoppingList.items },
-          { new: true }
-        );
-      } catch (error) {
-        errorHandler.handleError(error);
-      }
-    },
-
-    checkItem: async (root, { input }, { currentUser }) => {
-      if (!currentUser) {
-        throw new AuthenticationError('you must be logged in');
-      } else if (!currentUser.shoppingLists.find(s => s.id === input.id)) {
-        throw new ForbiddenError('forbidden');
-      }
-    },
-
-    uncheckItem: async (root, { input }, { currentUser }) => {
-      if (!currentUser) {
-        throw new AuthenticationError('you must be logged in');
-      } else if (!currentUser.shoppingLists.find(s => s.id === input.id)) {
-        throw new ForbiddenError('forbidden');
-      }
-    },
-
-    checkAllItems: async (root, { input }, { currentUser }) => {
-      if (!currentUser) {
-        throw new AuthenticationError('you must be logged in');
-      } else if (!currentUser.shoppingLists.find(s => s.id === input.id)) {
-        throw new ForbiddenError('forbidden');
-      }
-    },
-
-    deleteItem: async (root, { input }, { currentUser }) => {
-      if (!currentUser) {
-        throw new AuthenticationError('you must be logged in');
-      } else if (!currentUser.shoppingLists.find(s => s.id === input.id)) {
-        throw new ForbiddenError('forbidden');
-      }
-    },
-
-    deleteShoppingList: async (root, { input }, { currentUser }) => {
-      if (!currentUser) {
-        throw new AuthenticationError('you must be logged in');
-      } else if (!currentUser.shoppingLists.find(s => s.id === input.id)) {
-        throw new ForbiddenError('forbidden');
-      }
-    }
+    deleteShoppingList: async (root, { input }, { services }) =>
+      await services.shoppingListService.deleteShoppingList(input)
   }
 };
 

@@ -16,7 +16,7 @@ const context = async ({ req }) => {
       auth,
       users: users.generateUserService(),
       recipes: recipes.generateRecipeService(),
-      categories,
+      categories: categories.generateCategoryService(),
       shoppingLists
     }
   };

@@ -24,8 +24,7 @@ const shoppingListType = gql`
   extend type Mutation {
     createShoppingList(input: CreateShoppingListInput): ShoppingListPayload
     addItem(input: AddNewItemInput): ShoppingListPayload
-    checkItem(input: CheckItemInput): ShoppingListPayload
-    uncheckItem(input: UncheckItemInput): ShoppingListPayload
+    checkUncheckItem(input: CheckItemInput): ShoppingListPayload
     checkAllItems(input: CheckAllItemsInput): ShoppingListPayload
     shareShoppingList(input: ShareShoppingListInput): ShareShoppingListPayload
     deleteItem(input: DeleteItemInput): ShoppingListPayload

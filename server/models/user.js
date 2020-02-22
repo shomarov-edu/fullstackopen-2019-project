@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const Category = require('./category');
+const ShoppingList = require('./shoppingList');
 
 const userSchema = new mongoose.Schema({
   username: {
@@ -28,12 +30,7 @@ const userSchema = new mongoose.Schema({
       ref: 'Recipe'
     }
   ],
-  categories: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Category'
-    }
-  ],
+  categories: [Category.schema],
   likes: [
     {
       type: mongoose.Schema.Types.ObjectId,
@@ -46,12 +43,7 @@ const userSchema = new mongoose.Schema({
       ref: 'User'
     }
   ],
-  shoppingLists: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'ShoppingList'
-    }
-  ]
+  shoppingLists: [ShoppingList.schema]
 });
 
 module.exports = mongoose.model('User', userSchema);

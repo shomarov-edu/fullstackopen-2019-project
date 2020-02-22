@@ -129,6 +129,7 @@ const generateRecipeService = user => ({
         throw new UserInputError('operation not permitted');
 
       const patch = { likes: recipe.likes.concat(user.id) };
+
       return await Recipe.findByIdAndUpdate(recipeId, patch, { new: true });
     } catch (error) {
       errorHandler.handleError(error);

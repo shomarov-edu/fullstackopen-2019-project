@@ -1,16 +1,5 @@
 const mongoose = require('mongoose');
-
-const commentSchema = new mongoose.Schema({
-  author: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
-  },
-  content: {
-    type: String,
-    required: true
-  },
-  added: Date
-});
+const Comment = require('./comment');
 
 const recipeSchema = new mongoose.Schema({
   author: {
@@ -67,7 +56,7 @@ const recipeSchema = new mongoose.Schema({
       }
     }
   ],
-  comments: [commentSchema]
+  comments: [Comment.schema]
 });
 
 module.exports = mongoose.model('Recipe', recipeSchema);
