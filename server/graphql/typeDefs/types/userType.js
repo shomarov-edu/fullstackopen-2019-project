@@ -1,6 +1,12 @@
 const { gql } = require('apollo-server');
 
 const userType = gql`
+  enum ROLE {
+    ADMIN
+    MODERATOR
+    USER
+  }
+
   type User {
     id: ID!
     username: String!
@@ -8,6 +14,7 @@ const userType = gql`
     firstname: String!
     lastname: String!
     passwordHash: String!
+    role: String!
     recipes: [Recipe]!
     categories: [Category]!
     likes: [Recipe]!

@@ -64,7 +64,7 @@ const recipeResolvers = {
     rateRecipe: async (root, { input }, { services }) =>
       await services.recipes.rateRecipe(input),
 
-    deleteRecipe: async (root, input, { services }) =>
+    deleteRecipe: async (root, { input }, { services }) =>
       await services.recipes.deleteRecipe(input.recipeId)
   }
 };

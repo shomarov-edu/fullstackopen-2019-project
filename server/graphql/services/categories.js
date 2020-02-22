@@ -8,9 +8,7 @@ const User = require('../../models/user');
 const errorHandler = require('../../helpers/errorHandler');
 
 const generateCategoryService = currentUser => {
-  if (!currentUser) {
-    throw new AuthenticationError('you must be logged in');
-  }
+  if (!currentUser) return null;
 
   return {
     getCategories: async () => {
@@ -124,4 +122,4 @@ const generateCategoryService = currentUser => {
   };
 };
 
-module.exports = generateCategoryService;
+module.exports = { generateCategoryService };

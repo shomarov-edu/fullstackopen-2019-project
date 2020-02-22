@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { AuthenticationError } = require('apollo-server');
+const { AuthenticationError, ForbiddenError } = require('apollo-server');
 
 const encryptPassword = async password => {
   const saltRounds = 10;
@@ -18,6 +18,14 @@ const getUser = async tokenWithBearer => {
   } catch (error) {
     throw new AuthenticationError('invalid token');
   }
+};
+
+const isAdmin = (currentUser, func) => {
+  console.log(currentUser);
+  if (!currentUser || !currentUser.roles.includes('ADMIN'))
+    throw new ForbiddenError('forbidden');
+
+  return func;
 };
 
 module.exports = { encryptPassword, comparePasswords, getUser };

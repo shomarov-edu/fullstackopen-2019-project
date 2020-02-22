@@ -26,8 +26,8 @@ const shoppingListType = gql`
     addItem(input: AddNewItemInput): ShoppingListPayload
     checkUncheckItem(input: CheckItemInput): ShoppingListPayload
     checkAllItems(input: CheckAllItemsInput): ShoppingListPayload
-    shareShoppingList(input: ShareShoppingListInput): ShareShoppingListPayload
     deleteItem(input: DeleteItemInput): ShoppingListPayload
+    shareShoppingList(input: ShareShoppingListInput): ShoppingListPayload
     deleteShoppingList(input: DeleteShoppingListInput): Boolean
   }
 

@@ -13,9 +13,7 @@ const authorizeUserForShoppingList = (currentUser, shoppingList) => {
 };
 
 const generateShoppingListService = currentUser => {
-  if (!currentUser) {
-    throw new AuthenticationError('you must be logged in');
-  }
+  if (!currentUser) return null;
 
   return {
     sharedWith: async id => {
@@ -146,4 +144,4 @@ const generateShoppingListService = currentUser => {
   };
 };
 
-module.exports = generateShoppingListService;
+module.exports = { generateShoppingListService };

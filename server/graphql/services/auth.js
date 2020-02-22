@@ -12,7 +12,8 @@ const auth = {
 
       const user = new User({
         ...userInput,
-        passwordHash: await authHelper.encryptPassword(password)
+        passwordHash: await authHelper.encryptPassword(password),
+        role: 'USER'
       });
 
       return await user.save();
@@ -23,6 +24,7 @@ const auth = {
 
   login: async ({ username, password }) => {
     try {
+      console.log(username, password);
       const user = await User.findOne({ username });
 
       const passwordCorrect =
@@ -36,7 +38,8 @@ const auth = {
 
       const userForToken = {
         id: user.id,
-        username: user.username
+        username: user.username,
+        roles: user.roles
       };
 
       return { token: await jwt.sign(userForToken, process.env.SECRET) };

@@ -1,12 +1,15 @@
 const bcrypt = require('bcrypt');
 const authHelper = require('../../helpers/authHelper');
 const User = require('../../models/user');
-const { AuthenticationError, UserInputError } = require('apollo-server');
+const {
+  AuthenticationError,
+  ForbiddenError,
+  UserInputError
+} = require('apollo-server');
 const errorHandler = require('../../helpers/errorHandler');
 
-const generateUserService = user => ({
+const generateUserService = currentUser => ({
   getUsers: async () => {
-    if (!user) throw new AuthenticationError('must authenticate');
     try {
       return await User.find({});
     } catch (error) {
@@ -30,16 +33,18 @@ const generateUserService = user => ({
     }
   },
 
-  updateUser: async input => {
-    if (!user) return null;
-
-    const { password, patch } = input;
-
-    if (!(await authHelper.comparePasswords(password, user.passwordHash))) {
-      throw new AuthenticationError('invalid username or password');
-    }
+  updateUser: async ({ password, patch }) => {
+    if (!currentUser) return null;
 
     try {
+      const user = await User.findById(user.id);
+
+      if (user.id !== currentUser.id) throw new ForbiddenError('forbidden');
+
+      if (!(await authHelper.comparePasswords(password, user.passwordHash))) {
+        throw new AuthenticationError('invalid username or password');
+      }
+
       return await User.findByIdAndUpdate(user.id, patch, {
         new: true
       });
@@ -48,17 +53,21 @@ const generateUserService = user => ({
     }
   },
 
-  updateUsername: async (input, user) => {
-    if (!user) return null;
-
-    const { password, patch } = input;
-
-    const passwordCorrect = await bcrypt.compare(password, user.passwordHash);
-
-    if (!passwordCorrect)
-      throw new AuthenticationError('invalid username or password');
+  updateUsername: async input => {
+    if (!currentUser) return null;
 
     try {
+      const user = await User.findById(user.id);
+
+      if (user.id !== currentUser.id) throw new ForbiddenError('forbidden');
+
+      const { password, patch } = input;
+
+      const passwordCorrect = await bcrypt.compare(password, user.passwordHash);
+
+      if (!passwordCorrect)
+        throw new AuthenticationError('invalid username or password');
+
       return await User.findByIdAndUpdate(user.id, patch, {
         new: true
       });
@@ -67,25 +76,23 @@ const generateUserService = user => ({
     }
   },
 
-  updatePassword: async (input, user) => {
-    if (!user) return null;
-
-    const { password, newPassword } = input;
-
-    const passwordCorrect = await bcrypt.compare(password, user.passwordHash);
-
-    if (!passwordCorrect) {
-      throw new AuthenticationError('invalid username or password');
-    }
-
-    const patch = {
-      passwordHash: await authHelper.encryptPassword(newPassword)
-    };
+  updatePassword: async input => {
+    if (!currentUser) return null;
 
     try {
-      await User.findByIdAndUpdate(user.id, patch, {
-        new: true
-      });
+      const user = await User.findById(user.id);
+
+      if (user.id !== currentUser.id) throw new ForbiddenError('forbidden');
+
+      const { password, newPassword } = input;
+
+      if (!(await bcrypt.compare(password, user.passwordHash))) {
+        throw new AuthenticationError('invalid username or password');
+      }
+
+      user.passwordHash = await authHelper.encryptPassword(newPassword);
+
+      await user.save();
       return true;
     } catch (error) {
       errorHandler.handleError(error);
@@ -93,40 +100,40 @@ const generateUserService = user => ({
     }
   },
 
-  followUser: async (input, user) => {
-    if (!user) return null;
-
-    const { userId } = input;
-
-    if (user.following.includes(userId))
-      throw new UserInputError('already following');
+  followUser: async ({ userId }) => {
+    if (!currentUser) return null;
 
     try {
+      const user = await User.findById(currentUser.id);
+
+      if (user.id !== currentUser.id) throw new ForbiddenError('forbidden');
+
+      if (user.following.includes(userId))
+        throw new UserInputError('already following');
+
       user.following = user.following.concat(userId);
 
-      const patch = { following: user.following };
-
-      return await User.findByIdAndUpdate(user.id, patch, {
-        new: true
-      });
+      return await user.save();
     } catch (error) {
       errorHandler.handleError(error);
     }
   },
 
-  deleteUser: async (password, user) => {
-    if (!user) return null;
-
-    const passwordCorrect = await bcrypt.compare(password, user.passwordHash);
-
-    if (!passwordCorrect)
-      throw new AuthenticationError('invalid username or password');
+  deleteUser: async password => {
+    if (!currentUser) return null;
 
     try {
-      await User.findByIdAndDelete(user.id);
+      const user = await User.findById(currentUser.id);
+
+      if (user.id !== currentUser.id) throw new ForbiddenError('forbidden');
+
+      if (!(await bcrypt.compare(password, user.passwordHash))) {
+        throw new AuthenticationError('invalid username or password');
+      }
+
+      await User.findByIdAndDelete(currentUser.id);
     } catch (error) {
       errorHandler.handleError(error);
-      throw error;
     }
   }
 });

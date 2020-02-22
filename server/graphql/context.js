@@ -1,23 +1,23 @@
 const auth = require('./services/auth');
 const { getUser } = require('../helpers/authHelper');
-const users = require('./services/users');
-const recipes = require('./services/recipes');
-const categories = require('./services/categories');
-const shoppingLists = require('./services/shoppingLists');
+const { generateUserService } = require('./services/users');
+const { generateRecipeService } = require('./services/recipes');
+const { generateCategoryService } = require('./services/categories');
+const { generateShoppingListService } = require('./services/shoppingLists');
 
 const context = async ({ req }) => {
   const tokenWithBearer = req.headers.authorization || '';
 
-  const user = tokenWithBearer ? await getUser(tokenWithBearer) : null;
+  const currentUser = tokenWithBearer ? await getUser(tokenWithBearer) : null;
 
   return {
-    user,
+    currentUser,
     services: {
       auth,
-      users: users.generateUserService(),
-      recipes: recipes.generateRecipeService(),
-      categories: categories.generateCategoryService(),
-      shoppingLists
+      users: generateUserService(currentUser),
+      recipes: generateRecipeService(currentUser),
+      categories: generateCategoryService(currentUser),
+      shoppingLists: generateShoppingListService(currentUser)
     }
   };
 };

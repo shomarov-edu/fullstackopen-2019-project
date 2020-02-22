@@ -7,7 +7,7 @@ const {
 } = require('apollo-server');
 const errorHandler = require('../../helpers/errorHandler');
 
-const generateRecipeService = user => ({
+const generateRecipeService = currentUser => ({
   getRecipes: async () => {
     try {
       return await Recipe.find({});
@@ -33,10 +33,10 @@ const generateRecipeService = user => ({
   },
 
   createRecipe: async input => {
-    if (!user) throw new AuthenticationError('you must be logged in');
+    if (!currentUser) return null;
 
     try {
-      const user = await User.findById(user.id);
+      const user = await User.findById(currentUser.id);
 
       const recipe = new Recipe({
         author: user.id,
@@ -53,12 +53,13 @@ const generateRecipeService = user => ({
   },
 
   updateRecipe: async ({ id, patch }) => {
-    if (!user) throw new AuthenticationError('you must be logged in');
+    if (!currentUser) return null;
 
     try {
       const recipe = await Recipe.findById(id);
 
-      if (recipe.author !== user.id) throw new ForbiddenError('forbidden');
+      if (recipe.author !== currentUser.id)
+        throw new ForbiddenError('forbidden');
 
       return await Recipe.findByIdAndUpdate(id, patch, { new: true });
     } catch (error) {
@@ -67,11 +68,12 @@ const generateRecipeService = user => ({
   },
 
   commentRecipe: async ({ recipeId, content }) => {
-    if (!user) return null;
+    if (!currentUser) return null;
+
     try {
       const recipe = await Recipe.findById(recipeId);
 
-      const comment = { author: user.id, content, date: new Date() };
+      const comment = { author: currentUser.id, content, date: new Date() };
 
       recipe.comments.create(comment);
 
@@ -82,16 +84,15 @@ const generateRecipeService = user => ({
   },
 
   updateComment: async ({ recipeId, commentId, content }) => {
-    if (!user) {
-      throw new AuthenticationError('you must be logged in');
-    }
+    if (!currentUser) return null;
 
     try {
       const recipe = await Recipe.findById(recipeId);
 
       const comment = recipe.comments.id(commentId);
 
-      if (comment.author !== user.id) throw new ForbiddenError('forbidden');
+      if (comment.author !== currentUser.id)
+        throw new ForbiddenError('forbidden');
 
       comment.content = content;
 
@@ -102,9 +103,7 @@ const generateRecipeService = user => ({
   },
 
   deleteComment: async ({ recipeId, commentId }) => {
-    if (!user) {
-      throw new AuthenticationError('you must be logged in');
-    }
+    if (!currentUser) return null;
 
     try {
       const recipe = await Recipe.findById(recipeId);
@@ -118,17 +117,15 @@ const generateRecipeService = user => ({
   },
 
   likeRecipe: async ({ recipeId }) => {
-    if (!user) {
-      throw new AuthenticationError('you must be logged in');
-    }
+    if (!currentUser) return null;
 
     try {
       const recipe = await Recipe.findById(recipeId);
 
-      if (recipe.likes.includes(user.id))
+      if (recipe.likes.includes(currentUser.id))
         throw new UserInputError('operation not permitted');
 
-      const patch = { likes: recipe.likes.concat(user.id) };
+      const patch = { likes: recipe.likes.concat(currentUser.id) };
 
       return await Recipe.findByIdAndUpdate(recipeId, patch, { new: true });
     } catch (error) {
@@ -137,18 +134,16 @@ const generateRecipeService = user => ({
   },
 
   unlikeRecipe: async ({ recipeId }) => {
-    if (!user) {
-      throw new AuthenticationError('you must be logged in');
-    }
+    if (!currentUser) return null;
 
     try {
       const recipe = await Recipe.findById(recipeId);
 
-      if (!recipe.likes.includes(user.id))
+      if (!recipe.likes.includes(currentUser.id))
         throw new UserInputError('operation not permitted');
 
       const patch = {
-        likes: recipe.likes.filter(like => like.user !== user.id)
+        likes: recipe.likes.filter(like => like.user !== currentUser.id)
       };
 
       return await Recipe.findByIdAndUpdate(recipeId, patch, { new: true });
@@ -158,21 +153,19 @@ const generateRecipeService = user => ({
   },
 
   rateRecipe: async ({ recipeId, grade }) => {
-    if (!user) {
-      throw new AuthenticationError('you must be logged in');
-    }
+    if (!currentUser) return null;
 
     try {
       const recipe = await Recipe.findById(recipeId);
 
-      const grade = {
-        user: user.id,
-        grade: grade
+      const rating = {
+        user: currentUser.id,
+        grade
       };
 
       const updatedRatings = recipe.ratings
-        .filter(rating => rating.user !== user.id)
-        .concat(grade);
+        .filter(rating => rating.user !== currentUser.id)
+        .concat(rating);
 
       const patch = { ratings: updatedRatings };
       return await Recipe.findByIdAndUpdate(recipeId, patch, { new: true });
@@ -182,14 +175,13 @@ const generateRecipeService = user => ({
   },
 
   deleteRecipe: async recipeId => {
-    if (!user) {
-      throw new AuthenticationError('you must be logged in');
-    }
+    if (!currentUser) return null;
 
     try {
       const recipe = await Recipe.findById(recipeId);
 
-      if (!recipe.author !== user.id) throw new ForbiddenError('forbidden');
+      if (!recipe.author !== currentUser.id)
+        throw new ForbiddenError('forbidden');
 
       await Recipe.findByIdAndRemove(recipeId);
       return true;
