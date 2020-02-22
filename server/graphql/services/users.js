@@ -6,7 +6,7 @@ const errorHandler = require('../../helpers/errorHandler');
 
 const generateUserService = user => ({
   getUsers: async () => {
-    if (!user || !user.roles.includes('admin')) return null;
+    if (!user) throw new AuthenticationError('must authenticate');
     try {
       return await User.find({});
     } catch (error) {
@@ -16,7 +16,7 @@ const generateUserService = user => ({
 
   getUser: async username => {
     try {
-      return await User.find({ username });
+      return await User.findOne(username);
     } catch (error) {
       errorHandler.handleError(error);
     }

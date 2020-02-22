@@ -1,7 +1,7 @@
 const resolvers = {
   Query: {
     getUsers: async (root, args, context) =>
-      await context.services.users.getAll(),
+      await context.services.users.getUsers(),
 
     getUser: async (root, args, context) =>
       await context.services.users.getUser(),
