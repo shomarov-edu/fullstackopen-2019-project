@@ -8,8 +8,6 @@ const formatError = err => {
     return new Error('Internal server error');
   } else if (err.message.startsWith('Context creation failed: forbidden')) {
     return new Error('Unauthorized');
-  } else if (err.message.startsWith('Internal Server Error')) {
-    return new Error('Internal Server Error');
   }
 
   // Otherwise return the original error.  The error can also

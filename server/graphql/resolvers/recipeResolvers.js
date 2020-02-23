@@ -19,53 +19,53 @@ const recipeResolvers = {
   }),
 
   Recipe: {
-    author: async ({ author }, args, { services }) =>
-      await services.users.getUser(author)
+    author: async ({ author }, args, { models }) =>
+      await models.User.getUser(author)
   },
 
   Comment: {
-    author: async ({ author }, args, { services }) =>
-      await services.users.getUser(author)
+    author: async ({ author }, args, { models }) =>
+      await models.User.getUser(author)
   },
 
   Query: {
-    getRecipes: async (root, args, { services }) =>
-      await services.recipes.getRecipes(),
+    getRecipes: async (root, args, { models }) =>
+      await models.Recipe.getRecipes(),
 
-    getRecipe: async (root, { id }, { services }) =>
-      await services.recipes.getRecipe(id),
+    getRecipe: async (root, { id }, { models }) =>
+      await models.Recipe.getRecipe(id),
 
-    recipeCount: async (root, args, { services }) =>
-      await services.recipes.recipeCount()
+    recipeCount: async (root, args, { models }) =>
+      await models.Recipe.recipeCount()
   },
 
   Mutation: {
-    createRecipe: async (root, { input }, { services }) =>
-      await services.recipes.createRecipe(input),
+    createRecipe: async (root, { input }, { models }) =>
+      await models.Recipe.createRecipe(input),
 
-    updateRecipe: async (root, { input }, { services }) =>
-      await services.recipes.updateRecipe(input),
+    updateRecipe: async (root, { input }, { models }) =>
+      await models.Recipe.updateRecipe(input),
 
-    commentRecipe: async (root, { input }, { services }) =>
-      await services.recipes.commentRecipe(input),
+    commentRecipe: async (root, { input }, { models }) =>
+      await models.Recipe.commentRecipe(input),
 
-    updateComment: async (root, { input }, { services }) =>
-      await services.recipes.updateComment(input),
+    updateComment: async (root, { input }, { models }) =>
+      await models.Recipe.updateComment(input),
 
-    deleteComment: async (root, { input }, { services }) =>
-      await services.recipes.deleteComment(input),
+    deleteComment: async (root, { input }, { models }) =>
+      await models.Recipe.deleteComment(input),
 
-    likeRecipe: async (root, { input }, { services }) =>
-      await services.recipes.likeRecipe(input),
+    likeRecipe: async (root, { input }, { models }) =>
+      await models.Recipe.likeRecipe(input),
 
-    unlikeRecipe: async (root, { input }, { services }) =>
-      await services.recipes.unlikeRecipe(input),
+    unlikeRecipe: async (root, { input }, { models }) =>
+      await models.Recipe.unlikeRecipe(input),
 
-    rateRecipe: async (root, { input }, { services }) =>
-      await services.recipes.rateRecipe(input),
+    rateRecipe: async (root, { input }, { models }) =>
+      await models.Recipe.rateRecipe(input),
 
-    deleteRecipe: async (root, { input }, { services }) =>
-      await services.recipes.deleteRecipe(input.recipeId)
+    deleteRecipe: async (root, { input }, { models }) =>
+      await models.Recipe.deleteRecipe(input.recipeId)
   }
 };
 

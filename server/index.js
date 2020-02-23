@@ -2,22 +2,19 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 const options = require('./config/mongoose');
 const server = require('./config/apollo');
-
+const { handleError } = require('./helpers/errorHandler');
 const logger = require('./config/winston');
 
 logger.info('connecting to', process.env.MONGODB_URI);
 
-try {
-  mongoose.connect(process.env.MONGODB_URI, options);
-  console.log('connected to MongoDB');
-} catch (error) {
-  console.log('error connecting to MongoDB:', error.message);
-}
+mongoose
+  .connect(process.env.MONGODB_URI, options)
+  .catch(error => handleError(error));
 
 mongoose.connection.on('error', error => {
-  console.log(error);
+  logger.error(error);
 });
 
 server.listen().then(({ url }) => {
-  console.log(`🚀  Server ready at ${url}`);
+  logger.info(`🚀  Server ready at ${url}`);
 });

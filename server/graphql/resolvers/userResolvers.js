@@ -1,29 +1,52 @@
 const resolvers = {
   Query: {
-    getUsers: async (root, args, { services }) =>
-      await services.users.getUsers(),
+    getUsers: async (root, args, { models }) => await models.User.getUsers(),
 
-    getUser: async (root, args, { services }) => await services.users.getUser(),
+    getUser: async (root, { username }, { models }) =>
+      await models.User.getUser(username),
 
-    userCount: async (root, args, { services }) =>
-      await services.users.userCount()
+    userCount: async (root, args, { models }) => await models.User.userCount(),
+
+    getCategories: async (root, args, { models }) =>
+      await models.User.getCategories(),
+
+    getCategory: async (root, { categoryId }, { models }) =>
+      await models.User.getCategory(categoryId),
+
+    getCategoryRecipes: async (root, { categoryId }, { models }) =>
+      await models.User.getCategoryRecipes(categoryId)
   },
 
   Mutation: {
-    updateUser: async (root, { input }, { services }) =>
-      await services.users.updateUser(input),
+    updateUser: async (root, { input }, { models }) =>
+      await models.User.updateUser(input),
 
-    updateUsername: async (root, { input }, { services }) =>
-      await services.users.updateUsername(input),
+    updateUsername: async (root, { input }, { models }) =>
+      await models.User.updateUsername(input),
 
-    updatePassword: async (root, { input }, { services }) =>
-      await services.users.updatePassword(input),
+    updatePassword: async (root, { input }, { models }) =>
+      await models.User.updatePassword(input),
 
-    followUser: async (root, { input }, { services }) =>
-      await services.users.followUser(input),
+    followUser: async (root, { input }, { models }) =>
+      await models.User.followUser(input),
 
-    deleteUser: async (root, { password }, { services }) =>
-      await services.users.deleteUser(password)
+    deleteUser: async (root, { password }, { models }) =>
+      await models.User.deleteUser(password),
+
+    createCategory: async (root, { input }, { models }) =>
+      await models.User.createCategory(input),
+
+    renameCategory: async (root, { input }, { models }) =>
+      await models.User.renameCategory(input),
+
+    addRecipe: async (root, { input }, { models }) =>
+      await models.User.addRecipe(input),
+
+    removeRecipe: async (root, { input }, { models }) =>
+      await models.User.removeRecipe(input),
+
+    deleteCategory: async (root, { input }, { models }) =>
+      await models.User.deleteCategory(input)
   }
 };
 

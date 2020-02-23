@@ -3,9 +3,7 @@ const appRoot = require('app-root-path');
 
 var glob = require('glob');
 
-const typeDefs = glob
-  .sync(`${appRoot}/graphql/typeDefs/**/*.js`)
-  .map(file => require(file));
+const typeDefs = require('./typeDefs');
 
 const resolvers = glob
   .sync(`${appRoot}/graphql/resolvers/*.js`)

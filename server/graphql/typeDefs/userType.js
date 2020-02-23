@@ -23,7 +23,7 @@ const userType = gql`
   }
 
   extend type Query {
-    getUsers: [User]
+    getUsers: [User]!
     getUser(username: String!): User
     userCount: Int!
   }

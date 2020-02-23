@@ -1,9 +1,9 @@
-const authHelper = require('../../helpers/authHelper');
+const authHelper = require('../helpers/authorizationHelper');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { UserInputError } = require('apollo-server');
-const User = require('../../models/user');
-const errorHandler = require('../../helpers/errorHandler');
+const User = require('../models/user');
+const { handleError } = require('../helpers/errorHandler');
 
 const auth = {
   signup: async input => {
@@ -18,13 +18,12 @@ const auth = {
 
       return await user.save();
     } catch (error) {
-      errorHandler.handleError(error);
+      handleError(error);
     }
   },
 
   login: async ({ username, password }) => {
     try {
-      console.log(username, password);
       const user = await User.findOne({ username });
 
       const passwordCorrect =
@@ -44,7 +43,7 @@ const auth = {
 
       return { token: await jwt.sign(userForToken, process.env.SECRET) };
     } catch (error) {
-      errorHandler.handleError(error);
+      handleError(error);
     }
   }
 };

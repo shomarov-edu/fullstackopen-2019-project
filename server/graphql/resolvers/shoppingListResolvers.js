@@ -1,46 +1,46 @@
 const resolvers = {
   ShoppingList: {
-    owner: async ({ owner }, args, { services }) =>
-      await services.users.getUser(owner),
+    owner: async ({ owner }, args, { models }) =>
+      await models.User.getUser(owner),
 
-    sharedWith: async ({ shoppingListId }, args, { services }) =>
-      await services.shoppingListService.sharedWith(shoppingListId)
+    sharedWith: async ({ shoppingListId }, args, { models }) =>
+      await models.shoppingList.sharedWith(shoppingListId)
   },
 
   ShoppingListPayload: {
-    owner: async ({ owner }, args, { services }) =>
-      await services.users.getUser(owner),
+    owner: async ({ owner }, args, { models }) =>
+      await models.User.getUser(owner),
 
-    sharedWith: async ({ shoppingListId }, args, { services }) =>
-      await services.shoppingListService.sharedWith(shoppingListId)
+    sharedWith: async ({ shoppingListId }, args, { models }) =>
+      await models.shoppingList.sharedWith(shoppingListId)
   },
 
   Query: {
-    getShoppingLists: async (root, args, { services }) =>
-      await services.shoppingListService.getShoppingLists(),
+    getShoppingLists: async (root, args, { models }) =>
+      await models.shoppingList.getShoppingLists(),
 
-    getShoppingList: async (root, shoppingListId, { services }) =>
-      await services.shoppingListService.getShoppingList(shoppingListId)
+    getShoppingList: async (root, shoppingListId, { models }) =>
+      await models.shoppingList.getShoppingList(shoppingListId)
   },
 
   Mutation: {
-    createShoppingList: async (root, { input }, { services }) =>
-      await services.shoppingListService.createShoppingList(input),
+    createShoppingList: async (root, { input }, { models }) =>
+      await models.shoppingList.createShoppingList(input),
 
-    addItem: async (root, { input }, { services }) =>
-      await services.shoppingListService.addItem(input),
+    addItem: async (root, { input }, { models }) =>
+      await models.shoppingList.addItem(input),
 
-    checkUncheckItem: async (root, { input }, { services }) =>
-      await services.shoppingListService.checkItem(input),
+    checkUncheckItem: async (root, { input }, { models }) =>
+      await models.shoppingList.checkItem(input),
 
-    checkAllItems: async (root, { input }, { services }) =>
-      await services.shoppingListService.checkAllItems(input),
+    checkAllItems: async (root, { input }, { models }) =>
+      await models.shoppingList.checkAllItems(input),
 
-    deleteItem: async (root, { input }, { services }) =>
-      await services.shoppingListService.deleteItem(input),
+    deleteItem: async (root, { input }, { models }) =>
+      await models.shoppingList.deleteItem(input),
 
-    deleteShoppingList: async (root, { input }, { services }) =>
-      await services.shoppingListService.deleteShoppingList(input)
+    deleteShoppingList: async (root, { input }, { models }) =>
+      await models.shoppingList.deleteShoppingList(input)
   }
 };
 

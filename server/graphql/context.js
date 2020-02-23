@@ -1,9 +1,8 @@
-const auth = require('./services/auth');
-const { getUser } = require('../helpers/authHelper');
-const { generateUserService } = require('./services/users');
-const { generateRecipeService } = require('./services/recipes');
-const { generateCategoryService } = require('./services/categories');
-const { generateShoppingListService } = require('./services/shoppingLists');
+const authorization = require('./authorization');
+const { getUser } = require('../helpers/authorizationHelper');
+const User = require('../models/user');
+const Recipe = require('../models/recipe');
+const ShoppingList = require('../models/shoppingList');
 
 const context = async ({ req }) => {
   const tokenWithBearer = req.headers.authorization || '';
@@ -12,12 +11,11 @@ const context = async ({ req }) => {
 
   return {
     currentUser,
-    services: {
-      auth,
-      users: generateUserService(currentUser),
-      recipes: generateRecipeService(currentUser),
-      categories: generateCategoryService(currentUser),
-      shoppingLists: generateShoppingListService(currentUser)
+    authorization,
+    models: {
+      User: User.generateUserModel(currentUser),
+      Recipe: Recipe.generateRecipeModel(currentUser),
+      ShoppingList: ShoppingList.generateShoppingListModel(currentUser)
     }
   };
 };
