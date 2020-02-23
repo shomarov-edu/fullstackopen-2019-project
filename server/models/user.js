@@ -1,15 +1,14 @@
 const mongoose = require('mongoose');
-const ShoppingList = require('./shoppingList');
 const {
   encryptPassword,
   comparePasswords
 } = require('../helpers/authorizationHelper');
-const { handleError } = require('../helpers/errorHandler');
 const {
   AuthenticationError,
   ForbiddenError,
   UserInputError
 } = require('apollo-server');
+const { handleError } = require('../helpers/errorHandler');
 
 const categorySchema = new mongoose.Schema({
   name: {
@@ -63,10 +62,13 @@ const userSchema = new mongoose.Schema({
   following: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'this'
+      ref: 'User'
     }
   ],
-  shoppingLists: [ShoppingList.schema]
+  shoppingLists: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'ShoppingList'
+  }
 });
 
 userSchema.statics.generateUserModel = function(currentUser) {
@@ -230,14 +232,22 @@ userSchema.statics.generateUserModel = function(currentUser) {
 
     createCategory: async input => {
       try {
+        console.log(currentUser);
+        console.log(input);
         const user = await this.findById(currentUser.id);
+
+        console.log(user);
 
         const category = new this({
           currentUser: currentUser.id,
           name: input.name
         });
 
-        user.categories.create(category);
+        console.log(category);
+
+        user.categories.push(category);
+
+        console.log(user);
 
         return await user.save();
       } catch (error) {
@@ -311,4 +321,4 @@ userSchema.statics.generateUserModel = function(currentUser) {
   };
 };
 
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model('this', userSchema);

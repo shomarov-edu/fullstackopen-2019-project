@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const User = require('./user');
+console.log('shoppinglist', User);
 const { handleError } = require('../helpers/errorHandler');
 const {
   authorizeUserForShoppingList
@@ -66,15 +67,11 @@ shoppingListSchema.statics.generateShoppingListModel = function(currentUser) {
           name: input.name
         });
 
-        currentUser.shoppingLists = currentUser.shoppingLists.concat(
-          shoppingList
-        );
+        const user = await User.findById(currentUser.id);
 
-        await User.findByIdAndUpdate(
-          currentUser.id,
-          { shoppingLists: currentUser.shoppingLists },
-          { new: true }
-        );
+        user.shoppingLists = user.shoppingLists.concat(shoppingList);
+
+        await user.save();
 
         return await shoppingList.save();
       } catch (error) {

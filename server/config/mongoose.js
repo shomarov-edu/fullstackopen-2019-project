@@ -1,3 +1,5 @@
+// Mongoose options
+
 const options = {
   useNewUrlParser: true,
   useUnifiedTopology: true,

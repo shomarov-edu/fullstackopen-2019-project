@@ -34,7 +34,7 @@ const resolvers = {
       await models.User.deleteUser(password),
 
     createCategory: async (root, { input }, { models }) =>
-      await models.User.createCategory(input),
+      await models.Category.createCategory(input),
 
     renameCategory: async (root, { input }, { models }) =>
       await models.User.renameCategory(input),
@@ -47,6 +47,10 @@ const resolvers = {
 
     deleteCategory: async (root, { input }, { models }) =>
       await models.User.deleteCategory(input)
+  },
+
+  CreateCategoryPayload: {
+    user: async (root, args, { models }) => root
   }
 };
 

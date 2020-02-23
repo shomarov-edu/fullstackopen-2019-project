@@ -15,7 +15,7 @@ const categoryType = gql`
   }
 
   extend type Mutation {
-    createCategory(input: CreateCategoryInput): Category!
+    createCategory(input: CreateCategoryInput): CreateCategoryPayload!
     renameCategory(input: RenameCategoryInput): Category!
     addRecipe(input: AddRecipeInput): Category!
     removeRecipe(input: RemoveRecipeInput): Category!
@@ -24,6 +24,10 @@ const categoryType = gql`
 
   input CreateCategoryInput {
     name: String!
+  }
+
+  type CreateCategoryPayload {
+    user: User
   }
 
   input RenameCategoryInput {
