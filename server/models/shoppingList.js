@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const User = require('./user');
-console.log('shoppinglist', User);
 const { handleError } = require('../helpers/errorHandler');
 const {
   authorizeUserForShoppingList
@@ -35,7 +34,7 @@ shoppingListSchema.statics.generateShoppingListModel = function(currentUser) {
   return {
     sharedWith: async id => {
       try {
-        const shoppingList = await this.findById(id).populate('sharedWith');
+        const shoppingList = await this.findById(id);
         return shoppingList.sharedWith;
       } catch (error) {
         handleError(error);

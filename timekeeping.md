@@ -46,4 +46,4 @@
 | 20.01 | 6    | graphql development                                      |
 | 21.01 | 6    | graphql development                                      |
 | 22.01 | 4    | graphql development                                      |
-| 22.01 | 4    | graphql development                                      |
+| 23.01 | 4    | graphql development                                      |

@@ -215,7 +215,7 @@ userSchema.statics.generateUserModel = function(currentUser) {
 
     getCategory: async categoryId => {
       try {
-        return await this.findById(categoryId).populate('recipes');
+        return await this.findById(categoryId);
       } catch (error) {
         handleError(error);
       }
@@ -223,7 +223,7 @@ userSchema.statics.generateUserModel = function(currentUser) {
 
     getCategoryRecipes: async categoryId => {
       try {
-        const category = await this.findById(categoryId).populate('recipes');
+        const category = await this.findById(categoryId);
         return category.recipes;
       } catch (error) {
         handleError(error);

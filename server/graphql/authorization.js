@@ -1,8 +1,10 @@
-const authHelper = require('../helpers/authorizationHelper');
-const bcrypt = require('bcrypt');
+const {
+  encryptPassword,
+  comparePasswords
+} = require('../helpers/authorizationHelper');
 const jwt = require('jsonwebtoken');
-const { UserInputError } = require('apollo-server');
 const User = require('../models/user');
+const { UserInputError } = require('apollo-server');
 const { handleError } = require('../helpers/errorHandler');
 
 const auth = {
@@ -12,8 +14,7 @@ const auth = {
 
       const user = new User({
         ...userInput,
-        passwordHash: await authHelper.encryptPassword(password),
-        role: 'USER'
+        passwordHash: await encryptPassword(password)
       });
 
       return await user.save();
@@ -29,7 +30,7 @@ const auth = {
       const passwordCorrect =
         user === null
           ? false
-          : await bcrypt.compare(password, user.passwordHash);
+          : await comparePasswords(password, user.passwordHash);
 
       if (!(user && passwordCorrect)) {
         throw new UserInputError('invalid username or password');
@@ -38,7 +39,7 @@ const auth = {
       const userForToken = {
         id: user.id,
         username: user.username,
-        roles: user.roles
+        roles: user.role
       };
 
       return { token: await jwt.sign(userForToken, process.env.SECRET) };
