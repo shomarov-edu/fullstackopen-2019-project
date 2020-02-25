@@ -26,24 +26,25 @@
 | 30.01 | 2    | creation of signin and signup forms                      |
 | 31.01 | 2    | sign in, sign up & sign out functionality implementation |
 | 31.01 | 2    | creation of new recipe form                              |
-| 03.01 | 4    | frontend development                                     |
-| 05.01 | 6    | material-ui deletion, refactoring project to plain html  |
-| 06.01 | 4    | frontend development                                     |
-| 07.01 | 2    | frontend development                                     |
-| 08.01 | 2    | frontend development                                     |
-| 09.01 | 2    | frontend development, refactoring                        |
-| 10.01 | 6    | backend rebuilding                                       |
-| 11.01 | 8    | backend rebuilding                                       |
-| 11.01 | 8    | backend development                                      |
-| 12.01 | 6    | backend development                                      |
-| 13.01 | 4    | backend development                                      |
-| 14.01 | 4    | learning                                                 |
-| 15.01 | 2    | learning                                                 |
-| 16.01 | 2    | learning                                                 |
-| 17.01 | 6    | switch to graphql                                        |
-| 18.01 | 4    | graphql development                                      |
-| 19.01 | 8    | graphql development                                      |
-| 20.01 | 6    | graphql development                                      |
-| 21.01 | 6    | graphql development                                      |
-| 22.01 | 4    | graphql development                                      |
-| 23.01 | 4    | graphql development                                      |
+| 03.02 | 4    | frontend development                                     |
+| 05.02 | 6    | material-ui deletion, refactoring project to plain html  |
+| 06.02 | 4    | frontend development                                     |
+| 07.02 | 2    | frontend development                                     |
+| 08.02 | 2    | frontend development                                     |
+| 09.02 | 2    | frontend development, refactoring                        |
+| 10.02 | 6    | backend rebuilding                                       |
+| 11.02 | 8    | backend rebuilding                                       |
+| 11.02 | 8    | backend development                                      |
+| 12.02 | 6    | backend development                                      |
+| 13.02 | 4    | backend development                                      |
+| 14.02 | 4    | learning                                                 |
+| 15.02 | 2    | learning                                                 |
+| 16.02 | 2    | learning                                                 |
+| 17.02 | 6    | switch to graphql                                        |
+| 18.02 | 4    | graphql development                                      |
+| 19.02 | 8    | graphql development                                      |
+| 20.02 | 6    | graphql development                                      |
+| 21.02 | 6    | graphql development                                      |
+| 22.02 | 4    | graphql development                                      |
+| 23.02 | 4    | graphql development                                      |
+| 25.02 | 4    | switch mongoose for prisma                               |

@@ -3,9 +3,11 @@ const {
   comparePasswords
 } = require('../helpers/authorizationHelper');
 const jwt = require('jsonwebtoken');
-const User = require('../models/user');
+const { prisma } = require('../generated/prisma-client/');
 const { UserInputError } = require('apollo-server');
 const { handleError } = require('../helpers/errorHandler');
+
+const User = 'temp';
 
 const auth = {
   signup: async input => {

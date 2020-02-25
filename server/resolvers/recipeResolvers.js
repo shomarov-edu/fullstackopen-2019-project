@@ -1,33 +1,6 @@
 const { GraphQLScalarType, Kind } = require('graphql');
 
 const recipeResolvers = {
-  Date: new GraphQLScalarType({
-    name: 'Date',
-    description: 'Date custom scalar type',
-    parseValue(value) {
-      throw new Date(value);
-    },
-    serialize(value) {
-      return value.getTime();
-    },
-    parseLiteral(ast) {
-      if (ast.kind === Kind.INT) {
-        return parseInt(ast.value, 10);
-      }
-      return null;
-    }
-  }),
-
-  Recipe: {
-    author: async ({ author }, args, { models }) =>
-      await models.User.getUser(author)
-  },
-
-  Comment: {
-    author: async ({ author }, args, { models }) =>
-      await models.User.getUser(author)
-  },
-
   Query: {
     getRecipes: async (root, args, { models }) =>
       await models.Recipe.getRecipes(),
@@ -66,6 +39,16 @@ const recipeResolvers = {
 
     deleteRecipe: async (root, { input }, { models }) =>
       await models.Recipe.deleteRecipe(input.recipeId)
+  },
+
+  Recipe: {
+    author: async ({ author }, args, { models }) =>
+      await models.User.getUser(author)
+  },
+
+  Comment: {
+    author: async ({ author }, args, { models }) =>
+      await models.User.getUser(author)
   }
 };
 

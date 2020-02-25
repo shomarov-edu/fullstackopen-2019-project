@@ -1,0 +1,66 @@
+enum Role {
+  ADMIN
+  MODERATOR
+  USER
+}
+
+enum Category {
+  BREAKFAST
+  SOUPS
+  MAINS
+  DESSERTS
+}
+
+enum Difficulty {
+  EASY
+  INTERMEDIATE
+  HARD
+}
+
+type User {
+  id: ID! @id
+  username: String! @unique
+  email: String! @unique
+  firstname: String!
+  lastname: String!
+  passwordHash: String!
+  role: Role! @default(value: USER)
+  registered: DateTime! @createdAt
+  recipes: [Recipe]! @relation(name: "WrittenRecipes", link: INLINE)
+  likedRecipes: [Recipe]! @relation(name: "LikedRecipes", link: INLINE)
+  following: [User]! @relation(name: "FollowRelation", link: INLINE)
+  followers: [User]! @relation(name: "FollowRelation")
+}
+
+type Recipe {
+  id: ID! @id
+  author: User! @relation(name: "WrittenRecipes")
+  category: Category!
+  title: String!
+  description: String!
+  cookingTime: Int!
+  difficulty: Difficulty!
+  ingredients: [String!]!
+  method: [String!]!
+  notes: [String]!
+  tags: [String]!
+  source: String!
+  created: DateTime! @createdAt
+  updated: DateTime! @updatedAt
+  published: Boolean! @default(value: false)
+  likedBy: [User]! @relation(name: "LikedRecipes")
+  ratings: [Grade]!
+  comments: [Comment]!
+}
+
+type Comment @embedded {
+  id: ID!
+  author: User! @relation(link: INLINE)
+  content: String!
+}
+
+type Grade @embedded {
+  id: ID!
+  rater: User! @relation(link: INLINE)
+  grade: Int!
+}

@@ -1,8 +1,6 @@
 const authorization = require('./authorization');
+const { prisma } = require('../generated/prisma-client/');
 const { getUser } = require('../helpers/authorizationHelper');
-const User = require('../models/user');
-const Recipe = require('../models/recipe');
-const ShoppingList = require('../models/shoppingList');
 
 const context = async ({ req }) => {
   const tokenWithBearer = req.headers.authorization || '';
@@ -12,11 +10,7 @@ const context = async ({ req }) => {
   return {
     currentUser,
     authorization,
-    models: {
-      User: User.generateUserModel(currentUser),
-      Recipe: Recipe.generateRecipeModel(currentUser),
-      ShoppingList: ShoppingList.generateShoppingListModel(currentUser)
-    }
+    prisma
   };
 };
 

@@ -1,6 +1,15 @@
-const { ApolloServer } = require('apollo-server');
-const schema = require('../graphql/schema');
+const { ApolloServer, makeExecutableSchema } = require('apollo-server');
+const fs = require('fs');
+const appRoot = require('app-root-path');
+const resolvers = require('../resolvers');
 const context = require('../graphql/context');
+
+const typeDefs = fs.readFileSync(`${appRoot}/graphql/schema.graphql`, 'utf8');
+
+const schema = makeExecutableSchema({
+  typeDefs,
+  resolvers
+});
 
 const formatError = error => {
   // Don't give the specific errors to the client.

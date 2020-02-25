@@ -1,19 +1,33 @@
 version: '3.7'
 volumes:
-  mongodb:
+  mongo:
 services:
-  mongodb:
-    build:
-      dockerfile: Dockerfile.dev
-      context: ./mongodb
-    image: shomarov/mongodb
-    container_name: mongodb
-    env_file: ./mongodb/.env
-    volumes:
-      - mongodb:/data/db
-    ports:
-      - 27017-27019:27017-27019
+  mongo:
+    image: mongo
+    container_name: mongo
     restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: prisma
+      MONGO_INITDB_ROOT_PASSWORD: prisma
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo:/var/lib/mongo
+  prisma:
+    image: prismagraphql/prisma:1.34
+    container_name: prisma
+    restart: always
+    ports:
+      - 4466:4466
+    environment:
+      PRISMA_CONFIG: |
+        port: 4466
+        databases:
+          default:
+            connector: mongo
+            uri: mongodb://prisma:prisma@mongo
+    depends_on:
+      - mongo
   server:
     container_name: server
     build:
@@ -23,13 +37,17 @@ services:
     volumes:
       - /server/node_modules
       - ./server:/server
+    command: >
+      sh -c "./wait-for prisma:4466 --
+             echo Connection to Prisma is up. &&
+             prisma deploy &&
+             npm run dev"
     ports:
       - 4000:4000
-      - 5000:5000
     env_file:
       - ./server/.env
     depends_on:
-      - mongodb
+      - prisma
     restart: unless-stopped
   client:
     container_name: client

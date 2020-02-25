@@ -1,0 +1,233 @@
+# Define root Query and Mutation to extend from
+type Query {
+  root: String
+}
+
+type Mutation {
+  root: String
+}
+
+enum ROLE {
+  ADMIN
+  MODERATOR
+  USER
+}
+
+type User {
+  id: ID!
+  username: String!
+  email: String!
+  firstname: String!
+  lastname: String!
+  passwordHash: String!
+  role: String!
+  recipes: [Recipe]!
+  likes: [Recipe]!
+  following: [User]!
+}
+
+extend type Query {
+  getUsers: [User]!
+  getUser(username: String!): User
+  userCount: Int!
+}
+
+extend type Mutation {
+  updateUser(input: UpdateUserInput!): UserPayload
+  updateUsername(input: UpdateUsernameInput!): UserPayload
+  updatePassword(input: UpdatePasswordInput!): Boolean
+  followUser(input: FollowUserInput!): UserPayload
+  deleteUser(password: String!): Boolean
+}
+
+type UserPayload {
+  id: ID!
+  username: String!
+  email: String!
+  firstname: String!
+  lastname: String!
+}
+
+input UserInput {
+  firstname: String
+  lastname: String
+  email: String
+}
+
+input UpdateUserInput {
+  password: String!
+  patch: UserInput!
+}
+
+input UpdateUsernameInput {
+  password: String!
+  username: String!
+}
+
+input UpdatePasswordInput {
+  password: String!
+  newPassword: String!
+}
+
+input FollowUserInput {
+  userId: ID!
+}
+
+enum Difficulty {
+  EASY
+  INTERMEDIATE
+  HARD
+}
+
+type Recipe {
+  id: ID!
+  author: User!
+  title: String!
+  description: String!
+  cookTime: Int!
+  difficulty: Difficulty!
+  ingredients: [String!]!
+  method: [String!]!
+  notes: [String]
+  tags: [String]
+  source: String
+  created: String!
+  likes: [User]
+  comments: [Comment]
+  ratings: [Grade]
+}
+
+type Comment {
+  id: ID!
+  author: User!
+  content: String!
+}
+
+type Grade {
+  id: ID!
+  rater: User!
+  grade: Int!
+}
+
+extend type Query {
+  getRecipes: [Recipe]!
+  getRecipe(id: ID!): Recipe
+  recipeCount: Int!
+}
+
+extend type Mutation {
+  createRecipe(recipe: CreateRecipeInput): RecipePayload
+  updateRecipe(input: UpdateRecipeInput): Recipe
+  commentRecipe(input: CommentRecipeInput): Recipe
+  updateComment(input: CommentRecipeInput): Recipe
+  deleteComment(input: CommentRecipeInput): Recipe
+  likeRecipe(input: LikeRecipeInput): Recipe
+  unlikeRecipe(input: UnlikeRecipeInput): Recipe
+  rateRecipe(input: RateRecipeInput): Recipe
+  deleteRecipe(input: DeleteRecipeInput!): Boolean
+}
+
+type RecipePayload {
+  id: ID!
+  author: User!
+  title: String!
+  description: String!
+  cookTime: Int!
+  difficulty: Difficulty!
+  ingredients: [String!]!
+  method: [String!]!
+  notes: [String]!
+  tags: [String]!
+  source: String!
+  created: String!
+  likes: [User]!
+  comments: [Comment]!
+  ratings: [Grade]!
+}
+
+input CreateRecipeInput {
+  title: String!
+  description: String!
+  cookTime: Int!
+  difficulty: Difficulty!
+  ingredients: [String!]!
+  method: [String!]!
+  notes: [String]
+  tags: [String]
+  source: String
+}
+
+input RecipeInput {
+  title: String!
+  description: String!
+  cookTime: Int!
+  difficulty: Difficulty!
+  ingredients: [String]
+  method: [String]!
+  notes: [String]
+  tags: [String]
+  source: String
+}
+
+input UpdateRecipeInput {
+  recipeId: ID!
+  patch: RecipeInput
+}
+
+input CommentRecipeInput {
+  recipeId: ID!
+  content: String!
+}
+
+input UpdateCommentInput {
+  recipeId: ID!
+  content: String!
+}
+
+input DeleteCommentInput {
+  recipeId: ID!
+  content: String!
+}
+
+input LikeRecipeInput {
+  recipeId: ID!
+}
+
+input UnlikeRecipeInput {
+  recipeId: ID!
+}
+
+input RateRecipeInput {
+  recipeId: ID!
+  grade: Int!
+}
+
+input DeleteRecipeInput {
+  recipeId: ID!
+}
+
+type Token {
+  token: String!
+}
+
+extend type Query {
+  me: User
+}
+
+extend type Mutation {
+  signup(input: CreateUserInput!): Boolean!
+  login(input: LoginInput!): Token
+}
+
+input CreateUserInput {
+  firstname: String!
+  lastname: String!
+  email: String!
+  username: String!
+  password: String!
+}
+
+input LoginInput {
+  username: String!
+  password: String!
+}
