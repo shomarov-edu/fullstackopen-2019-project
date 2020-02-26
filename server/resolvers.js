@@ -65,7 +65,11 @@ const resolvers = {
         roles: user.role
       };
 
-      return { token: await jwt.sign(userForToken, process.env.SECRET) };
+      return {
+        token: jwt.sign(userForToken, process.env.SECRET, {
+          expiresIn: '7 days'
+        })
+      };
     },
 
     updateUser: async (root, { input }, { currentUser, prisma }) => {
@@ -152,6 +156,24 @@ const resolvers = {
       await prisma.deleteUser({ id: currentUser.id });
 
       return true;
+    },
+
+    createRecipe: async (root, { input }, { currentUser, prisma }) => {
+      console.log(input);
+      console.log(currentUser);
+
+      return await prisma.createRecipe({
+        category: input.category,
+        title: input.title,
+        description: input.description,
+        cookingTime: input.cookingTime,
+        difficulty: input.difficulty,
+        ingredients: { set: input.ingredients },
+        method: { set: input.method },
+        author: {
+          connect: { id: currentUser.id }
+        }
+      });
     }
   },
 
@@ -160,7 +182,15 @@ const resolvers = {
       await prisma.user({ id: root.id }).following(),
 
     followers: async (root, args, { prisma }) =>
-      await prisma.user({ id: root.id }).followers()
+      await prisma.user({ id: root.id }).followers(),
+
+    recipes: async (root, args, { prisma }) =>
+      await prisma.user({ id: root.id }).recipes()
+  },
+
+  Recipe: {
+    author: async (root, args, { prisma }) =>
+      await prisma.recipe({ id: root.id }).author()
   }
 };
 

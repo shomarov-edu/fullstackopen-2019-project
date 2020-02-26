@@ -12,12 +12,11 @@ enum ROLE {
 }
 
 type User {
-  id: ID!
+  id: ID
   username: String!
-  email: String!
+  email: String
   firstname: String!
   lastname: String!
-  passwordHash: String!
   role: String!
   registered: String!
   recipes: [Recipe!]
@@ -111,7 +110,7 @@ type Recipe {
   category: Category!
   title: String!
   description: String!
-  cookTime: Int!
+  cookingTime: Int!
   difficulty: Difficulty!
   ingredients: [String!]!
   method: [String!]!
@@ -121,8 +120,8 @@ type Recipe {
   created: String!
   updated: String!
   published: Boolean!
-  likedBy: [User]!
-  comments: [Comment]!
+  likedBy: [User!]!
+  comments: [Comment!]!
   rating: Float
 }
 
@@ -139,7 +138,7 @@ extend type Query {
 }
 
 extend type Mutation {
-  createRecipe(recipe: CreateRecipeInput!): Recipe!
+  createRecipe(input: CreateRecipeInput!): Recipe!
   updateRecipe(input: UpdateRecipeInput!): Recipe!
   publishRecipe(input: PublishRecipeInput!): Recipe!
   commentRecipe(input: CommentRecipeInput!): Recipe!
@@ -155,7 +154,7 @@ input CreateRecipeInput {
   category: Category!
   title: String!
   description: String!
-  cookTime: Int!
+  cookingTime: Int!
   difficulty: Difficulty!
   ingredients: [String!]!
   method: [String!]!
