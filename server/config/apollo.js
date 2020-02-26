@@ -1,15 +1,27 @@
 const { ApolloServer, makeExecutableSchema } = require('apollo-server');
 const fs = require('fs');
 const appRoot = require('app-root-path');
-const resolvers = require('../graphql/resolvers');
-const context = require('../graphql/context');
+const { prisma } = require('../generated/prisma-client/');
+const { getUser } = require('../helpers/authorizationHelper');
 
-const typeDefs = fs.readFileSync(`${appRoot}/graphql/schema.graphql`, 'utf8');
+const typeDefs = fs.readFileSync(`${appRoot}/schema.graphql`, 'utf8');
+const resolvers = require('../resolvers');
 
 const schema = makeExecutableSchema({
   typeDefs,
   resolvers
 });
+
+const context = async ({ req }) => {
+  const tokenWithBearer = req.headers.authorization || '';
+
+  const currentUser = tokenWithBearer ? await getUser(tokenWithBearer) : null;
+
+  return {
+    currentUser,
+    prisma
+  };
+};
 
 const formatError = error => {
   // Don't give the specific errors to the client.
