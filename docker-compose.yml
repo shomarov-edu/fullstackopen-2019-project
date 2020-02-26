@@ -9,6 +9,7 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: prisma
       MONGO_INITDB_ROOT_PASSWORD: prisma
+      MONGO_INITDB_DATABASE: fullstackopen-2019-projectDB
     ports:
       - 27017:27017
     volumes:
@@ -24,8 +25,9 @@ services:
         port: 4466
         databases:
           default:
+            database: fullstackopen-2019-projectDB
             connector: mongo
-            uri: mongodb://prisma:prisma@mongo
+            uri: mongodb://prisma:prisma@mongo/
     depends_on:
       - mongo
   server:

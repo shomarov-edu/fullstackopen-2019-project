@@ -1,11 +1,8 @@
-const { GraphQLScalarType, Kind } = require('graphql');
-
 const recipeResolvers = {
   Query: {
-    getRecipes: async (root, args, { models }) =>
-      await models.Recipe.getRecipes(),
+    recipes: async (root, args, { models }) => await models.Recipe.getRecipes(),
 
-    getRecipe: async (root, { id }, { models }) =>
+    recipe: async (root, { id }, { models }) =>
       await models.Recipe.getRecipe(id),
 
     recipeCount: async (root, args, { models }) =>

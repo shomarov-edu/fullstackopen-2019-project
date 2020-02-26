@@ -19,6 +19,7 @@ module.exports = {
 
       enum Category {
         BREAKFAST
+        SALADS
         SOUPS
         MAINS
         DESSERTS
@@ -381,9 +382,9 @@ module.exports = {
         method: [String!]!
         notes: [String!]!
         tags: [String!]!
-        source: String!
+        source: String
         created: DateTime!
-        updated: DateTime!
+        updated: DateTime
         published: Boolean!
         likedBy(
           where: UserWhereInput
@@ -394,8 +395,8 @@ module.exports = {
           first: Int
           last: Int
         ): [User!]
-        ratings: [Grade!]
         comments: [Comment!]
+        ratings: [Grade!]
       }
 
       type RecipeConnection {
@@ -420,11 +421,11 @@ module.exports = {
         method: RecipeCreatemethodInput
         notes: RecipeCreatenotesInput
         tags: RecipeCreatetagsInput
-        source: String!
+        source: String
         published: Boolean
         likedBy: UserCreateManyWithoutLikedRecipesInput
-        ratings: GradeCreateManyInput
         comments: CommentCreateManyInput
+        ratings: GradeCreateManyInput
       }
 
       input RecipeCreateManyWithoutAuthorInput {
@@ -460,11 +461,11 @@ module.exports = {
         method: RecipeCreatemethodInput
         notes: RecipeCreatenotesInput
         tags: RecipeCreatetagsInput
-        source: String!
+        source: String
         published: Boolean
         likedBy: UserCreateManyWithoutLikedRecipesInput
-        ratings: GradeCreateManyInput
         comments: CommentCreateManyInput
+        ratings: GradeCreateManyInput
       }
 
       input RecipeCreateWithoutLikedByInput {
@@ -479,10 +480,10 @@ module.exports = {
         method: RecipeCreatemethodInput
         notes: RecipeCreatenotesInput
         tags: RecipeCreatetagsInput
-        source: String!
+        source: String
         published: Boolean
-        ratings: GradeCreateManyInput
         comments: CommentCreateManyInput
+        ratings: GradeCreateManyInput
       }
 
       type RecipeEdge {
@@ -524,9 +525,9 @@ module.exports = {
         method: [String!]!
         notes: [String!]!
         tags: [String!]!
-        source: String!
+        source: String
         created: DateTime!
-        updated: DateTime!
+        updated: DateTime
         published: Boolean!
       }
 
@@ -660,8 +661,8 @@ module.exports = {
         source: String
         published: Boolean
         likedBy: UserUpdateManyWithoutLikedRecipesInput
-        ratings: GradeUpdateManyInput
         comments: CommentUpdateManyInput
+        ratings: GradeUpdateManyInput
       }
 
       input RecipeUpdateManyDataInput {
@@ -746,8 +747,8 @@ module.exports = {
         source: String
         published: Boolean
         likedBy: UserUpdateManyWithoutLikedRecipesInput
-        ratings: GradeUpdateManyInput
         comments: CommentUpdateManyInput
+        ratings: GradeUpdateManyInput
       }
 
       input RecipeUpdateWithoutLikedByDataInput {
@@ -763,8 +764,8 @@ module.exports = {
         tags: RecipeUpdatetagsInput
         source: String
         published: Boolean
-        ratings: GradeUpdateManyInput
         comments: CommentUpdateManyInput
+        ratings: GradeUpdateManyInput
       }
 
       input RecipeUpdateWithWhereUniqueWithoutAuthorInput {
@@ -882,12 +883,12 @@ module.exports = {
         published: Boolean
         published_not: Boolean
         likedBy_some: UserWhereInput
-        ratings_some: GradeWhereInput
-        ratings_every: GradeRestrictedWhereInput
-        ratings_none: GradeRestrictedWhereInput
         comments_some: CommentWhereInput
         comments_every: CommentRestrictedWhereInput
         comments_none: CommentRestrictedWhereInput
+        ratings_some: GradeWhereInput
+        ratings_every: GradeRestrictedWhereInput
+        ratings_none: GradeRestrictedWhereInput
         AND: [RecipeWhereInput!]
       }
 

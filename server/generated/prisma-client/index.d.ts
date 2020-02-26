@@ -142,7 +142,7 @@ export interface ClientConstructor<T> {
 
 export type Role = 'ADMIN' | 'MODERATOR' | 'USER';
 
-export type Category = 'BREAKFAST' | 'SOUPS' | 'MAINS' | 'DESSERTS';
+export type Category = 'BREAKFAST' | 'SALADS' | 'SOUPS' | 'MAINS' | 'DESSERTS';
 
 export type Difficulty = 'EASY' | 'INTERMEDIATE' | 'HARD';
 
@@ -285,12 +285,12 @@ export interface RecipeWhereInput {
   published?: Maybe<Boolean>;
   published_not?: Maybe<Boolean>;
   likedBy_some?: Maybe<UserWhereInput>;
-  ratings_some?: Maybe<GradeWhereInput>;
-  ratings_every?: Maybe<GradeRestrictedWhereInput>;
-  ratings_none?: Maybe<GradeRestrictedWhereInput>;
   comments_some?: Maybe<CommentWhereInput>;
   comments_every?: Maybe<CommentRestrictedWhereInput>;
   comments_none?: Maybe<CommentRestrictedWhereInput>;
+  ratings_some?: Maybe<GradeWhereInput>;
+  ratings_every?: Maybe<GradeRestrictedWhereInput>;
+  ratings_none?: Maybe<GradeRestrictedWhereInput>;
   AND?: Maybe<RecipeWhereInput[] | RecipeWhereInput>;
 }
 
@@ -398,59 +398,6 @@ export interface UserWhereInput {
   AND?: Maybe<UserWhereInput[] | UserWhereInput>;
 }
 
-export interface GradeWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  rater?: Maybe<UserWhereInput>;
-  grade?: Maybe<Int>;
-  grade_not?: Maybe<Int>;
-  grade_in?: Maybe<Int[] | Int>;
-  grade_not_in?: Maybe<Int[] | Int>;
-  grade_lt?: Maybe<Int>;
-  grade_lte?: Maybe<Int>;
-  grade_gt?: Maybe<Int>;
-  grade_gte?: Maybe<Int>;
-  AND?: Maybe<GradeWhereInput[] | GradeWhereInput>;
-}
-
-export interface GradeRestrictedWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  grade?: Maybe<Int>;
-  grade_not?: Maybe<Int>;
-  grade_in?: Maybe<Int[] | Int>;
-  grade_not_in?: Maybe<Int[] | Int>;
-  grade_lt?: Maybe<Int>;
-  grade_lte?: Maybe<Int>;
-  grade_gt?: Maybe<Int>;
-  grade_gte?: Maybe<Int>;
-  AND?: Maybe<GradeRestrictedWhereInput[] | GradeRestrictedWhereInput>;
-}
-
 export interface CommentWhereInput {
   id?: Maybe<ID_Input>;
   id_not?: Maybe<ID_Input>;
@@ -516,6 +463,59 @@ export interface CommentRestrictedWhereInput {
   AND?: Maybe<CommentRestrictedWhereInput[] | CommentRestrictedWhereInput>;
 }
 
+export interface GradeWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  rater?: Maybe<UserWhereInput>;
+  grade?: Maybe<Int>;
+  grade_not?: Maybe<Int>;
+  grade_in?: Maybe<Int[] | Int>;
+  grade_not_in?: Maybe<Int[] | Int>;
+  grade_lt?: Maybe<Int>;
+  grade_lte?: Maybe<Int>;
+  grade_gt?: Maybe<Int>;
+  grade_gte?: Maybe<Int>;
+  AND?: Maybe<GradeWhereInput[] | GradeWhereInput>;
+}
+
+export interface GradeRestrictedWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  grade?: Maybe<Int>;
+  grade_not?: Maybe<Int>;
+  grade_in?: Maybe<Int[] | Int>;
+  grade_not_in?: Maybe<Int[] | Int>;
+  grade_lt?: Maybe<Int>;
+  grade_lte?: Maybe<Int>;
+  grade_gt?: Maybe<Int>;
+  grade_gte?: Maybe<Int>;
+  AND?: Maybe<GradeRestrictedWhereInput[] | GradeRestrictedWhereInput>;
+}
+
 export type UserWhereUniqueInput = AtLeastOne<{
   id: Maybe<ID_Input>;
   username?: Maybe<String>;
@@ -534,11 +534,11 @@ export interface RecipeCreateInput {
   method?: Maybe<RecipeCreatemethodInput>;
   notes?: Maybe<RecipeCreatenotesInput>;
   tags?: Maybe<RecipeCreatetagsInput>;
-  source: String;
+  source?: Maybe<String>;
   published?: Maybe<Boolean>;
   likedBy?: Maybe<UserCreateManyWithoutLikedRecipesInput>;
-  ratings?: Maybe<GradeCreateManyInput>;
   comments?: Maybe<CommentCreateManyInput>;
+  ratings?: Maybe<GradeCreateManyInput>;
 }
 
 export interface UserCreateOneWithoutRecipesInput {
@@ -578,10 +578,10 @@ export interface RecipeCreateWithoutLikedByInput {
   method?: Maybe<RecipeCreatemethodInput>;
   notes?: Maybe<RecipeCreatenotesInput>;
   tags?: Maybe<RecipeCreatetagsInput>;
-  source: String;
+  source?: Maybe<String>;
   published?: Maybe<Boolean>;
-  ratings?: Maybe<GradeCreateManyInput>;
   comments?: Maybe<CommentCreateManyInput>;
+  ratings?: Maybe<GradeCreateManyInput>;
 }
 
 export interface RecipeCreateingredientsInput {
@@ -600,14 +600,14 @@ export interface RecipeCreatetagsInput {
   set?: Maybe<String[] | String>;
 }
 
-export interface GradeCreateManyInput {
-  create?: Maybe<GradeCreateInput[] | GradeCreateInput>;
+export interface CommentCreateManyInput {
+  create?: Maybe<CommentCreateInput[] | CommentCreateInput>;
 }
 
-export interface GradeCreateInput {
+export interface CommentCreateInput {
   id: ID_Input;
-  rater: UserCreateOneInput;
-  grade: Int;
+  author: UserCreateOneInput;
+  content: String;
 }
 
 export interface UserCreateOneInput {
@@ -647,11 +647,11 @@ export interface RecipeCreateWithoutAuthorInput {
   method?: Maybe<RecipeCreatemethodInput>;
   notes?: Maybe<RecipeCreatenotesInput>;
   tags?: Maybe<RecipeCreatetagsInput>;
-  source: String;
+  source?: Maybe<String>;
   published?: Maybe<Boolean>;
   likedBy?: Maybe<UserCreateManyWithoutLikedRecipesInput>;
-  ratings?: Maybe<GradeCreateManyInput>;
   comments?: Maybe<CommentCreateManyInput>;
+  ratings?: Maybe<GradeCreateManyInput>;
 }
 
 export interface UserCreateManyWithoutLikedRecipesInput {
@@ -714,14 +714,14 @@ export interface UserCreateWithoutFollowingInput {
   followers?: Maybe<UserCreateManyWithoutFollowingInput>;
 }
 
-export interface CommentCreateManyInput {
-  create?: Maybe<CommentCreateInput[] | CommentCreateInput>;
+export interface GradeCreateManyInput {
+  create?: Maybe<GradeCreateInput[] | GradeCreateInput>;
 }
 
-export interface CommentCreateInput {
+export interface GradeCreateInput {
   id: ID_Input;
-  author: UserCreateOneInput;
-  content: String;
+  rater: UserCreateOneInput;
+  grade: Int;
 }
 
 export interface RecipeUpdateInput {
@@ -738,8 +738,8 @@ export interface RecipeUpdateInput {
   source?: Maybe<String>;
   published?: Maybe<Boolean>;
   likedBy?: Maybe<UserUpdateManyWithoutLikedRecipesInput>;
-  ratings?: Maybe<GradeUpdateManyInput>;
   comments?: Maybe<CommentUpdateManyInput>;
+  ratings?: Maybe<GradeUpdateManyInput>;
 }
 
 export interface UserUpdateOneRequiredWithoutRecipesInput {
@@ -802,8 +802,8 @@ export interface RecipeUpdateWithoutLikedByDataInput {
   tags?: Maybe<RecipeUpdatetagsInput>;
   source?: Maybe<String>;
   published?: Maybe<Boolean>;
-  ratings?: Maybe<GradeUpdateManyInput>;
   comments?: Maybe<CommentUpdateManyInput>;
+  ratings?: Maybe<GradeUpdateManyInput>;
 }
 
 export interface RecipeUpdateingredientsInput {
@@ -820,52 +820,6 @@ export interface RecipeUpdatenotesInput {
 
 export interface RecipeUpdatetagsInput {
   set?: Maybe<String[] | String>;
-}
-
-export interface GradeUpdateManyInput {
-  create?: Maybe<GradeCreateInput[] | GradeCreateInput>;
-  deleteMany?: Maybe<GradeScalarWhereInput[] | GradeScalarWhereInput>;
-  updateMany?: Maybe<
-    GradeUpdateManyWithWhereNestedInput[] | GradeUpdateManyWithWhereNestedInput
-  >;
-}
-
-export interface GradeScalarWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  grade?: Maybe<Int>;
-  grade_not?: Maybe<Int>;
-  grade_in?: Maybe<Int[] | Int>;
-  grade_not_in?: Maybe<Int[] | Int>;
-  grade_lt?: Maybe<Int>;
-  grade_lte?: Maybe<Int>;
-  grade_gt?: Maybe<Int>;
-  grade_gte?: Maybe<Int>;
-  AND?: Maybe<GradeScalarWhereInput[] | GradeScalarWhereInput>;
-  OR?: Maybe<GradeScalarWhereInput[] | GradeScalarWhereInput>;
-  NOT?: Maybe<GradeScalarWhereInput[] | GradeScalarWhereInput>;
-}
-
-export interface GradeUpdateManyWithWhereNestedInput {
-  where: GradeScalarWhereInput;
-  data: GradeUpdateManyDataInput;
-}
-
-export interface GradeUpdateManyDataInput {
-  id?: Maybe<ID_Input>;
-  grade?: Maybe<Int>;
 }
 
 export interface CommentUpdateManyInput {
@@ -919,6 +873,52 @@ export interface CommentUpdateManyWithWhereNestedInput {
 export interface CommentUpdateManyDataInput {
   id?: Maybe<ID_Input>;
   content?: Maybe<String>;
+}
+
+export interface GradeUpdateManyInput {
+  create?: Maybe<GradeCreateInput[] | GradeCreateInput>;
+  deleteMany?: Maybe<GradeScalarWhereInput[] | GradeScalarWhereInput>;
+  updateMany?: Maybe<
+    GradeUpdateManyWithWhereNestedInput[] | GradeUpdateManyWithWhereNestedInput
+  >;
+}
+
+export interface GradeScalarWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  grade?: Maybe<Int>;
+  grade_not?: Maybe<Int>;
+  grade_in?: Maybe<Int[] | Int>;
+  grade_not_in?: Maybe<Int[] | Int>;
+  grade_lt?: Maybe<Int>;
+  grade_lte?: Maybe<Int>;
+  grade_gt?: Maybe<Int>;
+  grade_gte?: Maybe<Int>;
+  AND?: Maybe<GradeScalarWhereInput[] | GradeScalarWhereInput>;
+  OR?: Maybe<GradeScalarWhereInput[] | GradeScalarWhereInput>;
+  NOT?: Maybe<GradeScalarWhereInput[] | GradeScalarWhereInput>;
+}
+
+export interface GradeUpdateManyWithWhereNestedInput {
+  where: GradeScalarWhereInput;
+  data: GradeUpdateManyDataInput;
+}
+
+export interface GradeUpdateManyDataInput {
+  id?: Maybe<ID_Input>;
+  grade?: Maybe<Int>;
 }
 
 export interface RecipeUpsertWithWhereUniqueWithoutLikedByInput {
@@ -1122,8 +1122,8 @@ export interface RecipeUpdateWithoutAuthorDataInput {
   source?: Maybe<String>;
   published?: Maybe<Boolean>;
   likedBy?: Maybe<UserUpdateManyWithoutLikedRecipesInput>;
-  ratings?: Maybe<GradeUpdateManyInput>;
   comments?: Maybe<CommentUpdateManyInput>;
+  ratings?: Maybe<GradeUpdateManyInput>;
 }
 
 export interface UserUpdateManyWithoutLikedRecipesInput {
@@ -1418,12 +1418,12 @@ export interface Recipe {
   method: String[];
   notes: String[];
   tags: String[];
-  source: String;
+  source?: String;
   created: DateTimeOutput;
-  updated: DateTimeOutput;
+  updated?: DateTimeOutput;
   published: Boolean;
-  ratings?: <T = FragmentableArray<Grade>>() => T;
   comments?: <T = FragmentableArray<Comment>>() => T;
+  ratings?: <T = FragmentableArray<Grade>>() => T;
 }
 
 export interface RecipePromise extends Promise<Recipe>, Fragmentable {
@@ -1451,8 +1451,8 @@ export interface RecipePromise extends Promise<Recipe>, Fragmentable {
     first?: Int;
     last?: Int;
   }) => T;
-  ratings: <T = FragmentableArray<Grade>>() => T;
   comments: <T = FragmentableArray<Comment>>() => T;
+  ratings: <T = FragmentableArray<Grade>>() => T;
 }
 
 export interface RecipeSubscription
@@ -1482,8 +1482,8 @@ export interface RecipeSubscription
     first?: Int;
     last?: Int;
   }) => T;
-  ratings: <T = Promise<AsyncIterator<GradeSubscription>>>() => T;
   comments: <T = Promise<AsyncIterator<CommentSubscription>>>() => T;
+  ratings: <T = Promise<AsyncIterator<GradeSubscription>>>() => T;
 }
 
 export interface RecipeNullablePromise
@@ -1513,8 +1513,8 @@ export interface RecipeNullablePromise
     first?: Int;
     last?: Int;
   }) => T;
-  ratings: <T = FragmentableArray<Grade>>() => T;
   comments: <T = FragmentableArray<Comment>>() => T;
+  ratings: <T = FragmentableArray<Grade>>() => T;
 }
 
 export interface User {
@@ -1673,33 +1673,6 @@ export interface UserNullablePromise
   }) => T;
 }
 
-export interface Grade {
-  id: ID_Output;
-  grade: Int;
-}
-
-export interface GradePromise extends Promise<Grade>, Fragmentable {
-  id: () => Promise<ID_Output>;
-  rater: <T = UserPromise>() => T;
-  grade: () => Promise<Int>;
-}
-
-export interface GradeSubscription
-  extends Promise<AsyncIterator<Grade>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  rater: <T = UserSubscription>() => T;
-  grade: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface GradeNullablePromise
-  extends Promise<Grade | null>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  rater: <T = UserPromise>() => T;
-  grade: () => Promise<Int>;
-}
-
 export interface Comment {
   id: ID_Output;
   content: String;
@@ -1725,6 +1698,33 @@ export interface CommentNullablePromise
   id: () => Promise<ID_Output>;
   author: <T = UserPromise>() => T;
   content: () => Promise<String>;
+}
+
+export interface Grade {
+  id: ID_Output;
+  grade: Int;
+}
+
+export interface GradePromise extends Promise<Grade>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  rater: <T = UserPromise>() => T;
+  grade: () => Promise<Int>;
+}
+
+export interface GradeSubscription
+  extends Promise<AsyncIterator<Grade>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  rater: <T = UserSubscription>() => T;
+  grade: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface GradeNullablePromise
+  extends Promise<Grade | null>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  rater: <T = UserPromise>() => T;
+  grade: () => Promise<Int>;
 }
 
 export interface RecipeConnection {
@@ -1910,9 +1910,9 @@ export interface RecipePreviousValues {
   method: String[];
   notes: String[];
   tags: String[];
-  source: String;
+  source?: String;
   created: DateTimeOutput;
-  updated: DateTimeOutput;
+  updated?: DateTimeOutput;
   published: Boolean;
 }
 
@@ -2059,15 +2059,15 @@ export const models: Model[] = [
     embedded: false
   },
   {
+    name: 'User',
+    embedded: false
+  },
+  {
     name: 'Category',
     embedded: false
   },
   {
     name: 'Difficulty',
-    embedded: false
-  },
-  {
-    name: 'User',
     embedded: false
   },
   {

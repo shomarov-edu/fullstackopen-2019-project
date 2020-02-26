@@ -1,8 +1,8 @@
 const resolvers = {
   Query: {
-    getUsers: async (root, args, { models }) => await models.User.getUsers(),
+    users: async (root, args, { models }) => await models.User.getUsers(),
 
-    getUser: async (root, { username }, { models }) =>
+    user: async (root, { username }, { models }) =>
       await models.User.getUser(username),
 
     userCount: async (root, args, { models }) => await models.User.userCount()
@@ -21,7 +21,7 @@ const resolvers = {
     followUser: async (root, { input }, { models }) =>
       await models.User.followUser(input),
 
-    deleteUser: async (root, { password }, { models }) =>
+    deleteAccount: async (root, { password }, { models }) =>
       await models.User.deleteUser(password)
   }
 };
