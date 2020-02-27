@@ -1,7 +1,7 @@
 const winston = require('winston');
 const appRoot = require('app-root-path');
 
-const logger = winston.createLogger({
+module.exports = winston.createLogger({
   level: 'silly',
   format: winston.format.combine(
     winston.format.colorize(),
@@ -12,5 +12,3 @@ const logger = winston.createLogger({
     //    new winston.transports.File({ filename: `${appRoot}/logs/combined.log` })
   ]
 });
-
-module.exports = logger;

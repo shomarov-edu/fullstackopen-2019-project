@@ -11,7 +11,13 @@ const resolvers = {
     me: async (root, args, { currentUser, prisma }) =>
       await prisma.user(currentUser.id),
 
-    users: async (root, args, { prisma }) => await prisma.users(),
+    users: async (root, args, { prisma }) => {
+      console.log('HEY!');
+      console.log('prisma', prisma);
+      const users = await prisma.users();
+      console.log('users', users);
+      return users;
+    },
 
     user: async (root, { username }, { prisma }) =>
       await prisma.user({ username }),

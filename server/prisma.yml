@@ -1,5 +1,5 @@
 endpoint: http://prisma:4466/
-datamodel: datamodel.prisma
+datamodel: datamodel.graphql
 databaseType: document
 generate:
   - generator: javascript-client

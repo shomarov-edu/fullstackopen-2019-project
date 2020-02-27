@@ -1,7 +1,7 @@
 require('dotenv').config();
-const server = require('./config/apollo');
-const logger = require('./config/winston');
+const apollo = require('./config/apollo');
+const winston = require('./config/winston');
 
-server.listen().then(({ url }) => {
-  logger.info(`🚀  Server ready at ${url}`);
+apollo.listen().then(({ url }) => {
+  winston.info(`🚀  Server ready at ${url}`);
 });
