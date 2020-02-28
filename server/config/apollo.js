@@ -1,12 +1,11 @@
 const { ApolloServer, makeExecutableSchema } = require('apollo-server');
+const { prisma } = require('../prisma');
 const fs = require('fs');
 const appRoot = require('app-root-path');
-const { prisma } = require('../generated/prisma-client/');
 const { getUser } = require('../helpers/authorizationHelper');
-const winston = require('../config/winston');
 
 const typeDefs = fs.readFileSync(`${appRoot}/schema.graphql`, 'utf8');
-const resolvers = require('../resolvers');
+const resolvers = require('../graphql/resolvers');
 
 const schema = makeExecutableSchema({
   typeDefs,
@@ -24,14 +23,9 @@ const context = async ({ req }) => {
   };
 };
 
-const formatError = error => {
-  winston.error(error);
-};
-
 const apollo = new ApolloServer({
   schema,
-  context,
-  formatError
+  context
 });
 
 module.exports = apollo;

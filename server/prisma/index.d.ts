@@ -2,13 +2,13 @@
 // Please don't change this file manually but run `prisma generate` to update it.
 // For more information, please read the docs: https://www.prisma.io/docs/prisma-client/
 
-import { DocumentNode } from 'graphql';
+import { DocumentNode } from "graphql";
 import {
   makePrismaClientClass,
   BaseClientOptions,
   Model
-} from 'prisma-client-lib';
-import { typeDefs } from './prisma-schema';
+} from "prisma-client-lib";
+import { typeDefs } from "./prisma-schema";
 
 export type AtLeastOne<T, U = { [K in keyof T]: Pick<T, K> }> = Partial<T> &
   U[keyof U];
@@ -140,53 +140,53 @@ export interface ClientConstructor<T> {
  * Types
  */
 
-export type Role = 'ADMIN' | 'MODERATOR' | 'USER';
+export type Role = "ADMIN" | "MODERATOR" | "USER";
 
-export type Category = 'BREAKFAST' | 'SALADS' | 'SOUPS' | 'MAINS' | 'DESSERTS';
+export type Category = "BREAKFAST" | "SALADS" | "SOUPS" | "MAINS" | "DESSERTS";
 
-export type Difficulty = 'EASY' | 'INTERMEDIATE' | 'HARD';
+export type Difficulty = "EASY" | "INTERMEDIATE" | "HARD";
 
 export type RecipeOrderByInput =
-  | 'id_ASC'
-  | 'id_DESC'
-  | 'category_ASC'
-  | 'category_DESC'
-  | 'title_ASC'
-  | 'title_DESC'
-  | 'description_ASC'
-  | 'description_DESC'
-  | 'cookingTime_ASC'
-  | 'cookingTime_DESC'
-  | 'difficulty_ASC'
-  | 'difficulty_DESC'
-  | 'source_ASC'
-  | 'source_DESC'
-  | 'created_ASC'
-  | 'created_DESC'
-  | 'updated_ASC'
-  | 'updated_DESC'
-  | 'published_ASC'
-  | 'published_DESC';
+  | "id_ASC"
+  | "id_DESC"
+  | "category_ASC"
+  | "category_DESC"
+  | "title_ASC"
+  | "title_DESC"
+  | "description_ASC"
+  | "description_DESC"
+  | "cookingTime_ASC"
+  | "cookingTime_DESC"
+  | "difficulty_ASC"
+  | "difficulty_DESC"
+  | "source_ASC"
+  | "source_DESC"
+  | "created_ASC"
+  | "created_DESC"
+  | "updated_ASC"
+  | "updated_DESC"
+  | "published_ASC"
+  | "published_DESC";
 
 export type UserOrderByInput =
-  | 'id_ASC'
-  | 'id_DESC'
-  | 'username_ASC'
-  | 'username_DESC'
-  | 'email_ASC'
-  | 'email_DESC'
-  | 'firstname_ASC'
-  | 'firstname_DESC'
-  | 'lastname_ASC'
-  | 'lastname_DESC'
-  | 'passwordHash_ASC'
-  | 'passwordHash_DESC'
-  | 'role_ASC'
-  | 'role_DESC'
-  | 'registered_ASC'
-  | 'registered_DESC';
+  | "id_ASC"
+  | "id_DESC"
+  | "username_ASC"
+  | "username_DESC"
+  | "email_ASC"
+  | "email_DESC"
+  | "firstname_ASC"
+  | "firstname_DESC"
+  | "lastname_ASC"
+  | "lastname_DESC"
+  | "passwordHash_ASC"
+  | "passwordHash_DESC"
+  | "role_ASC"
+  | "role_DESC"
+  | "registered_ASC"
+  | "registered_DESC";
 
-export type MutationType = 'CREATED' | 'UPDATED' | 'DELETED';
+export type MutationType = "CREATED" | "UPDATED" | "DELETED";
 
 export type RecipeWhereUniqueInput = AtLeastOne<{
   id: Maybe<ID_Input>;
@@ -2055,31 +2055,31 @@ export type Long = string;
 
 export const models: Model[] = [
   {
-    name: 'Role',
+    name: "Role",
     embedded: false
   },
   {
-    name: 'User',
+    name: "User",
     embedded: false
   },
   {
-    name: 'Category',
+    name: "Category",
     embedded: false
   },
   {
-    name: 'Difficulty',
+    name: "Difficulty",
     embedded: false
   },
   {
-    name: 'Recipe',
+    name: "Recipe",
     embedded: false
   },
   {
-    name: 'Comment',
+    name: "Comment",
     embedded: true
   },
   {
-    name: 'Grade',
+    name: "Grade",
     embedded: true
   }
 ];

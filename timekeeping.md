@@ -49,3 +49,5 @@
 | 23.02 | 4    | graphql development                                      |
 | 25.02 | 4    | switch mongoose for prisma                               |
 | 26.02 | 4    | backend development                                      |
+| 27.02 | 6    | backend development                                      |
+| 28.02 | 8    | tests & configuration                                    |

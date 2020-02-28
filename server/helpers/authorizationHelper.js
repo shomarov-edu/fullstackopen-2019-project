@@ -20,10 +20,19 @@ const getUser = async tokenWithBearer => {
   }
 };
 
+const getUserForTests = async token => {
+  try {
+    return jwt.verify(token, process.env.SECRET);
+  } catch (error) {
+    throw new AuthenticationError('invalid token');
+  }
+};
+
 //TODO: Write permissions helper functions
 
 module.exports = {
   encryptPassword,
   comparePasswords,
-  getUser
+  getUser,
+  getUserForTests
 };

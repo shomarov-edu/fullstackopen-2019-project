@@ -9,7 +9,6 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: prisma
       MONGO_INITDB_ROOT_PASSWORD: prisma
-      MONGO_INITDB_DATABASE: fullstackopen-2019-projectDB
     ports:
       - 27017:27017
     volumes:
@@ -22,10 +21,10 @@ services:
       - 4466:4466
     environment:
       PRISMA_CONFIG: |
+        managementApiSecret: f805a9b75ae5401895ecc6d1d1e6d6f331c0b09f2e8c6fff38b9b9bdaec29d03
         port: 4466
         databases:
           default:
-            database: fullstackopen-2019-projectDB
             connector: mongo
             uri: mongodb://prisma:prisma@mongo/
     depends_on:
@@ -42,12 +41,10 @@ services:
     command: >
       sh -c "./wait-for prisma:4466 --
              echo Connection to Prisma is up. &&
-             prisma deploy &&
+             prisma deploy
              npm run dev"
     ports:
       - 4000:4000
-    env_file:
-      - ./server/.env
     depends_on:
       - prisma
     restart: unless-stopped

@@ -3,19 +3,16 @@ const {
   encryptPassword,
   comparePasswords,
   isAuthenticated
-} = require('./helpers/authorizationHelper');
+} = require('../helpers/authorizationHelper');
 const jwt = require('jsonwebtoken');
 
 const resolvers = {
   Query: {
     me: async (root, args, { currentUser, prisma }) =>
-      await prisma.user(currentUser.id),
+      await prisma.user({ id: currentUser.id }),
 
     users: async (root, args, { prisma }) => {
-      console.log('HEY!');
-      console.log('prisma', prisma);
       const users = await prisma.users();
-      console.log('users', users);
       return users;
     },
 

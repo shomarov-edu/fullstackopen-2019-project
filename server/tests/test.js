@@ -1,28 +1,60 @@
-const { makeExecutableSchema, gql } = require('apollo-server');
-const { graphql } = require('graphql');
-const fs = require('fs');
 const appRoot = require('app-root-path');
-const { prisma } = require('../generated/prisma-client');
-const { getUser } = require('../helpers/authorizationHelper');
+const { prisma, query, mutate } = require('./config');
+const { queries, mutations } = require('../graphql');
+const { getUserForTests } = require('../helpers/authorizationHelper');
 
-const typeDefs = fs.readFileSync(`${appRoot}/schema.graphql`, 'utf8');
-const resolvers = require('../resolvers');
+let token;
 
-const schema = makeExecutableSchema({
-  typeDefs,
-  resolvers
+beforeAll(async () => {
+  await prisma.deleteManyUsers();
 });
 
-const query = `
-  query {
-    users {
-      username
-    }
-  }
-`;
+test('no users in database', async () => {
+  const result = await query({
+    query: queries.users
+  });
 
-test('user ', async () => {
-  console.log(prisma);
-  const result = await graphql(schema, query, null, { prisma });
-  console.log(result);
+  expect(result.data.users.length).toBe(0);
+});
+
+test('user creation fails with invalid input', async () => {
+  const result = await mutate({
+    mutation: mutations.signupWithoutEmail
+  });
+
+  expect(result.errors).toBeDefined();
+  expect(result.data).toBeUndefined();
+});
+
+test('create new user', async () => {
+  const result = await mutate({
+    mutation: mutations.signup
+  });
+
+  expect(result.data.signup).toBe(true);
+});
+
+test('user logs in successfully', async () => {
+  const result = await mutate({
+    mutation: mutations.login
+  });
+
+  expect(result.data.login.token).toBeDefined();
+
+  token = result.data.login.token || null;
+});
+
+test('user receives own data', async () => {
+  const result = await query({
+    auth: { req: { headers: { authorization: `Bearer ${token}` } } },
+    query: queries.me
+  });
+
+  expect(result.errors).toBeUndefined();
+  expect(result.data.me).toBeDefined();
+
+  const user = result.data.me;
+  const decodedUser = await getUserForTests(token);
+
+  expect(user.id).toEqual(decodedUser.id);
 });
