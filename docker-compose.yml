@@ -21,7 +21,6 @@ services:
       - 4466:4466
     environment:
       PRISMA_CONFIG: |
-        managementApiSecret: f805a9b75ae5401895ecc6d1d1e6d6f331c0b09f2e8c6fff38b9b9bdaec29d03
         port: 4466
         databases:
           default:

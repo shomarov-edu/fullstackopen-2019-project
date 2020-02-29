@@ -3,7 +3,7 @@ client/build
 
 server/node_modules
 server/.env
-server/prisma
+server/prisma/
 
 mongo/data
 

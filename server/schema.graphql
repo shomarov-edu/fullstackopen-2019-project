@@ -17,6 +17,7 @@ type User {
   email: String
   firstname: String!
   lastname: String!
+  name: String!
   role: String!
   registered: String!
   recipes: [Recipe!]
@@ -32,13 +33,17 @@ type Token {
 extend type Query {
   me: User
   users: [User!]!
-  user(username: String!): User
+  user(input: UserInput): User
   userCount: Int!
 }
 
+input UserInput {
+  username: String
+}
+
 extend type Mutation {
-  signup(input: CreateUserInput!): Boolean!
-  login(input: LoginInput!): Token
+  signup(input: SignUpInput!): Boolean!
+  login(input: LogInInput!): Token
   followUser(input: FollowUserInput!): User!
   updateUser(input: UpdateUserInput!): User!
   updateUsername(input: UpdateUsernameInput!): User!
@@ -46,7 +51,7 @@ extend type Mutation {
   deleteAccount(input: deleteAccountInput!): Boolean!
 }
 
-input CreateUserInput {
+input SignUpInput {
   firstname: String!
   lastname: String!
   email: String!
@@ -54,8 +59,8 @@ input CreateUserInput {
   password: String!
 }
 
-input LoginInput {
-  username: String!
+input LogInInput {
+  usernameOrEmail: String!
   password: String!
 }
 
@@ -63,15 +68,11 @@ input FollowUserInput {
   userIdToFollow: ID!
 }
 
-input UserInput {
+input UpdateUserInput {
+  password: String!
   firstname: String
   lastname: String
   email: String
-}
-
-input UpdateUserInput {
-  password: String!
-  patch: UserInput!
 }
 
 input UpdateUsernameInput {
@@ -133,8 +134,12 @@ type Comment {
 
 extend type Query {
   recipes: [Recipe!]!
-  recipe(id: ID!): Recipe
+  recipe(input: RecipeInput!): Recipe
   recipeCount: Int!
+}
+
+input RecipeInput {
+  id: ID!
 }
 
 extend type Mutation {
@@ -163,7 +168,8 @@ input CreateRecipeInput {
   source: String
 }
 
-input RecipeInput {
+input UpdateRecipeInput {
+  recipeId: ID!
   category: Category
   title: String
   description: String
@@ -174,11 +180,6 @@ input RecipeInput {
   notes: [String!]
   tags: [String!]
   source: String
-}
-
-input UpdateRecipeInput {
-  recipeId: ID!
-  patch: RecipeInput!
 }
 
 input PublishRecipeInput {

@@ -3,7 +3,7 @@ const { gql } = require('apollo-server');
 const mutations = {
   login: gql`
     mutation {
-      login(input: { username: "user", password: "password" }) {
+      login(input: { username: $username, password: $password }) {
         token
       }
     }
@@ -17,7 +17,7 @@ const mutations = {
           firstname: "User"
           lastname: "Usersson"
           email: "user@user.com"
-          password: "password"
+          password: "passwor"
         }
       )
     }

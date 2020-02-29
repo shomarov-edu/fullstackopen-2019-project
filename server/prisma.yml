@@ -1,7 +1,6 @@
 endpoint: http://prisma:4466/project/dev
 datamodel: datamodel.graphql
 databaseType: document
-secret: 79efd4586fdd4a69ecf7a7bd8fe2ae58da6758c8cb3084184abf8ccb5ace3283
 generate:
   - generator: javascript-client
     output: ./prisma/

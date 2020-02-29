@@ -16,8 +16,8 @@ const resolvers = {
       return users;
     },
 
-    user: async (root, { username }, { prisma }) =>
-      await prisma.user({ username }),
+    user: async (root, { input }, { prisma }) =>
+      await prisma.user({ username: input.username }),
 
     userCount: async (root, args, { prisma }) =>
       await prisma
@@ -27,11 +27,12 @@ const resolvers = {
 
     recipes: async (root, args, { prisma }) => await prisma.recipes(),
 
-    recipe: async (root, { id }, { prisma }) => await prisma.recipe(id),
+    recipe: async (root, { input }, { prisma }) =>
+      await prisma.recipe(input.id),
 
     recipeCount: async (root, args, { prisma }) =>
       await prisma
-        .recipeConnection()
+        .recipesConnection()
         .aggregate()
         .count()
   },
@@ -49,9 +50,11 @@ const resolvers = {
     },
 
     login: async (root, { input }, { prisma }) => {
-      const { username, password } = input;
+      const { usernameOrEmail, password } = input;
 
-      const user = await prisma.user({ username });
+      const user =
+        (await prisma.user({ username: usernameOrEmail })) ||
+        (await prisma.user({ email: usernameOrEmail }));
 
       const passwordCorrect =
         user === null
