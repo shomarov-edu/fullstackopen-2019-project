@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import useField from '../hooks/useField';
-import recipeService from '../services/recipes';
 import Comments from './Comments';
 
 const Recipe = ({ loggedInUser, user, recipe, allRecipes, setAllRecipes }) => {
@@ -44,20 +43,6 @@ const Recipe = ({ loggedInUser, user, recipe, allRecipes, setAllRecipes }) => {
       notes,
       source: source.input.value
     };
-
-    recipeService.setToken(loggedInUser.token);
-
-    try {
-      const savedRecipe = await recipeService.updateRecipe(
-        recipe.id,
-        updatedRecipe
-      );
-      setAllRecipes(
-        allRecipes.map(r => (r.id !== recipe.id ? r : savedRecipe))
-      );
-    } catch (exception) {
-      console.log(exception);
-    }
 
     setEdit(!edit);
   };

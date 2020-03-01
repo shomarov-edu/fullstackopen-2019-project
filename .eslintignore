@@ -1,11 +1,8 @@
+# api
+api/node_modules
+api/.env
+api/prisma
+
 # client
 client/node_modules
 client/build
-
-# server
-server/node_modules
-server/.env
-server/prisma
-
-# mongodb
-mongodb

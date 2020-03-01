@@ -1,6 +1,5 @@
 import React from 'react';
 import useField from '../hooks/useField';
-import recipeService from '../services/recipes';
 import Comment from './Comment';
 
 const Comments = ({ loggedInUser, recipe, allRecipes, setAllRecipes }) => {
@@ -14,8 +13,6 @@ const Comments = ({ loggedInUser, recipe, allRecipes, setAllRecipes }) => {
       comment: commentField.input.value
     };
 
-    recipeService.setToken(loggedInUser.token);
-
     const comments = recipe.comments.map(c => ({
       _id: c._id,
       author: c.author.id !== undefined ? c.author.id : c.author,
@@ -26,19 +23,6 @@ const Comments = ({ loggedInUser, recipe, allRecipes, setAllRecipes }) => {
       ...recipe,
       comments: comments.concat(newComment)
     };
-
-    try {
-      const savedRecipe = await recipeService.updateRecipe(
-        recipe.id,
-        updatedRecipe
-      );
-      setAllRecipes(
-        allRecipes.map(r => (r.id !== recipe.id ? r : savedRecipe))
-      );
-      commentField.reset();
-    } catch (exception) {
-      console.log(exception);
-    }
   };
 
   return (

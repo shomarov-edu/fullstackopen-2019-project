@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import useField from '../hooks/useField';
-import recipeService from '../services/recipes';
 
 const Comment = ({
   loggedInUser,
@@ -41,22 +40,6 @@ const Comment = ({
       ...recipe,
       comments: updatedComments
     };
-
-    recipeService.setToken(loggedInUser.token);
-
-    try {
-      const savedRecipe = await recipeService.updateRecipe(
-        recipe.id,
-        updatedRecipe
-      );
-      setAllRecipes(
-        allRecipes.map(r => (r.id !== recipe.id ? r : savedRecipe))
-      );
-      commentField.reset();
-      toggleVisibility();
-    } catch (exception) {
-      console.log(exception);
-    }
   };
 
   const handleDelete = async () => {
@@ -72,21 +55,6 @@ const Comment = ({
       ...recipe,
       comments: updatedComments
     };
-
-    recipeService.setToken(loggedInUser.token);
-
-    try {
-      const savedRecipe = await recipeService.updateRecipe(
-        recipe.id,
-        updatedRecipe
-      );
-      setAllRecipes(
-        allRecipes.map(r => (r.id !== recipe.id ? r : savedRecipe))
-      );
-      commentField.reset();
-    } catch (exception) {
-      console.log(exception);
-    }
   };
 
   return (

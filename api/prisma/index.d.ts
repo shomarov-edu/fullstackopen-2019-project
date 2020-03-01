@@ -1420,7 +1420,7 @@ export interface Recipe {
   tags: String[];
   source?: String;
   created: DateTimeOutput;
-  updated?: DateTimeOutput;
+  updated: DateTimeOutput;
   published: Boolean;
   comments?: <T = FragmentableArray<Comment>>() => T;
   ratings?: <T = FragmentableArray<Grade>>() => T;
@@ -1912,7 +1912,7 @@ export interface RecipePreviousValues {
   tags: String[];
   source?: String;
   created: DateTimeOutput;
-  updated?: DateTimeOutput;
+  updated: DateTimeOutput;
   published: Boolean;
 }
 

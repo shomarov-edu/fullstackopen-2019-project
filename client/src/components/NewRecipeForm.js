@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import useField from '../hooks/useField';
-import recipeService from '../services/recipes';
 
 const NewRecipeForm = ({ user }) => {
   const title = useField('text');
@@ -24,14 +23,6 @@ const NewRecipeForm = ({ user }) => {
       instructions,
       source: source.input.value
     };
-
-    recipeService.setToken(user.token);
-
-    try {
-      await recipeService.createNewRecipe(recipe);
-    } catch (exception) {
-      console.log(exception);
-    }
   };
 
   return (

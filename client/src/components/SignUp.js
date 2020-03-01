@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import useField from '../hooks/useField';
-import userService from '../services/users';
 
 const SignUp = ({ history }) => {
   const username = useField('text');
@@ -22,14 +21,6 @@ const SignUp = ({ history }) => {
     };
 
     try {
-      const returnedUser = await userService.signup(user);
-
-      if (!returnedUser) {
-        console.log('Sign up failed');
-      } else {
-        console.log('Sign up successful');
-      }
-
       username.reset();
       firstname.reset();
       lastname.reset();

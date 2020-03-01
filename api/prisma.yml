@@ -4,6 +4,5 @@ databaseType: document
 generate:
   - generator: javascript-client
     output: ./prisma/
-hooks:
-  post-deploy:
-    - prisma generate
+seed:
+  run: node ./data/index.js --reset

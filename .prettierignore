@@ -1,9 +1,9 @@
+api/node_modules
+api/.env
+api/prisma/
+
 client/node_modules
 client/build
-
-server/node_modules
-server/.env
-server/prisma/
 
 mongo/data
 

@@ -333,7 +333,7 @@ type Recipe {
   tags: [String!]!
   source: String
   created: DateTime!
-  updated: DateTime
+  updated: DateTime!
   published: Boolean!
   likedBy(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User!]
   comments: [Comment!]
@@ -468,7 +468,7 @@ type RecipePreviousValues {
   tags: [String!]!
   source: String
   created: DateTime!
-  updated: DateTime
+  updated: DateTime!
   published: Boolean!
 }
 

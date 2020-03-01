@@ -1,8 +1,3 @@
-# Root Query and Mutation types to extend from
-
-type Query
-type Mutation
-
 # types for User object
 
 enum ROLE {
@@ -12,7 +7,6 @@ enum ROLE {
 }
 
 type User {
-  id: ID
   username: String!
   email: String
   firstname: String!
@@ -21,9 +15,13 @@ type User {
   role: String!
   registered: String!
   recipes: [Recipe!]
-  likes: [Recipe!]
-  following: [User!]
+  recipeCount: Int!
+  likedRecipes: [Recipe!]
+  likedRecipeCount: Int!
+  followees: [User!]
+  followeeCount: Int!
   followers: [User!]
+  followerCount: Int!
 }
 
 type Token {
@@ -65,7 +63,7 @@ input LogInInput {
 }
 
 input FollowUserInput {
-  userIdToFollow: ID!
+  username: String!
 }
 
 input UpdateUserInput {
@@ -106,7 +104,6 @@ enum Difficulty {
 }
 
 type Recipe {
-  id: ID!
   author: User!
   category: Category!
   title: String!
@@ -127,7 +124,6 @@ type Recipe {
 }
 
 type Comment {
-  id: ID!
   author: User!
   content: String!
 }
@@ -169,7 +165,6 @@ input CreateRecipeInput {
 }
 
 input UpdateRecipeInput {
-  recipeId: ID!
   category: Category
   title: String
   description: String
@@ -183,36 +178,39 @@ input UpdateRecipeInput {
 }
 
 input PublishRecipeInput {
-  recipeId: ID!
+  id: ID!
 }
 
 input CommentRecipeInput {
-  recipeId: ID!
   content: String!
 }
 
 input UpdateCommentInput {
-  recipeId: ID!
+  id: ID!
   content: String!
 }
 
 input DeleteCommentInput {
-  recipeId: ID!
+  id: ID!
 }
 
 input LikeRecipeInput {
-  recipeId: ID!
+  id: ID!
 }
 
 input UnlikeRecipeInput {
-  recipeId: ID!
+  id: ID!
 }
 
 input RateRecipeInput {
-  recipeId: ID!
   grade: Int!
 }
 
 input DeleteRecipeInput {
-  recipeId: ID!
+  id: ID!
 }
+
+# Root Query and Mutation types to extend from
+
+type Query
+type Mutation

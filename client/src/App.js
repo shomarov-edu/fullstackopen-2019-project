@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { gql, useQuery } from '@apollo/client';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
-import userService from './services/users';
-import recipeService from './services/recipes';
 import Navigation from './components/Navigation';
 import Login from './components/Login';
 import SignUp from './components/SignUp';
@@ -24,16 +23,12 @@ const App = () => {
     if (user) {
       setLocalStorageUser(user);
     }
-    recipeService.getAll().then(loadedRecipes => setAllRecipes(loadedRecipes));
   }, []);
 
   useEffect(() => {
     const fetchUser = async () => {
       if (localStorageUser) {
         console.log('localStorageUser', localStorageUser);
-        const user = await userService.getUserByUsername(
-          localStorageUser.username
-        );
         console.log('user2', user);
         setLoggedInUser(user);
       }
@@ -46,8 +41,6 @@ const App = () => {
     const fetchUser = async () => {
       if (userToFetch) {
         setUser(null);
-        const loadedUser = await userService.getUserByUsername(userToFetch);
-        setUser(loadedUser);
       }
     };
 

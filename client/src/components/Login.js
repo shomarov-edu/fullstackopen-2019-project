@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import useField from '../hooks/useField';
-import userService from '../services/users';
 
 const Login = ({ setLocalStorageUser, history }) => {
   const username = useField('text');
@@ -14,21 +13,6 @@ const Login = ({ setLocalStorageUser, history }) => {
       username: username.input.value,
       password: password.input.value
     };
-
-    try {
-      const fetchedUser = await userService.login(credentials);
-      console.log(fetchedUser);
-      setLocalStorageUser(fetchedUser);
-
-      window.localStorage.setItem('loggedInUser', JSON.stringify(fetchedUser));
-
-      username.reset();
-      password.reset();
-
-      history.push(`/${fetchedUser.username}`);
-    } catch (exception) {
-      console.log(exception);
-    }
   };
 
   return (

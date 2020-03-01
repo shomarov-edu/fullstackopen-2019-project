@@ -13,10 +13,10 @@ type User {
   passwordHash: String!
   role: Role! @default(value: USER)
   registered: DateTime! @createdAt
-  recipes: [Recipe!] @relation(name: "WrittenRecipes", link: INLINE)
-  likedRecipes: [Recipe!] @relation(name: "LikedRecipes", link: INLINE)
-  following: [User!] @relation(name: "FollowRelation", link: INLINE)
-  followers: [User!] @relation(name: "FollowRelation")
+  recipes: [Recipe!]! @relation(name: "WrittenRecipes", link: INLINE)
+  likedRecipes: [Recipe!]! @relation(name: "LikedRecipes", link: INLINE)
+  following: [User!]! @relation(name: "FollowRelation", link: INLINE)
+  followers: [User!]! @relation(name: "FollowRelation")
 }
 
 enum Category {
@@ -41,17 +41,17 @@ type Recipe {
   description: String!
   cookingTime: Int!
   difficulty: Difficulty!
-  ingredients: [String!]
-  method: [String!]
-  notes: [String!]
-  tags: [String!]
+  ingredients: [String!]!
+  method: [String!]!
+  notes: [String!]!
+  tags: [String!]!
   source: String
   created: DateTime! @createdAt
-  updated: DateTime @updatedAt
+  updated: DateTime! @updatedAt
   published: Boolean! @default(value: false)
-  likedBy: [User!] @relation(name: "LikedRecipes")
-  comments: [Comment!]
-  ratings: [Grade!]
+  likedBy: [User!]! @relation(name: "LikedRecipes")
+  comments: [Comment!]!
+  ratings: [Grade!]!
 }
 
 type Comment @embedded {
