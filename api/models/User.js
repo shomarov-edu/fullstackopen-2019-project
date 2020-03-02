@@ -7,38 +7,26 @@ const validator = require('../utils/validator');
 // TODO: Input validations
 
 const generateUserModel = currentUser => ({
-  // QUERIES
+  // QUERIES:
 
-  getAll: async () => {
-    return await prisma.users();
-  },
+  getAll: async () => await prisma.users(),
 
-  getByUsername: async username => {
-    return await prisma.user({ username });
-  },
+  getByUsername: async username => await prisma.user({ username }),
 
-  getUserCount: async () => {
-    return await prisma
+  getUserCount: async () =>
+    await prisma
       .usersConnection()
       .aggregate()
-      .count();
-  },
+      .count(),
 
-  getFollowees: async username => {
-    return await prisma.user({ username }).followees();
-  },
+  getFollowees: async username => await prisma.user({ username }).followees(),
 
-  getFollowers: async username => {
-    return await prisma.user({ username }).followers();
-  },
+  getFollowers: async username => await prisma.user({ username }).followers(),
 
-  getRecipes: async username => {
-    return await prisma.user({ username }).recipes();
-  },
+  getRecipes: async username => await prisma.user({ username }).recipes(),
 
-  getLikedRecipes: async username => {
-    return await prisma.user({ username }).likedRecipes();
-  },
+  getLikedRecipes: async username =>
+    await prisma.user({ username }).likedRecipes(),
 
   // MUTATIONS:
 

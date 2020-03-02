@@ -52,5 +52,5 @@
 | 27.02 | 6    | backend development                                      |
 | 28.02 | 8    | tests & configuration                                    |
 | 29.02 | 2    | schema review                                            |
-| 01.03 | 2    | schema review                                            |
-| 02.03 | 2    | schema review                                            |
+| 01.03 | 6    | backend development                                      |
+| 02.03 | 6    | backend development                                      |

@@ -96,7 +96,7 @@ const resolvers = {
 
   Recipe: {
     author: async (recipe, args, { models }) =>
-      await models.recipe({ id: recipe.id }).author()
+      await models.Recipe.getUserByRecipeId(recipe.id)
   }
 };
 

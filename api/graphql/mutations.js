@@ -27,6 +27,49 @@ const mutations = {
         }
       )
     }
+  `,
+
+  createRecipe: gql`
+    mutation createRecipe(
+      $category: Category!
+      $title: String!
+      $description: String!
+      $cookingTime: Int!
+      $difficulty: Difficulty!
+      $ingredients: [String!]!
+      $method: [String!]!
+      $notes: [String!]
+      $source: String
+    ) {
+      createRecipe(
+        input: {
+          category: $category
+          title: $title
+          description: $description
+          cookingTime: $cookingTime
+          difficulty: $difficulty
+          ingredients: $ingredients
+          method: $method
+          notes: $notes
+          source: $source
+        }
+      ) {
+        id
+        author {
+          username
+        }
+        category
+        title
+        description
+        cookingTime
+        difficulty
+        ingredients
+        method
+        notes
+        source
+        published
+      }
+    }
   `
 };
 

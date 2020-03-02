@@ -6,6 +6,7 @@ const getUser = require('./helpers/getUser');
 let token;
 
 beforeAll(async () => {
+  await prisma.deleteManyRecipes();
   await prisma.deleteManyUsers();
 });
 

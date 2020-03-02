@@ -11,24 +11,23 @@ const validator = require('../utils/validator');
 const generateRecipeModel = currentUser => ({
   // QUERIES:
 
-  getAll: async () => {
-    return await prisma.recipes();
-  },
+  getAll: async () => await prisma.recipes(),
 
-  getById: async id => {
-    return await prisma.recipe(id);
-  },
+  getById: async id => await prisma.recipe(id),
 
-  getRecipeCount: async () => {
+  getUserByRecipeId: async id => await prisma.recipe({ id }).author(),
+
+  getRecipeCount: async () =>
     await prisma
       .recipesConnection()
       .aggregate()
-      .count();
-  },
+      .count(),
 
   // MUTATIONS:
 
   createRecipe: async input => {
+    if (!currentUser) return null;
+
     return await prisma.createRecipe({
       author: {
         connect: { id: currentUser.id }
@@ -46,38 +45,47 @@ const generateRecipeModel = currentUser => ({
   },
 
   updateRecipe: async input => {
+    if (!currentUser) return null;
     // TODO
   },
 
   publishRecipe: async input => {
+    if (!currentUser) return null;
     // TODO
   },
 
   commentRecipe: async input => {
+    if (!currentUser) return null;
     // TODO
   },
 
   updateComment: async input => {
+    if (!currentUser) return null;
     // TODO
   },
 
   deleteComment: async input => {
+    if (!currentUser) return null;
     // TODO
   },
 
   likeRecipe: async input => {
+    if (!currentUser) return null;
     // TODO
   },
 
   unlikeRecipe: async input => {
+    if (!currentUser) return null;
     // TODO
   },
 
   rateRecipe: async input => {
+    if (!currentUser) return null;
     // TODO
   },
 
   deleteRecipe: async input => {
+    if (!currentUser) return null;
     // TODO
   }
 });
