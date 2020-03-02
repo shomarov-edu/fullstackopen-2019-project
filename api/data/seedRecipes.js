@@ -1,18 +1,5 @@
 const { prisma } = require('../prisma');
-const { encryptPassword } = require('../helpers/authorizationHelper');
-const users = require('./users');
 const recipes = require('./recipes');
-
-const createUsers = async () => {
-  users.forEach(async user => {
-    const { password, ...userInput } = user;
-    const savedUser = await prisma.createUser({
-      ...userInput,
-      passwordHash: await encryptPassword(password)
-    });
-    console.log(savedUser);
-  });
-};
 
 const createRecipe = async (user, input) => {
   await prisma.createRecipe({
@@ -31,7 +18,7 @@ const createRecipe = async (user, input) => {
   });
 };
 
-const createRecipes = async () => {
+(async () => {
   let user = await prisma.user({ username: 'user' });
   let input = recipes[0];
   await createRecipe(user, input);
@@ -52,6 +39,4 @@ const createRecipes = async () => {
 
   input = recipes[5];
   await createRecipe(user, input);
-};
-
-module.exports = { createUsers, createRecipes };
+})();

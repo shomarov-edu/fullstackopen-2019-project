@@ -1,0 +1,10 @@
+endpoint: http://prisma:4466/project/dev
+datamodel: datamodel.graphql
+databaseType: document
+generate:
+  - generator: javascript-client
+    output: ./prisma/
+hooks:
+  post-deploy:
+    - node ./data/seedUsers.js
+    - node ./data/seedRecipes.js

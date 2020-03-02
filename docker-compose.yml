@@ -28,19 +28,20 @@ services:
             uri: mongodb://prisma:prisma@mongo/
     depends_on:
       - mongo
-  server:
-    container_name: server
+  api:
+    container_name: api
     build:
       dockerfile: Dockerfile.dev
-      context: ./server
-    image: shomarov/server
+      context: ./api
+    image: shomarov/api
     volumes:
-      - /server/node_modules
-      - ./server:/server
+      - /api/node_modules
+      - ./api:/api
     command: >
       sh -c "./wait-for prisma:4466 --
              echo Connection to Prisma is up. &&
-             prisma deploy
+             prisma deploy -p prisma.test.yml &&
+             prisma deploy -p prisma.dev.yml &&
              npm run dev"
     ports:
       - 4000:4000
@@ -59,5 +60,5 @@ services:
     ports:
       - 3000:3000
     depends_on:
-      - server
+      - api
     restart: unless-stopped

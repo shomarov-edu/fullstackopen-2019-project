@@ -14,10 +14,10 @@ const queries = {
         recipes {
           title
         }
-        likes {
+        likedRecipes {
           title
         }
-        following {
+        followees {
           username
         }
         followers {
@@ -40,10 +40,10 @@ const queries = {
         recipes {
           title
         }
-        likes {
+        likedRecipes {
           title
         }
-        following {
+        followees {
           username
         }
         followers {
@@ -66,10 +66,10 @@ const queries = {
         recipes {
           title
         }
-        likes {
+        likedRecipes {
           title
         }
-        following {
+        followees {
           username
         }
         followers {

@@ -2,35 +2,28 @@ const { gql } = require('apollo-server');
 
 const mutations = {
   login: gql`
-    mutation {
-      login(input: { username: $username, password: $password }) {
+    mutation login($usernameOrEmail: String!, $password: String!) {
+      login(input: { usernameOrEmail: $usernameOrEmail, password: $password }) {
         token
       }
     }
   `,
 
   signup: gql`
-    mutation {
+    mutation signup(
+      $username: String!
+      $firstname: String!
+      $lastname: String!
+      $email: String!
+      $password: String!
+    ) {
       signup(
         input: {
-          username: "user"
-          firstname: "User"
-          lastname: "Usersson"
-          email: "user@user.com"
-          password: "passwor"
-        }
-      )
-    }
-  `,
-
-  signupWithoutEmail: gql`
-    mutation {
-      signup(
-        input: {
-          username: "user"
-          firstname: "User"
-          lastname: "Usersson"
-          password: "password"
+          username: $username
+          firstname: $firstname
+          lastname: $lastname
+          email: $email
+          password: $password
         }
       )
     }

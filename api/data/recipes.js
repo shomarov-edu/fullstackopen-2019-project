@@ -1,6 +1,6 @@
 const recipes = [
   {
-    category: 'DESSERTS',
+    category: 'DESSERT',
     title: 'Vegan lemon cake',
     description:
       'Try baking a vegan version of lemon cake. Light and zingy, it also works well if you replace the flour and baking powder with gluten-free alternatives',
@@ -25,7 +25,7 @@ const recipes = [
     published: true
   },
   {
-    category: 'MAINS',
+    category: 'MAIN',
     title: 'Falafel burgers',
     description:
       "A healthy burger that's filling too. These are great for anyone who craves a big bite but doesn't want the calories",
@@ -57,7 +57,7 @@ const recipes = [
     published: true
   },
   {
-    category: 'SALADS',
+    category: 'SALAD',
     title: 'Chickpea Tuna Salad',
     description:
       "You want easy? Try this plant-based chickpea tuna salad recipe. Smash some chickpeas, add a few odds and ends and you’re well on your way! This is a fantastic staple dish and by adjusting a few of the ingredients you can keep the flavors fresh and alive so it never gets boring. Serve it as a salad or as a sandwich filling with your favorite toppings - there's no end to the combos you can come up with. You got this!",
@@ -90,7 +90,7 @@ const recipes = [
     published: true
   },
   {
-    category: 'MAINS',
+    category: 'MAIN',
     title: 'Millet Mercimek Koftesi',
     description:
       'A lightened up version of traditional Turkish lentil patties using millet - a healthy and satisfying summer lunch.',
@@ -171,7 +171,7 @@ const recipes = [
     published: true
   },
   {
-    category: 'DESSERTS',
+    category: 'DESSERT',
     title: '4-Ingredient Easy Vegan Brownies',
     description:
       'Incredibly rich, vegan, easy brownies made with just 4 ingredients and 1 bowl! Naturally sweetened, grain- and gluten-free, and so satisfying!',

@@ -15,16 +15,16 @@ type User {
   registered: DateTime! @createdAt
   recipes: [Recipe!]! @relation(name: "WrittenRecipes", link: INLINE)
   likedRecipes: [Recipe!]! @relation(name: "LikedRecipes", link: INLINE)
-  following: [User!]! @relation(name: "FollowRelation", link: INLINE)
+  followees: [User!]! @relation(name: "FollowRelation", link: INLINE)
   followers: [User!]! @relation(name: "FollowRelation")
 }
 
 enum Category {
   BREAKFAST
-  SALADS
-  SOUPS
-  MAINS
-  DESSERTS
+  SALAD
+  SOUP
+  MAIN
+  DESSERT
 }
 
 enum Difficulty {

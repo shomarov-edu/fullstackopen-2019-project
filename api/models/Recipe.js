@@ -1,9 +1,10 @@
 const { prisma } = require('../prisma');
-const { AuthenticationError, UserInputError } = require('apollo-server');
-const comparePasswords = require('../helpers/comparePasswords');
-const encryptPassword = require('../helpers/encryptPassword');
+const {
+  AuthenticationError,
+  ForbiddenError,
+  UserInputError
+} = require('apollo-server');
 const validator = require('../utils/validator');
-const { handleError } = require('../utils/errorHandler');
 
 // TODO: Validations and error handling
 
@@ -11,125 +12,73 @@ const generateRecipeModel = currentUser => ({
   // QUERIES:
 
   getAll: async () => {
-    try {
-      return await prisma.recipes();
-    } catch (error) {
-      handleError(error);
-    }
+    return await prisma.recipes();
   },
 
   getById: async id => {
-    try {
-      return await prisma.recipe(id);
-    } catch (error) {
-      handleError(error);
-    }
+    return await prisma.recipe(id);
   },
 
   getRecipeCount: async () => {
-    try {
-      await prisma
-        .recipesConnection()
-        .aggregate()
-        .count();
-    } catch (error) {
-      handleError(error);
-    }
+    await prisma
+      .recipesConnection()
+      .aggregate()
+      .count();
   },
 
   // MUTATIONS:
 
   createRecipe: async input => {
-    try {
-      return await prisma.createRecipe({
-        author: {
-          connect: { id: currentUser.id }
-        },
-        category: input.category,
-        title: input.title,
-        description: input.description,
-        cookingTime: input.cookingTime,
-        difficulty: input.difficulty,
-        ingredients: { set: input.ingredients },
-        method: { set: input.method },
-        notes: { set: input.notes || null },
-        tags: { set: input.tags || null }
-      });
-    } catch (error) {
-      handleError(error);
-    }
+    return await prisma.createRecipe({
+      author: {
+        connect: { id: currentUser.id }
+      },
+      category: input.category,
+      title: input.title,
+      description: input.description,
+      cookingTime: input.cookingTime,
+      difficulty: input.difficulty,
+      ingredients: { set: input.ingredients },
+      method: { set: input.method },
+      notes: { set: input.notes || null },
+      tags: { set: input.tags || null }
+    });
   },
 
   updateRecipe: async input => {
-    try {
-      // TODO
-    } catch (error) {
-      handleError(error);
-    }
+    // TODO
   },
 
   publishRecipe: async input => {
-    try {
-      // TODO
-    } catch (error) {
-      handleError(error);
-    }
+    // TODO
   },
 
   commentRecipe: async input => {
-    try {
-      // TODO
-    } catch (error) {
-      handleError(error);
-    }
+    // TODO
   },
 
   updateComment: async input => {
-    try {
-      // TODO
-    } catch (error) {
-      handleError(error);
-    }
+    // TODO
   },
 
   deleteComment: async input => {
-    try {
-      // TODO
-    } catch (error) {
-      handleError(error);
-    }
+    // TODO
   },
 
   likeRecipe: async input => {
-    try {
-      // TODO
-    } catch (error) {
-      handleError(error);
-    }
+    // TODO
   },
 
   unlikeRecipe: async input => {
-    try {
-      // TODO
-    } catch (error) {
-      handleError(error);
-    }
+    // TODO
   },
 
   rateRecipe: async input => {
-    try {
-      // TODO
-    } catch (error) {
-      handleError(error);
-    }
+    // TODO
   },
 
   deleteRecipe: async input => {
-    try {
-      // TODO
-    } catch (error) {
-      handleError(error);
-    }
+    // TODO
   }
 });
 

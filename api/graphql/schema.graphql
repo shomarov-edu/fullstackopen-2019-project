@@ -7,8 +7,9 @@ enum ROLE {
 }
 
 type User {
+  id: ID!
   username: String!
-  email: String
+  email: String!
   firstname: String!
   lastname: String!
   name: String!
@@ -91,10 +92,10 @@ input deleteAccountInput {
 
 enum Category {
   BREAKFAST
-  SALADS
-  SOUPS
+  SALAD
+  SOUP
   MAIN
-  DESSERTS
+  DESSERT
 }
 
 enum Difficulty {
@@ -104,6 +105,7 @@ enum Difficulty {
 }
 
 type Recipe {
+  id: ID!
   author: User!
   category: Category!
   title: String!
@@ -118,12 +120,13 @@ type Recipe {
   created: String!
   updated: String!
   published: Boolean!
-  likedBy: [User!]!
+  likedBy: [User!]
   comments: [Comment!]!
   rating: Float
 }
 
 type Comment {
+  id: ID!
   author: User!
   content: String!
 }

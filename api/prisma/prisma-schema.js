@@ -17,10 +17,10 @@ type BatchPayload {
 
 enum Category {
   BREAKFAST
-  SALADS
-  SOUPS
-  MAINS
-  DESSERTS
+  SALAD
+  SOUP
+  MAIN
+  DESSERT
 }
 
 type Comment {
@@ -859,7 +859,7 @@ type User {
   registered: DateTime!
   recipes(where: RecipeWhereInput, orderBy: RecipeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Recipe!]
   likedRecipes(where: RecipeWhereInput, orderBy: RecipeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Recipe!]
-  following(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User!]
+  followees(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User!]
   followers(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User!]
 }
 
@@ -879,17 +879,17 @@ input UserCreateInput {
   role: Role
   recipes: RecipeCreateManyWithoutAuthorInput
   likedRecipes: RecipeCreateManyWithoutLikedByInput
-  following: UserCreateManyWithoutFollowersInput
-  followers: UserCreateManyWithoutFollowingInput
+  followees: UserCreateManyWithoutFollowersInput
+  followers: UserCreateManyWithoutFolloweesInput
+}
+
+input UserCreateManyWithoutFolloweesInput {
+  create: [UserCreateWithoutFolloweesInput!]
+  connect: [UserWhereUniqueInput!]
 }
 
 input UserCreateManyWithoutFollowersInput {
   create: [UserCreateWithoutFollowersInput!]
-  connect: [UserWhereUniqueInput!]
-}
-
-input UserCreateManyWithoutFollowingInput {
-  create: [UserCreateWithoutFollowingInput!]
   connect: [UserWhereUniqueInput!]
 }
 
@@ -908,6 +908,19 @@ input UserCreateOneWithoutRecipesInput {
   connect: UserWhereUniqueInput
 }
 
+input UserCreateWithoutFolloweesInput {
+  id: ID
+  username: String!
+  email: String!
+  firstname: String!
+  lastname: String!
+  passwordHash: String!
+  role: Role
+  recipes: RecipeCreateManyWithoutAuthorInput
+  likedRecipes: RecipeCreateManyWithoutLikedByInput
+  followers: UserCreateManyWithoutFolloweesInput
+}
+
 input UserCreateWithoutFollowersInput {
   id: ID
   username: String!
@@ -918,20 +931,7 @@ input UserCreateWithoutFollowersInput {
   role: Role
   recipes: RecipeCreateManyWithoutAuthorInput
   likedRecipes: RecipeCreateManyWithoutLikedByInput
-  following: UserCreateManyWithoutFollowersInput
-}
-
-input UserCreateWithoutFollowingInput {
-  id: ID
-  username: String!
-  email: String!
-  firstname: String!
-  lastname: String!
-  passwordHash: String!
-  role: Role
-  recipes: RecipeCreateManyWithoutAuthorInput
-  likedRecipes: RecipeCreateManyWithoutLikedByInput
-  followers: UserCreateManyWithoutFollowingInput
+  followees: UserCreateManyWithoutFollowersInput
 }
 
 input UserCreateWithoutLikedRecipesInput {
@@ -943,8 +943,8 @@ input UserCreateWithoutLikedRecipesInput {
   passwordHash: String!
   role: Role
   recipes: RecipeCreateManyWithoutAuthorInput
-  following: UserCreateManyWithoutFollowersInput
-  followers: UserCreateManyWithoutFollowingInput
+  followees: UserCreateManyWithoutFollowersInput
+  followers: UserCreateManyWithoutFolloweesInput
 }
 
 input UserCreateWithoutRecipesInput {
@@ -956,8 +956,8 @@ input UserCreateWithoutRecipesInput {
   passwordHash: String!
   role: Role
   likedRecipes: RecipeCreateManyWithoutLikedByInput
-  following: UserCreateManyWithoutFollowersInput
-  followers: UserCreateManyWithoutFollowingInput
+  followees: UserCreateManyWithoutFollowersInput
+  followers: UserCreateManyWithoutFolloweesInput
 }
 
 type UserEdge {
@@ -1122,8 +1122,8 @@ input UserUpdateInput {
   role: Role
   recipes: RecipeUpdateManyWithoutAuthorInput
   likedRecipes: RecipeUpdateManyWithoutLikedByInput
-  following: UserUpdateManyWithoutFollowersInput
-  followers: UserUpdateManyWithoutFollowingInput
+  followees: UserUpdateManyWithoutFollowersInput
+  followers: UserUpdateManyWithoutFolloweesInput
 }
 
 input UserUpdateManyDataInput {
@@ -1144,6 +1144,18 @@ input UserUpdateManyMutationInput {
   role: Role
 }
 
+input UserUpdateManyWithoutFolloweesInput {
+  create: [UserCreateWithoutFolloweesInput!]
+  delete: [UserWhereUniqueInput!]
+  connect: [UserWhereUniqueInput!]
+  set: [UserWhereUniqueInput!]
+  disconnect: [UserWhereUniqueInput!]
+  update: [UserUpdateWithWhereUniqueWithoutFolloweesInput!]
+  upsert: [UserUpsertWithWhereUniqueWithoutFolloweesInput!]
+  deleteMany: [UserScalarWhereInput!]
+  updateMany: [UserUpdateManyWithWhereNestedInput!]
+}
+
 input UserUpdateManyWithoutFollowersInput {
   create: [UserCreateWithoutFollowersInput!]
   delete: [UserWhereUniqueInput!]
@@ -1152,18 +1164,6 @@ input UserUpdateManyWithoutFollowersInput {
   disconnect: [UserWhereUniqueInput!]
   update: [UserUpdateWithWhereUniqueWithoutFollowersInput!]
   upsert: [UserUpsertWithWhereUniqueWithoutFollowersInput!]
-  deleteMany: [UserScalarWhereInput!]
-  updateMany: [UserUpdateManyWithWhereNestedInput!]
-}
-
-input UserUpdateManyWithoutFollowingInput {
-  create: [UserCreateWithoutFollowingInput!]
-  delete: [UserWhereUniqueInput!]
-  connect: [UserWhereUniqueInput!]
-  set: [UserWhereUniqueInput!]
-  disconnect: [UserWhereUniqueInput!]
-  update: [UserUpdateWithWhereUniqueWithoutFollowingInput!]
-  upsert: [UserUpsertWithWhereUniqueWithoutFollowingInput!]
   deleteMany: [UserScalarWhereInput!]
   updateMany: [UserUpdateManyWithWhereNestedInput!]
 }
@@ -1192,6 +1192,18 @@ input UserUpdateOneRequiredWithoutRecipesInput {
   connect: UserWhereUniqueInput
 }
 
+input UserUpdateWithoutFolloweesDataInput {
+  username: String
+  email: String
+  firstname: String
+  lastname: String
+  passwordHash: String
+  role: Role
+  recipes: RecipeUpdateManyWithoutAuthorInput
+  likedRecipes: RecipeUpdateManyWithoutLikedByInput
+  followers: UserUpdateManyWithoutFolloweesInput
+}
+
 input UserUpdateWithoutFollowersDataInput {
   username: String
   email: String
@@ -1201,19 +1213,7 @@ input UserUpdateWithoutFollowersDataInput {
   role: Role
   recipes: RecipeUpdateManyWithoutAuthorInput
   likedRecipes: RecipeUpdateManyWithoutLikedByInput
-  following: UserUpdateManyWithoutFollowersInput
-}
-
-input UserUpdateWithoutFollowingDataInput {
-  username: String
-  email: String
-  firstname: String
-  lastname: String
-  passwordHash: String
-  role: Role
-  recipes: RecipeUpdateManyWithoutAuthorInput
-  likedRecipes: RecipeUpdateManyWithoutLikedByInput
-  followers: UserUpdateManyWithoutFollowingInput
+  followees: UserUpdateManyWithoutFollowersInput
 }
 
 input UserUpdateWithoutLikedRecipesDataInput {
@@ -1224,8 +1224,8 @@ input UserUpdateWithoutLikedRecipesDataInput {
   passwordHash: String
   role: Role
   recipes: RecipeUpdateManyWithoutAuthorInput
-  following: UserUpdateManyWithoutFollowersInput
-  followers: UserUpdateManyWithoutFollowingInput
+  followees: UserUpdateManyWithoutFollowersInput
+  followers: UserUpdateManyWithoutFolloweesInput
 }
 
 input UserUpdateWithoutRecipesDataInput {
@@ -1236,18 +1236,18 @@ input UserUpdateWithoutRecipesDataInput {
   passwordHash: String
   role: Role
   likedRecipes: RecipeUpdateManyWithoutLikedByInput
-  following: UserUpdateManyWithoutFollowersInput
-  followers: UserUpdateManyWithoutFollowingInput
+  followees: UserUpdateManyWithoutFollowersInput
+  followers: UserUpdateManyWithoutFolloweesInput
+}
+
+input UserUpdateWithWhereUniqueWithoutFolloweesInput {
+  where: UserWhereUniqueInput!
+  data: UserUpdateWithoutFolloweesDataInput!
 }
 
 input UserUpdateWithWhereUniqueWithoutFollowersInput {
   where: UserWhereUniqueInput!
   data: UserUpdateWithoutFollowersDataInput!
-}
-
-input UserUpdateWithWhereUniqueWithoutFollowingInput {
-  where: UserWhereUniqueInput!
-  data: UserUpdateWithoutFollowingDataInput!
 }
 
 input UserUpdateWithWhereUniqueWithoutLikedRecipesInput {
@@ -1260,16 +1260,16 @@ input UserUpsertWithoutRecipesInput {
   create: UserCreateWithoutRecipesInput!
 }
 
+input UserUpsertWithWhereUniqueWithoutFolloweesInput {
+  where: UserWhereUniqueInput!
+  update: UserUpdateWithoutFolloweesDataInput!
+  create: UserCreateWithoutFolloweesInput!
+}
+
 input UserUpsertWithWhereUniqueWithoutFollowersInput {
   where: UserWhereUniqueInput!
   update: UserUpdateWithoutFollowersDataInput!
   create: UserCreateWithoutFollowersInput!
-}
-
-input UserUpsertWithWhereUniqueWithoutFollowingInput {
-  where: UserWhereUniqueInput!
-  update: UserUpdateWithoutFollowingDataInput!
-  create: UserCreateWithoutFollowingInput!
 }
 
 input UserUpsertWithWhereUniqueWithoutLikedRecipesInput {
@@ -1377,7 +1377,7 @@ input UserWhereInput {
   registered_gte: DateTime
   recipes_some: RecipeWhereInput
   likedRecipes_some: RecipeWhereInput
-  following_some: UserWhereInput
+  followees_some: UserWhereInput
   followers_some: UserWhereInput
   AND: [UserWhereInput!]
 }

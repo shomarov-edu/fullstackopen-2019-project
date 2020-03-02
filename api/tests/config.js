@@ -2,16 +2,15 @@ require('dotenv').config();
 const fs = require('fs');
 const appRoot = require('app-root-path');
 const { ApolloServer } = require('apollo-server');
-const { Prisma } = require('../prisma');
+const { prisma } = require('../prisma');
 const { createTestClient } = require('apollo-server-testing');
-const { getUser } = require(`${appRoot}/helpers/authorizationHelper`);
+const auth = require('../services/authentication');
+const { generateUserModel } = require('../models/User');
+const { generateRecipeModel } = require('../models/Recipe');
+const getUser = require(`${appRoot}/helpers/getUser`);
 
-const typeDefs = fs.readFileSync(`${appRoot}/schema.graphql`, 'utf8');
+const typeDefs = fs.readFileSync(`${appRoot}/graphql/schema.graphql`, 'utf8');
 const resolvers = require(`${appRoot}/graphql/resolvers`);
-
-const prisma = new Prisma({
-  endpoint: 'http://prisma:4466/project/test'
-});
 
 const context = async ({ req }) => {
   const tokenWithBearer = req.headers.authorization || '';
@@ -19,8 +18,12 @@ const context = async ({ req }) => {
   const currentUser = tokenWithBearer ? await getUser(tokenWithBearer) : null;
 
   return {
+    auth,
     currentUser,
-    prisma
+    models: {
+      User: generateUserModel(currentUser),
+      Recipe: generateRecipeModel(currentUser)
+    }
   };
 };
 

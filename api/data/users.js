@@ -26,7 +26,8 @@ const users = [
     lastname: 'Modlung',
     username: 'mod',
     email: 'mod@mod.com',
-    password: 'password'
+    password: 'password',
+    role: 'MODERATOR'
   }
 ];
 

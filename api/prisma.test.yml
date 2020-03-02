@@ -1,8 +1,6 @@
-endpoint: http://prisma:4466/project/dev
+endpoint: http://prisma:4466/project/test
 datamodel: datamodel.graphql
 databaseType: document
 generate:
   - generator: javascript-client
     output: ./prisma/
-seed:
-  run: node ./data/index.js --reset

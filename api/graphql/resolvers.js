@@ -1,18 +1,18 @@
 const resolvers = {
   Query: {
-    me: async (_, __, { currentUser, models }) =>
-      await models.User.getByUsername(currentUser.username),
-
-    users: async (_, __, { models }) => {
-      await models.User.getAll();
+    me: async (_, __, { currentUser, models }) => {
+      if (!currentUser) return null;
+      return await models.User.getByUsername(currentUser.username);
     },
+
+    users: async (_, __, { models }) => await models.User.getAll(),
 
     user: async (_, { input }, { models }) =>
       await models.User.getByUsername(input.username),
 
     userCount: async (_, __, { models }) => await models.User.getUserCount(),
 
-    recipes: async (_, __, { models }) => await models.Recipe.getRecipes(),
+    recipes: async (_, __, { models }) => await models.Recipe.getAll(),
 
     recipe: async (_, { input }, { models }) =>
       await models.Recipe.getById(input.id),
@@ -73,9 +73,10 @@ const resolvers = {
   },
 
   User: {
-    followees: async user => user.following.length,
+    followees: async (user, _, { models }) =>
+      models.User.getFollowees(user.username),
 
-    followeeCount: async user => user.following.length,
+    followeeCount: async user => user.followees.length,
 
     followers: async (user, _, { models }) =>
       await models.User.getFollowers(user.username),
