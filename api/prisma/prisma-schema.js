@@ -850,10 +850,9 @@ type Subscription {
 
 type User {
   id: ID!
-  username: String!
+  name: String!
   email: String!
-  firstname: String!
-  lastname: String!
+  username: String!
   passwordHash: String!
   role: Role!
   registered: DateTime!
@@ -871,10 +870,9 @@ type UserConnection {
 
 input UserCreateInput {
   id: ID
-  username: String!
+  name: String!
   email: String!
-  firstname: String!
-  lastname: String!
+  username: String!
   passwordHash: String!
   role: Role
   recipes: RecipeCreateManyWithoutAuthorInput
@@ -910,10 +908,9 @@ input UserCreateOneWithoutRecipesInput {
 
 input UserCreateWithoutFolloweesInput {
   id: ID
-  username: String!
+  name: String!
   email: String!
-  firstname: String!
-  lastname: String!
+  username: String!
   passwordHash: String!
   role: Role
   recipes: RecipeCreateManyWithoutAuthorInput
@@ -923,10 +920,9 @@ input UserCreateWithoutFolloweesInput {
 
 input UserCreateWithoutFollowersInput {
   id: ID
-  username: String!
+  name: String!
   email: String!
-  firstname: String!
-  lastname: String!
+  username: String!
   passwordHash: String!
   role: Role
   recipes: RecipeCreateManyWithoutAuthorInput
@@ -936,10 +932,9 @@ input UserCreateWithoutFollowersInput {
 
 input UserCreateWithoutLikedRecipesInput {
   id: ID
-  username: String!
+  name: String!
   email: String!
-  firstname: String!
-  lastname: String!
+  username: String!
   passwordHash: String!
   role: Role
   recipes: RecipeCreateManyWithoutAuthorInput
@@ -949,10 +944,9 @@ input UserCreateWithoutLikedRecipesInput {
 
 input UserCreateWithoutRecipesInput {
   id: ID
-  username: String!
+  name: String!
   email: String!
-  firstname: String!
-  lastname: String!
+  username: String!
   passwordHash: String!
   role: Role
   likedRecipes: RecipeCreateManyWithoutLikedByInput
@@ -968,14 +962,12 @@ type UserEdge {
 enum UserOrderByInput {
   id_ASC
   id_DESC
-  username_ASC
-  username_DESC
+  name_ASC
+  name_DESC
   email_ASC
   email_DESC
-  firstname_ASC
-  firstname_DESC
-  lastname_ASC
-  lastname_DESC
+  username_ASC
+  username_DESC
   passwordHash_ASC
   passwordHash_DESC
   role_ASC
@@ -986,10 +978,9 @@ enum UserOrderByInput {
 
 type UserPreviousValues {
   id: ID!
-  username: String!
+  name: String!
   email: String!
-  firstname: String!
-  lastname: String!
+  username: String!
   passwordHash: String!
   role: Role!
   registered: DateTime!
@@ -1010,20 +1001,20 @@ input UserScalarWhereInput {
   id_not_starts_with: ID
   id_ends_with: ID
   id_not_ends_with: ID
-  username: String
-  username_not: String
-  username_in: [String!]
-  username_not_in: [String!]
-  username_lt: String
-  username_lte: String
-  username_gt: String
-  username_gte: String
-  username_contains: String
-  username_not_contains: String
-  username_starts_with: String
-  username_not_starts_with: String
-  username_ends_with: String
-  username_not_ends_with: String
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
   email: String
   email_not: String
   email_in: [String!]
@@ -1038,34 +1029,20 @@ input UserScalarWhereInput {
   email_not_starts_with: String
   email_ends_with: String
   email_not_ends_with: String
-  firstname: String
-  firstname_not: String
-  firstname_in: [String!]
-  firstname_not_in: [String!]
-  firstname_lt: String
-  firstname_lte: String
-  firstname_gt: String
-  firstname_gte: String
-  firstname_contains: String
-  firstname_not_contains: String
-  firstname_starts_with: String
-  firstname_not_starts_with: String
-  firstname_ends_with: String
-  firstname_not_ends_with: String
-  lastname: String
-  lastname_not: String
-  lastname_in: [String!]
-  lastname_not_in: [String!]
-  lastname_lt: String
-  lastname_lte: String
-  lastname_gt: String
-  lastname_gte: String
-  lastname_contains: String
-  lastname_not_contains: String
-  lastname_starts_with: String
-  lastname_not_starts_with: String
-  lastname_ends_with: String
-  lastname_not_ends_with: String
+  username: String
+  username_not: String
+  username_in: [String!]
+  username_not_in: [String!]
+  username_lt: String
+  username_lte: String
+  username_gt: String
+  username_gte: String
+  username_contains: String
+  username_not_contains: String
+  username_starts_with: String
+  username_not_starts_with: String
+  username_ends_with: String
+  username_not_ends_with: String
   passwordHash: String
   passwordHash_not: String
   passwordHash_in: [String!]
@@ -1114,10 +1091,9 @@ input UserSubscriptionWhereInput {
 }
 
 input UserUpdateInput {
-  username: String
+  name: String
   email: String
-  firstname: String
-  lastname: String
+  username: String
   passwordHash: String
   role: Role
   recipes: RecipeUpdateManyWithoutAuthorInput
@@ -1127,19 +1103,17 @@ input UserUpdateInput {
 }
 
 input UserUpdateManyDataInput {
-  username: String
+  name: String
   email: String
-  firstname: String
-  lastname: String
+  username: String
   passwordHash: String
   role: Role
 }
 
 input UserUpdateManyMutationInput {
-  username: String
+  name: String
   email: String
-  firstname: String
-  lastname: String
+  username: String
   passwordHash: String
   role: Role
 }
@@ -1193,10 +1167,9 @@ input UserUpdateOneRequiredWithoutRecipesInput {
 }
 
 input UserUpdateWithoutFolloweesDataInput {
-  username: String
+  name: String
   email: String
-  firstname: String
-  lastname: String
+  username: String
   passwordHash: String
   role: Role
   recipes: RecipeUpdateManyWithoutAuthorInput
@@ -1205,10 +1178,9 @@ input UserUpdateWithoutFolloweesDataInput {
 }
 
 input UserUpdateWithoutFollowersDataInput {
-  username: String
+  name: String
   email: String
-  firstname: String
-  lastname: String
+  username: String
   passwordHash: String
   role: Role
   recipes: RecipeUpdateManyWithoutAuthorInput
@@ -1217,10 +1189,9 @@ input UserUpdateWithoutFollowersDataInput {
 }
 
 input UserUpdateWithoutLikedRecipesDataInput {
-  username: String
+  name: String
   email: String
-  firstname: String
-  lastname: String
+  username: String
   passwordHash: String
   role: Role
   recipes: RecipeUpdateManyWithoutAuthorInput
@@ -1229,10 +1200,9 @@ input UserUpdateWithoutLikedRecipesDataInput {
 }
 
 input UserUpdateWithoutRecipesDataInput {
-  username: String
+  name: String
   email: String
-  firstname: String
-  lastname: String
+  username: String
   passwordHash: String
   role: Role
   likedRecipes: RecipeUpdateManyWithoutLikedByInput
@@ -1293,20 +1263,20 @@ input UserWhereInput {
   id_not_starts_with: ID
   id_ends_with: ID
   id_not_ends_with: ID
-  username: String
-  username_not: String
-  username_in: [String!]
-  username_not_in: [String!]
-  username_lt: String
-  username_lte: String
-  username_gt: String
-  username_gte: String
-  username_contains: String
-  username_not_contains: String
-  username_starts_with: String
-  username_not_starts_with: String
-  username_ends_with: String
-  username_not_ends_with: String
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
   email: String
   email_not: String
   email_in: [String!]
@@ -1321,34 +1291,20 @@ input UserWhereInput {
   email_not_starts_with: String
   email_ends_with: String
   email_not_ends_with: String
-  firstname: String
-  firstname_not: String
-  firstname_in: [String!]
-  firstname_not_in: [String!]
-  firstname_lt: String
-  firstname_lte: String
-  firstname_gt: String
-  firstname_gte: String
-  firstname_contains: String
-  firstname_not_contains: String
-  firstname_starts_with: String
-  firstname_not_starts_with: String
-  firstname_ends_with: String
-  firstname_not_ends_with: String
-  lastname: String
-  lastname_not: String
-  lastname_in: [String!]
-  lastname_not_in: [String!]
-  lastname_lt: String
-  lastname_lte: String
-  lastname_gt: String
-  lastname_gte: String
-  lastname_contains: String
-  lastname_not_contains: String
-  lastname_starts_with: String
-  lastname_not_starts_with: String
-  lastname_ends_with: String
-  lastname_not_ends_with: String
+  username: String
+  username_not: String
+  username_in: [String!]
+  username_not_in: [String!]
+  username_lt: String
+  username_lte: String
+  username_gt: String
+  username_gte: String
+  username_contains: String
+  username_not_contains: String
+  username_starts_with: String
+  username_not_starts_with: String
+  username_ends_with: String
+  username_not_ends_with: String
   passwordHash: String
   passwordHash_not: String
   passwordHash_in: [String!]
@@ -1384,8 +1340,8 @@ input UserWhereInput {
 
 input UserWhereUniqueInput {
   id: ID
-  username: String
   email: String
+  username: String
 }
 `
       }

@@ -15,7 +15,11 @@ const generateRecipeModel = currentUser => ({
 
   getById: async id => await prisma.recipe(id),
 
-  getUserByRecipeId: async id => await prisma.recipe({ id }).author(),
+  getUserByRecipeId: async id => {
+    const recipe = await prisma.recipe({ id });
+    const recipeAuthor = await prisma.recipe({ id }).author();
+    return recipeAuthor;
+  },
 
   getRecipeCount: async () =>
     await prisma

@@ -6,10 +6,9 @@ enum Role {
 
 type User {
   id: ID! @id
-  username: String! @unique
+  name: String!
   email: String! @unique
-  firstname: String!
-  lastname: String!
+  username: String! @unique
   passwordHash: String!
   role: Role! @default(value: USER)
   registered: DateTime! @createdAt

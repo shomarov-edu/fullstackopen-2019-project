@@ -8,11 +8,9 @@ enum ROLE {
 
 type User {
   id: ID!
-  username: String!
-  email: String!
-  firstname: String!
-  lastname: String!
   name: String!
+  email: String!
+  username: String!
   role: String!
   registered: String!
   recipes: [Recipe!]
@@ -31,12 +29,17 @@ type Token {
 
 extend type Query {
   me: User
-  users: [User!]!
+  users(input: UsersInput): [User!]!
   user(input: UserInput): User
   userCount: Int!
 }
 
+input UsersInput {
+  name: String!
+}
+
 input UserInput {
+  id: ID
   username: String
 }
 
@@ -51,8 +54,7 @@ extend type Mutation {
 }
 
 input SignUpInput {
-  firstname: String!
-  lastname: String!
+  name: String!
   email: String!
   username: String!
   password: String!
@@ -69,8 +71,7 @@ input FollowUserInput {
 
 input UpdateUserInput {
   password: String!
-  firstname: String
-  lastname: String
+  name: String
   email: String
 }
 

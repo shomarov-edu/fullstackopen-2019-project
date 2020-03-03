@@ -171,14 +171,12 @@ export type RecipeOrderByInput =
 export type UserOrderByInput =
   | "id_ASC"
   | "id_DESC"
-  | "username_ASC"
-  | "username_DESC"
+  | "name_ASC"
+  | "name_DESC"
   | "email_ASC"
   | "email_DESC"
-  | "firstname_ASC"
-  | "firstname_DESC"
-  | "lastname_ASC"
-  | "lastname_DESC"
+  | "username_ASC"
+  | "username_DESC"
   | "passwordHash_ASC"
   | "passwordHash_DESC"
   | "role_ASC"
@@ -309,20 +307,20 @@ export interface UserWhereInput {
   id_not_starts_with?: Maybe<ID_Input>;
   id_ends_with?: Maybe<ID_Input>;
   id_not_ends_with?: Maybe<ID_Input>;
-  username?: Maybe<String>;
-  username_not?: Maybe<String>;
-  username_in?: Maybe<String[] | String>;
-  username_not_in?: Maybe<String[] | String>;
-  username_lt?: Maybe<String>;
-  username_lte?: Maybe<String>;
-  username_gt?: Maybe<String>;
-  username_gte?: Maybe<String>;
-  username_contains?: Maybe<String>;
-  username_not_contains?: Maybe<String>;
-  username_starts_with?: Maybe<String>;
-  username_not_starts_with?: Maybe<String>;
-  username_ends_with?: Maybe<String>;
-  username_not_ends_with?: Maybe<String>;
+  name?: Maybe<String>;
+  name_not?: Maybe<String>;
+  name_in?: Maybe<String[] | String>;
+  name_not_in?: Maybe<String[] | String>;
+  name_lt?: Maybe<String>;
+  name_lte?: Maybe<String>;
+  name_gt?: Maybe<String>;
+  name_gte?: Maybe<String>;
+  name_contains?: Maybe<String>;
+  name_not_contains?: Maybe<String>;
+  name_starts_with?: Maybe<String>;
+  name_not_starts_with?: Maybe<String>;
+  name_ends_with?: Maybe<String>;
+  name_not_ends_with?: Maybe<String>;
   email?: Maybe<String>;
   email_not?: Maybe<String>;
   email_in?: Maybe<String[] | String>;
@@ -337,34 +335,20 @@ export interface UserWhereInput {
   email_not_starts_with?: Maybe<String>;
   email_ends_with?: Maybe<String>;
   email_not_ends_with?: Maybe<String>;
-  firstname?: Maybe<String>;
-  firstname_not?: Maybe<String>;
-  firstname_in?: Maybe<String[] | String>;
-  firstname_not_in?: Maybe<String[] | String>;
-  firstname_lt?: Maybe<String>;
-  firstname_lte?: Maybe<String>;
-  firstname_gt?: Maybe<String>;
-  firstname_gte?: Maybe<String>;
-  firstname_contains?: Maybe<String>;
-  firstname_not_contains?: Maybe<String>;
-  firstname_starts_with?: Maybe<String>;
-  firstname_not_starts_with?: Maybe<String>;
-  firstname_ends_with?: Maybe<String>;
-  firstname_not_ends_with?: Maybe<String>;
-  lastname?: Maybe<String>;
-  lastname_not?: Maybe<String>;
-  lastname_in?: Maybe<String[] | String>;
-  lastname_not_in?: Maybe<String[] | String>;
-  lastname_lt?: Maybe<String>;
-  lastname_lte?: Maybe<String>;
-  lastname_gt?: Maybe<String>;
-  lastname_gte?: Maybe<String>;
-  lastname_contains?: Maybe<String>;
-  lastname_not_contains?: Maybe<String>;
-  lastname_starts_with?: Maybe<String>;
-  lastname_not_starts_with?: Maybe<String>;
-  lastname_ends_with?: Maybe<String>;
-  lastname_not_ends_with?: Maybe<String>;
+  username?: Maybe<String>;
+  username_not?: Maybe<String>;
+  username_in?: Maybe<String[] | String>;
+  username_not_in?: Maybe<String[] | String>;
+  username_lt?: Maybe<String>;
+  username_lte?: Maybe<String>;
+  username_gt?: Maybe<String>;
+  username_gte?: Maybe<String>;
+  username_contains?: Maybe<String>;
+  username_not_contains?: Maybe<String>;
+  username_starts_with?: Maybe<String>;
+  username_not_starts_with?: Maybe<String>;
+  username_ends_with?: Maybe<String>;
+  username_not_ends_with?: Maybe<String>;
   passwordHash?: Maybe<String>;
   passwordHash_not?: Maybe<String>;
   passwordHash_in?: Maybe<String[] | String>;
@@ -518,8 +502,8 @@ export interface GradeRestrictedWhereInput {
 
 export type UserWhereUniqueInput = AtLeastOne<{
   id: Maybe<ID_Input>;
-  username?: Maybe<String>;
   email?: Maybe<String>;
+  username?: Maybe<String>;
 }>;
 
 export interface RecipeCreateInput {
@@ -548,10 +532,9 @@ export interface UserCreateOneWithoutRecipesInput {
 
 export interface UserCreateWithoutRecipesInput {
   id?: Maybe<ID_Input>;
-  username: String;
+  name: String;
   email: String;
-  firstname: String;
-  lastname: String;
+  username: String;
   passwordHash: String;
   role?: Maybe<Role>;
   likedRecipes?: Maybe<RecipeCreateManyWithoutLikedByInput>;
@@ -617,10 +600,9 @@ export interface UserCreateOneInput {
 
 export interface UserCreateInput {
   id?: Maybe<ID_Input>;
-  username: String;
+  name: String;
   email: String;
-  firstname: String;
-  lastname: String;
+  username: String;
   passwordHash: String;
   role?: Maybe<Role>;
   recipes?: Maybe<RecipeCreateManyWithoutAuthorInput>;
@@ -663,10 +645,9 @@ export interface UserCreateManyWithoutLikedRecipesInput {
 
 export interface UserCreateWithoutLikedRecipesInput {
   id?: Maybe<ID_Input>;
-  username: String;
+  name: String;
   email: String;
-  firstname: String;
-  lastname: String;
+  username: String;
   passwordHash: String;
   role?: Maybe<Role>;
   recipes?: Maybe<RecipeCreateManyWithoutAuthorInput>;
@@ -683,10 +664,9 @@ export interface UserCreateManyWithoutFollowersInput {
 
 export interface UserCreateWithoutFollowersInput {
   id?: Maybe<ID_Input>;
-  username: String;
+  name: String;
   email: String;
-  firstname: String;
-  lastname: String;
+  username: String;
   passwordHash: String;
   role?: Maybe<Role>;
   recipes?: Maybe<RecipeCreateManyWithoutAuthorInput>;
@@ -703,10 +683,9 @@ export interface UserCreateManyWithoutFolloweesInput {
 
 export interface UserCreateWithoutFolloweesInput {
   id?: Maybe<ID_Input>;
-  username: String;
+  name: String;
   email: String;
-  firstname: String;
-  lastname: String;
+  username: String;
   passwordHash: String;
   role?: Maybe<Role>;
   recipes?: Maybe<RecipeCreateManyWithoutAuthorInput>;
@@ -750,10 +729,9 @@ export interface UserUpdateOneRequiredWithoutRecipesInput {
 }
 
 export interface UserUpdateWithoutRecipesDataInput {
-  username?: Maybe<String>;
+  name?: Maybe<String>;
   email?: Maybe<String>;
-  firstname?: Maybe<String>;
-  lastname?: Maybe<String>;
+  username?: Maybe<String>;
   passwordHash?: Maybe<String>;
   role?: Maybe<Role>;
   likedRecipes?: Maybe<RecipeUpdateManyWithoutLikedByInput>;
@@ -1070,10 +1048,9 @@ export interface UserUpdateWithWhereUniqueWithoutFollowersInput {
 }
 
 export interface UserUpdateWithoutFollowersDataInput {
-  username?: Maybe<String>;
+  name?: Maybe<String>;
   email?: Maybe<String>;
-  firstname?: Maybe<String>;
-  lastname?: Maybe<String>;
+  username?: Maybe<String>;
   passwordHash?: Maybe<String>;
   role?: Maybe<Role>;
   recipes?: Maybe<RecipeUpdateManyWithoutAuthorInput>;
@@ -1154,10 +1131,9 @@ export interface UserUpdateWithWhereUniqueWithoutLikedRecipesInput {
 }
 
 export interface UserUpdateWithoutLikedRecipesDataInput {
-  username?: Maybe<String>;
+  name?: Maybe<String>;
   email?: Maybe<String>;
-  firstname?: Maybe<String>;
-  lastname?: Maybe<String>;
+  username?: Maybe<String>;
   passwordHash?: Maybe<String>;
   role?: Maybe<Role>;
   recipes?: Maybe<RecipeUpdateManyWithoutAuthorInput>;
@@ -1193,10 +1169,9 @@ export interface UserUpdateWithWhereUniqueWithoutFolloweesInput {
 }
 
 export interface UserUpdateWithoutFolloweesDataInput {
-  username?: Maybe<String>;
+  name?: Maybe<String>;
   email?: Maybe<String>;
-  firstname?: Maybe<String>;
-  lastname?: Maybe<String>;
+  username?: Maybe<String>;
   passwordHash?: Maybe<String>;
   role?: Maybe<Role>;
   recipes?: Maybe<RecipeUpdateManyWithoutAuthorInput>;
@@ -1225,20 +1200,20 @@ export interface UserScalarWhereInput {
   id_not_starts_with?: Maybe<ID_Input>;
   id_ends_with?: Maybe<ID_Input>;
   id_not_ends_with?: Maybe<ID_Input>;
-  username?: Maybe<String>;
-  username_not?: Maybe<String>;
-  username_in?: Maybe<String[] | String>;
-  username_not_in?: Maybe<String[] | String>;
-  username_lt?: Maybe<String>;
-  username_lte?: Maybe<String>;
-  username_gt?: Maybe<String>;
-  username_gte?: Maybe<String>;
-  username_contains?: Maybe<String>;
-  username_not_contains?: Maybe<String>;
-  username_starts_with?: Maybe<String>;
-  username_not_starts_with?: Maybe<String>;
-  username_ends_with?: Maybe<String>;
-  username_not_ends_with?: Maybe<String>;
+  name?: Maybe<String>;
+  name_not?: Maybe<String>;
+  name_in?: Maybe<String[] | String>;
+  name_not_in?: Maybe<String[] | String>;
+  name_lt?: Maybe<String>;
+  name_lte?: Maybe<String>;
+  name_gt?: Maybe<String>;
+  name_gte?: Maybe<String>;
+  name_contains?: Maybe<String>;
+  name_not_contains?: Maybe<String>;
+  name_starts_with?: Maybe<String>;
+  name_not_starts_with?: Maybe<String>;
+  name_ends_with?: Maybe<String>;
+  name_not_ends_with?: Maybe<String>;
   email?: Maybe<String>;
   email_not?: Maybe<String>;
   email_in?: Maybe<String[] | String>;
@@ -1253,34 +1228,20 @@ export interface UserScalarWhereInput {
   email_not_starts_with?: Maybe<String>;
   email_ends_with?: Maybe<String>;
   email_not_ends_with?: Maybe<String>;
-  firstname?: Maybe<String>;
-  firstname_not?: Maybe<String>;
-  firstname_in?: Maybe<String[] | String>;
-  firstname_not_in?: Maybe<String[] | String>;
-  firstname_lt?: Maybe<String>;
-  firstname_lte?: Maybe<String>;
-  firstname_gt?: Maybe<String>;
-  firstname_gte?: Maybe<String>;
-  firstname_contains?: Maybe<String>;
-  firstname_not_contains?: Maybe<String>;
-  firstname_starts_with?: Maybe<String>;
-  firstname_not_starts_with?: Maybe<String>;
-  firstname_ends_with?: Maybe<String>;
-  firstname_not_ends_with?: Maybe<String>;
-  lastname?: Maybe<String>;
-  lastname_not?: Maybe<String>;
-  lastname_in?: Maybe<String[] | String>;
-  lastname_not_in?: Maybe<String[] | String>;
-  lastname_lt?: Maybe<String>;
-  lastname_lte?: Maybe<String>;
-  lastname_gt?: Maybe<String>;
-  lastname_gte?: Maybe<String>;
-  lastname_contains?: Maybe<String>;
-  lastname_not_contains?: Maybe<String>;
-  lastname_starts_with?: Maybe<String>;
-  lastname_not_starts_with?: Maybe<String>;
-  lastname_ends_with?: Maybe<String>;
-  lastname_not_ends_with?: Maybe<String>;
+  username?: Maybe<String>;
+  username_not?: Maybe<String>;
+  username_in?: Maybe<String[] | String>;
+  username_not_in?: Maybe<String[] | String>;
+  username_lt?: Maybe<String>;
+  username_lte?: Maybe<String>;
+  username_gt?: Maybe<String>;
+  username_gte?: Maybe<String>;
+  username_contains?: Maybe<String>;
+  username_not_contains?: Maybe<String>;
+  username_starts_with?: Maybe<String>;
+  username_not_starts_with?: Maybe<String>;
+  username_ends_with?: Maybe<String>;
+  username_not_ends_with?: Maybe<String>;
   passwordHash?: Maybe<String>;
   passwordHash_not?: Maybe<String>;
   passwordHash_in?: Maybe<String[] | String>;
@@ -1318,10 +1279,9 @@ export interface UserUpdateManyWithWhereNestedInput {
 }
 
 export interface UserUpdateManyDataInput {
-  username?: Maybe<String>;
+  name?: Maybe<String>;
   email?: Maybe<String>;
-  firstname?: Maybe<String>;
-  lastname?: Maybe<String>;
+  username?: Maybe<String>;
   passwordHash?: Maybe<String>;
   role?: Maybe<Role>;
 }
@@ -1364,10 +1324,9 @@ export interface RecipeUpdateManyMutationInput {
 }
 
 export interface UserUpdateInput {
-  username?: Maybe<String>;
+  name?: Maybe<String>;
   email?: Maybe<String>;
-  firstname?: Maybe<String>;
-  lastname?: Maybe<String>;
+  username?: Maybe<String>;
   passwordHash?: Maybe<String>;
   role?: Maybe<Role>;
   recipes?: Maybe<RecipeUpdateManyWithoutAuthorInput>;
@@ -1377,10 +1336,9 @@ export interface UserUpdateInput {
 }
 
 export interface UserUpdateManyMutationInput {
-  username?: Maybe<String>;
+  name?: Maybe<String>;
   email?: Maybe<String>;
-  firstname?: Maybe<String>;
-  lastname?: Maybe<String>;
+  username?: Maybe<String>;
   passwordHash?: Maybe<String>;
   role?: Maybe<Role>;
 }
@@ -1519,10 +1477,9 @@ export interface RecipeNullablePromise
 
 export interface User {
   id: ID_Output;
-  username: String;
+  name: String;
   email: String;
-  firstname: String;
-  lastname: String;
+  username: String;
   passwordHash: String;
   role: Role;
   registered: DateTimeOutput;
@@ -1530,10 +1487,9 @@ export interface User {
 
 export interface UserPromise extends Promise<User>, Fragmentable {
   id: () => Promise<ID_Output>;
-  username: () => Promise<String>;
+  name: () => Promise<String>;
   email: () => Promise<String>;
-  firstname: () => Promise<String>;
-  lastname: () => Promise<String>;
+  username: () => Promise<String>;
   passwordHash: () => Promise<String>;
   role: () => Promise<Role>;
   registered: () => Promise<DateTimeOutput>;
@@ -1579,10 +1535,9 @@ export interface UserSubscription
   extends Promise<AsyncIterator<User>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
-  username: () => Promise<AsyncIterator<String>>;
+  name: () => Promise<AsyncIterator<String>>;
   email: () => Promise<AsyncIterator<String>>;
-  firstname: () => Promise<AsyncIterator<String>>;
-  lastname: () => Promise<AsyncIterator<String>>;
+  username: () => Promise<AsyncIterator<String>>;
   passwordHash: () => Promise<AsyncIterator<String>>;
   role: () => Promise<AsyncIterator<Role>>;
   registered: () => Promise<AsyncIterator<DateTimeOutput>>;
@@ -1628,10 +1583,9 @@ export interface UserNullablePromise
   extends Promise<User | null>,
     Fragmentable {
   id: () => Promise<ID_Output>;
-  username: () => Promise<String>;
+  name: () => Promise<String>;
   email: () => Promise<String>;
-  firstname: () => Promise<String>;
-  lastname: () => Promise<String>;
+  username: () => Promise<String>;
   passwordHash: () => Promise<String>;
   role: () => Promise<Role>;
   registered: () => Promise<DateTimeOutput>;
@@ -1981,10 +1935,9 @@ export interface UserSubscriptionPayloadSubscription
 
 export interface UserPreviousValues {
   id: ID_Output;
-  username: String;
+  name: String;
   email: String;
-  firstname: String;
-  lastname: String;
+  username: String;
   passwordHash: String;
   role: Role;
   registered: DateTimeOutput;
@@ -1994,10 +1947,9 @@ export interface UserPreviousValuesPromise
   extends Promise<UserPreviousValues>,
     Fragmentable {
   id: () => Promise<ID_Output>;
-  username: () => Promise<String>;
+  name: () => Promise<String>;
   email: () => Promise<String>;
-  firstname: () => Promise<String>;
-  lastname: () => Promise<String>;
+  username: () => Promise<String>;
   passwordHash: () => Promise<String>;
   role: () => Promise<Role>;
   registered: () => Promise<DateTimeOutput>;
@@ -2007,10 +1959,9 @@ export interface UserPreviousValuesSubscription
   extends Promise<AsyncIterator<UserPreviousValues>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
-  username: () => Promise<AsyncIterator<String>>;
+  name: () => Promise<AsyncIterator<String>>;
   email: () => Promise<AsyncIterator<String>>;
-  firstname: () => Promise<AsyncIterator<String>>;
-  lastname: () => Promise<AsyncIterator<String>>;
+  username: () => Promise<AsyncIterator<String>>;
   passwordHash: () => Promise<AsyncIterator<String>>;
   role: () => Promise<AsyncIterator<Role>>;
   registered: () => Promise<AsyncIterator<DateTimeOutput>>;

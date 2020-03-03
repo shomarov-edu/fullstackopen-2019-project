@@ -1,21 +1,27 @@
+const validator = require('validator');
+
 const resolvers = {
   Query: {
-    me: async (_, __, { currentUser, models }) => {
-      if (!currentUser) return null;
-      return await models.User.getByUsername(currentUser.username);
+    me: async (_, __, { models }) => {
+      return await models.User.me();
     },
 
-    users: async (_, __, { models }) => await models.User.getAll(),
+    users: async (_, { input }, { models }) =>
+      await models.User.getAll(input.name),
 
-    user: async (_, { input }, { models }) =>
-      await models.User.getByUsername(input.username),
+    user: async (_, { input }, { models, loaders }) => {
+      if (input.id && validator.isMongoId(input.id))
+        return await loaders.user.userByIdLoader.load(input.id);
+
+      return await models.User.getByUsername(input.username);
+    },
 
     userCount: async (_, __, { models }) => await models.User.getUserCount(),
 
     recipes: async (_, __, { models }) => await models.Recipe.getAll(),
 
-    recipe: async (_, { input }, { models }) =>
-      await models.Recipe.getById(input.id),
+    recipe: async (_, { input }, { loaders }) =>
+      await loaders.recipe.recipeByIdLoader.load(input.id),
 
     recipeCount: async (_, __, { models }) =>
       await models.Recipe.getRecipeCount()
@@ -27,7 +33,7 @@ const resolvers = {
     login: async (_, { input }, { auth }) => await auth.login(input),
 
     followUser: async (_, { input }, { models }) =>
-      await models.User.followUser(input.usernameToFollow),
+      await models.User.followUser(input.idToFollow),
 
     updateUser: async (_, { input }, { models }) =>
       await models.User.updateUser(input),
@@ -73,30 +79,29 @@ const resolvers = {
   },
 
   User: {
-    followees: async (user, _, { models }) =>
-      models.User.getFollowees(user.username),
+    // followees: async (user, _, { models }) => models.User.getFollowees(user.id),
 
     followeeCount: async user => user.followees.length,
 
-    followers: async (user, _, { models }) =>
-      await models.User.getFollowers(user.username),
+    // followers: async (user, _, { models }) =>
+    //   await models.User.getFollowers(user.id),
 
-    followerCount: async user => user.following.length,
+    followerCount: async user => user.followers.length,
 
-    recipes: async (user, _, { models }) =>
-      await models.User.getRecipes(user.username),
+    recipes: async (user, _, { loaders }) =>
+      await loaders.recipe.recipesByUserIdLoader.load(user.id),
 
-    recipeCount: async user => user.recipes.length,
+    recipeCount: async (user, _, { models }) => user.recipes.length,
 
-    likedRecipes: async (user, _, { models }) =>
-      await models.User.getLikedRecipes(user.username),
+    // likedRecipes: async (user, _, { models }) =>
+    //   await models.User.getLikedRecipes(user.id),
 
     likedRecipeCount: async user => user.likedRecipes.length
   },
 
   Recipe: {
-    author: async (recipe, args, { models }) =>
-      await models.Recipe.getUserByRecipeId(recipe.id)
+    author: async (recipe, args, { loaders }) =>
+      await loaders.user.userByRecipeLoader.load(recipe.id)
   }
 };
 

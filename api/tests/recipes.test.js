@@ -1,4 +1,4 @@
-const { prisma, query, mutate } = require('./config');
+const { prisma, query, mutate } = require('./config/testClient');
 const queries = require('../graphql/queries');
 const mutations = require('../graphql/mutations');
 const getUser = require('./helpers/getUser');
@@ -76,7 +76,6 @@ describe('user is able to signup, login, create and save a new recipe', () => {
       variables
     });
 
-    console.log(result);
     expect(result.data.createRecipe.id).toBeDefined;
 
     const user = getUser(token);
