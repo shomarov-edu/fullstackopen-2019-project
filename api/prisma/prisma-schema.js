@@ -30,7 +30,7 @@ type Comment {
 }
 
 input CommentCreateInput {
-  id: ID!
+  id: ID
   author: UserCreateOneInput!
   content: String!
 }
@@ -105,13 +105,20 @@ input CommentScalarWhereInput {
   NOT: [CommentScalarWhereInput!]
 }
 
+input CommentUpdateDataInput {
+  author: UserUpdateOneRequiredInput
+  content: String
+}
+
 input CommentUpdateManyDataInput {
-  id: ID
   content: String
 }
 
 input CommentUpdateManyInput {
   create: [CommentCreateInput!]
+  update: [CommentUpdateWithWhereUniqueNestedInput!]
+  upsert: [CommentUpsertWithWhereUniqueNestedInput!]
+  delete: [CommentWhereUniqueInput!]
   deleteMany: [CommentScalarWhereInput!]
   updateMany: [CommentUpdateManyWithWhereNestedInput!]
 }
@@ -119,6 +126,17 @@ input CommentUpdateManyInput {
 input CommentUpdateManyWithWhereNestedInput {
   where: CommentScalarWhereInput!
   data: CommentUpdateManyDataInput!
+}
+
+input CommentUpdateWithWhereUniqueNestedInput {
+  where: CommentWhereUniqueInput!
+  data: CommentUpdateDataInput!
+}
+
+input CommentUpsertWithWhereUniqueNestedInput {
+  where: CommentWhereUniqueInput!
+  update: CommentUpdateDataInput!
+  create: CommentCreateInput!
 }
 
 input CommentWhereInput {
@@ -154,6 +172,10 @@ input CommentWhereInput {
   AND: [CommentWhereInput!]
 }
 
+input CommentWhereUniqueInput {
+  id: ID
+}
+
 scalar DateTime
 
 enum Difficulty {
@@ -169,7 +191,7 @@ type Grade {
 }
 
 input GradeCreateInput {
-  id: ID!
+  id: ID
   rater: UserCreateOneInput!
   grade: Int!
 }
@@ -232,13 +254,20 @@ input GradeScalarWhereInput {
   NOT: [GradeScalarWhereInput!]
 }
 
+input GradeUpdateDataInput {
+  rater: UserUpdateOneRequiredInput
+  grade: Int
+}
+
 input GradeUpdateManyDataInput {
-  id: ID
   grade: Int
 }
 
 input GradeUpdateManyInput {
   create: [GradeCreateInput!]
+  update: [GradeUpdateWithWhereUniqueNestedInput!]
+  upsert: [GradeUpsertWithWhereUniqueNestedInput!]
+  delete: [GradeWhereUniqueInput!]
   deleteMany: [GradeScalarWhereInput!]
   updateMany: [GradeUpdateManyWithWhereNestedInput!]
 }
@@ -246,6 +275,17 @@ input GradeUpdateManyInput {
 input GradeUpdateManyWithWhereNestedInput {
   where: GradeScalarWhereInput!
   data: GradeUpdateManyDataInput!
+}
+
+input GradeUpdateWithWhereUniqueNestedInput {
+  where: GradeWhereUniqueInput!
+  data: GradeUpdateDataInput!
+}
+
+input GradeUpsertWithWhereUniqueNestedInput {
+  where: GradeWhereUniqueInput!
+  update: GradeUpdateDataInput!
+  create: GradeCreateInput!
 }
 
 input GradeWhereInput {
@@ -273,6 +313,10 @@ input GradeWhereInput {
   grade_gt: Int
   grade_gte: Int
   AND: [GradeWhereInput!]
+}
+
+input GradeWhereUniqueInput {
+  id: ID
 }
 
 scalar Long
@@ -1090,6 +1134,18 @@ input UserSubscriptionWhereInput {
   AND: [UserSubscriptionWhereInput!]
 }
 
+input UserUpdateDataInput {
+  name: String
+  email: String
+  username: String
+  passwordHash: String
+  role: Role
+  recipes: RecipeUpdateManyWithoutAuthorInput
+  likedRecipes: RecipeUpdateManyWithoutLikedByInput
+  followees: UserUpdateManyWithoutFollowersInput
+  followers: UserUpdateManyWithoutFolloweesInput
+}
+
 input UserUpdateInput {
   name: String
   email: String
@@ -1159,6 +1215,13 @@ input UserUpdateManyWithWhereNestedInput {
   data: UserUpdateManyDataInput!
 }
 
+input UserUpdateOneRequiredInput {
+  create: UserCreateInput
+  update: UserUpdateDataInput
+  upsert: UserUpsertNestedInput
+  connect: UserWhereUniqueInput
+}
+
 input UserUpdateOneRequiredWithoutRecipesInput {
   create: UserCreateWithoutRecipesInput
   update: UserUpdateWithoutRecipesDataInput
@@ -1223,6 +1286,11 @@ input UserUpdateWithWhereUniqueWithoutFollowersInput {
 input UserUpdateWithWhereUniqueWithoutLikedRecipesInput {
   where: UserWhereUniqueInput!
   data: UserUpdateWithoutLikedRecipesDataInput!
+}
+
+input UserUpsertNestedInput {
+  update: UserUpdateDataInput!
+  create: UserCreateInput!
 }
 
 input UserUpsertWithoutRecipesInput {

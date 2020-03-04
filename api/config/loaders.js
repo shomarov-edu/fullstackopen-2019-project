@@ -7,7 +7,18 @@ const userByIdLoader = new DataLoader(async userIds => {
     where: {
       id_in: userIds
     }
-  });
+  }).$fragment(`
+    fragment UserDetails on User {
+      id
+      username
+      name
+      registered
+      role
+      recipes { id author {id} category title cookingTime published }
+      followees { username }
+      followers { username }
+    }
+  `);
 
   const usersById = keyBy(loadedUsers, 'id');
 
@@ -16,7 +27,7 @@ const userByIdLoader = new DataLoader(async userIds => {
   );
 
   for (let user of users) {
-    userByRecipeLoader(await prisma.user({ id: user.id }).recipes, user);
+    userByUsernameLoader.prime(user.username, user);
   }
 
   console.log('users loaded with userByIdLoader: ', userIds.length);
@@ -29,7 +40,17 @@ const userByUsernameLoader = new DataLoader(async usernames => {
     where: {
       username_in: usernames
     }
-  });
+  }).$fragment(`
+    fragment UserDetails on User {
+      username
+      name
+      registered
+      role
+      recipes { id category title cookingTime published }
+      followees { id username }
+      followers { id username }
+    }
+  `);
 
   const usersByUsername = keyBy(loadedUsers, 'username');
 
@@ -42,105 +63,128 @@ const userByUsernameLoader = new DataLoader(async usernames => {
     userByIdLoader.prime(user.id, user);
   }
 
-  for (let user of users) {
-    userByRecipeLoader.prime(
-      await prisma.user({ username: user.username }).recipes,
-      user
-    );
-  }
-
   console.log('users loaded with userByIdLoader: ', usernames.length);
 
   return users;
 });
 
-const userByRecipeLoader = new DataLoader(async recipeIds => {
-  const recipes = await prisma.recipes({
-    where: {
-      id_in: recipeIds
+const createRecipeLoader = () => ({
+  recipeByIdLoader: new DataLoader(async recipeIds => {
+    const recipes = await prisma.recipes({
+      where: {
+        id_in: recipeIds
+      }
+    }).$fragment(`
+    fragment FullRecipe on Recipe {
+      id
+      title
+      author {
+        name
+        username
+      }
+      category
+      description
+      cookingTime
+      difficulty
+      ingredients
+      method
+      notes
+      tags
+      source
+      created
+      updated
+      published
+      likedBy {
+        name
+        username
+      }
+      comments {
+        id
+        author {
+          username
+        }
+        content
+      }
+      ratings {
+        id
+        rater {
+          username
+        }
+        grade
+      }
     }
-  });
+`);
 
-  const promiseArray = recipes.map(async recipe => {
-    const user = await prisma.recipe({ id: recipe.id }).author();
-    user.recipeId = recipe.id;
-    return user;
-  });
+    const recipesById = keyBy(recipes, 'id');
 
-  const loadedUsers = await Promise.all(promiseArray);
+    console.log('recipes loaded with recipeByIdLoader: ', recipeIds.length);
 
-  const usersById = keyBy(loadedUsers, 'recipeId');
+    return recipeIds.map(
+      recipeId =>
+        recipesById[recipeId] || new Error(`No result for ${recipeId}`)
+    );
+  }),
 
-  const users = recipeIds.map(
-    recipeId => usersById[recipeId] || new Error(`No result for ${recipeId}`)
-  );
+  recipesByUserId: new DataLoader(async userIds => {
+    console.log(userIds);
+    const users = await prisma.users({
+      where: {
+        id_in: userIds
+      }
+    }).$fragment(`
+    fragment UserRecipes on User {
+      recipes {
+        id
+        title
+        author {
+          id
+        }
+        category
+        description
+        cookingTime
+        difficulty
+        ingredients
+        method
+        notes
+        tags
+        source
+        created
+        updated
+        published
+        likedBy {
+          name
+          username
+        }
+        comments {
+          id
+          author {
+            username
+          }
+          content
+        }
+        ratings {
+          id
+          rater {
+            username
+          }
+          grade
+        }
+      }
+    `);
 
-  for (let user of users) {
-    userByIdLoader.prime(user.id, user);
-  }
+    const usersById = keyBy(users, 'id');
 
-  for (let user of users) {
-    userByUsernameLoader.prime(user.username, user);
-  }
+    console.log('recipe arrays loaded with recipeByIdLoader: ', users.length);
 
-  console.log('users loaded with userByRecipeLoader: ', recipeIds.length);
-
-  return users;
+    return userIds.map(
+      userId => usersById[userId] || new Error(`No result for ${userId}`)
+    );
+  })
 });
 
-const recipeByIdLoader = new DataLoader(async recipeIds => {
-  const recipes = await prisma.recipes({
-    where: {
-      id_in: recipeIds
-    }
-  });
+const createUserLoader = () => ({ userByIdLoader, userByUsernameLoader });
 
-  const recipesById = keyBy(recipes, 'id');
-
-  console.log('recipes loaded with recipeByIdLoader: ', recipeIds.length);
-
-  return recipeIds.map(
-    recipeId => recipesById[recipeId] || new Error(`No result for ${recipeId}`)
-  );
-});
-
-const recipesByUserIdLoader = new DataLoader(async userIds => {
-  const users = await prisma.users({
-    where: {
-      id_in: userIds
-    }
-  });
-
-  const promiseArray = users.map(async user => {
-    const recipes = await prisma.user({ id: user.id }).recipes();
-    recipes.author = user.id;
-    return recipes;
-  });
-
-  const loadedRecipes = await Promise.all(promiseArray);
-
-  const recipesById = keyBy(loadedRecipes, 'author');
-
-  const recipes = userIds.map(
-    userId => recipesById[userId] || new Error(`No result for ${userId}`)
-  );
-
-  console.log('recipes loaded with recipeByUserIdLoader: ', userIds.length);
-
-  return recipes;
-});
-
-const createUserLoader = () => {
-  return { userByIdLoader, userByRecipeLoader, userByUsernameLoader };
-};
-
-const createRecipeLoader = () => {
-  return { recipeByIdLoader, recipesByUserIdLoader };
-};
-
-const loaders = () => ({
+module.exports = () => ({
   user: createUserLoader(),
   recipe: createRecipeLoader()
 });
-
-module.exports = loaders;

@@ -6,14 +6,13 @@ const resolvers = {
       return await models.User.me();
     },
 
-    users: async (_, { input }, { models }) =>
-      await models.User.getAll(input.name),
+    users: async (_, { input }, { models }) => await models.User.getAll(input),
 
-    user: async (_, { input }, { models, loaders }) => {
+    user: async (_, { input }, { loaders }) => {
       if (input.id && validator.isMongoId(input.id))
         return await loaders.user.userByIdLoader.load(input.id);
 
-      return await models.User.getByUsername(input.username);
+      return await loaders.user.userByUsernameLoader.load(input.username);
     },
 
     userCount: async (_, __, { models }) => await models.User.getUserCount(),
@@ -24,7 +23,7 @@ const resolvers = {
       await loaders.recipe.recipeByIdLoader.load(input.id),
 
     recipeCount: async (_, __, { models }) =>
-      await models.Recipe.getRecipeCount()
+      await models.Recipe.getPublishedRecipeCount()
   },
 
   Mutation: {
@@ -54,7 +53,7 @@ const resolvers = {
       await models.Recipe.updateRecipe(input),
 
     publishRecipe: async (_, { input }, { models }) =>
-      await models.Recipe.publishRecipe(input),
+      await models.Recipe.togglePublishRecipe(input),
 
     commentRecipe: async (_, { input }, { models }) =>
       await models.Recipe.commentRecipe(input),
@@ -79,29 +78,35 @@ const resolvers = {
   },
 
   User: {
-    // followees: async (user, _, { models }) => models.User.getFollowees(user.id),
+    role: (user, _, { currentUser }) => {
+      if (!currentUser || currentUser.role !== 'ADMIN') return null;
+      return user.role;
+    },
+
+    recipes: async (user, _, { loaders }) =>
+      await loaders.recipe.recipesByUserId.load(user.id),
 
     followeeCount: async user => user.followees.length,
 
-    // followers: async (user, _, { models }) =>
-    //   await models.User.getFollowers(user.id),
-
     followerCount: async user => user.followers.length,
-
-    recipes: async (user, _, { loaders }) =>
-      await loaders.recipe.recipesByUserIdLoader.load(user.id),
 
     recipeCount: async (user, _, { models }) => user.recipes.length,
 
-    // likedRecipes: async (user, _, { models }) =>
-    //   await models.User.getLikedRecipes(user.id),
+    publishedRecipes: (user, _, __) => user.recipes.filter(r => r.published),
+
+    publishedRecipeCount: (user, _, __) =>
+      user.recipes.filter(r => r.published).length,
 
     likedRecipeCount: async user => user.likedRecipes.length
   },
 
   Recipe: {
-    author: async (recipe, args, { loaders }) =>
-      await loaders.user.userByRecipeLoader.load(recipe.id)
+    author: async (recipe, _, { loaders }) => {
+      return await loaders.user.userByIdLoader.load(recipe.author.id);
+    },
+
+    rating: async (recipe, args, { models }) =>
+      recipe.ratings.reduce((a, b) => a + b, 0) / recipe.ratings.length || 0
   }
 };
 

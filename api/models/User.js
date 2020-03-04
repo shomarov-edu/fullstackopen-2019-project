@@ -1,9 +1,11 @@
 const { prisma } = require('../prisma');
-const { AuthenticationError, UserInputError } = require('apollo-server');
+const {
+  AuthenticationError,
+  ForbiddenError,
+  UserInputError
+} = require('apollo-server');
 const comparePasswords = require('../helpers/comparePasswords');
 const encryptPassword = require('../helpers/encryptPassword');
-const titleCase = require('../helpers/titleCase');
-const validator = require('../utils/validator');
 
 // TODO: Input validations
 
@@ -14,7 +16,29 @@ const generateUserModel = currentUser => ({
     if (!currentUser) return null;
 
     return await prisma.user({ id: currentUser.id }).$fragment(`
-    fragment User {
+    fragment FullUserDetails on User {
+      id
+      name
+      email
+      username
+      role
+      registered
+      recipes { id author { id } category title description cookingTime difficulty ingredients method notes tags source created updated published }
+      likedRecipes { id category title description cookingTime difficulty ingredients method notes tags source created updated published }
+      followees { id name username }
+      followers { id name username }
+    }
+  `);
+  },
+
+  // Only admins can view personal information of all users
+
+  getAll: async input => {
+    if (!currentUser || currentUser.role !== 'ADMIN')
+      throw new ForbiddenError('forbidden');
+
+    const users = await prisma.users().$fragment(`
+    fragment FullUserDetails on User {
       id
       username
       email
@@ -23,81 +47,53 @@ const generateUserModel = currentUser => ({
       registered
       recipes { id category title description cookingTime difficulty ingredients method notes tags source created updated published }
       likedRecipes { id category title description cookingTime difficulty ingredients method notes tags source created updated published }
-      followees { username }
-      followers { username }
+      followees { id username }
+      followers { id username }
     }
   `);
+
+    if (!input || !input.name) return users;
+
+    return users.filter(user =>
+      user.name.toLowerCase().includes(input.name.toLowerCase())
+    );
   },
 
-  getAll: async name => {
-    console.log(name);
-    //if (!currentUser || currentUser.role !== 'ADMIN') return null;
+  // Retrieval of user by user id => moved to dataloaders
 
-    return await prisma.users({
-      where: {
-        AND: [
-          { name_contains: name },
-          { name_contains: name.toLowerCase() },
-          { name_contains: name.toUpperCase() },
-          { name_contains: titleCase(name) }
-        ]
-      }
-    });
-  },
-
-  //getById: async id => await prisma.user({ id }),
-
-  getById: async id => {},
-
-  getByUsername: async username => {
-    const userWithRecipes = await prisma.user({ username }).$fragment(`
-    fragment UserRecipes on User {
-      id
+  getById: async id =>
+    await prisma.user({ id }).$fragment(`
+    fragment UserDetails on User {
       username
-      firstname
-      lastname
-      email
-      role
+      name
       registered
-      recipes { id category title description cookingTime difficulty ingredients method notes tags source created updated published }
-      likedRecipes { id category title description cookingTime difficulty ingredients method notes tags source created updated published }
+      recipes { id category title cookingTime published }
       followees { username }
       followers { username }
     }
-  `);
+  `),
 
-    console.log('user', userWithRecipes);
+  // Retrieval of user by username => moved to dataloaders
 
-    return userWithRecipes;
-  },
+  getByUsername: async username =>
+    await prisma.user({ username }).$fragment(`
+    fragment UserDetails on User {
+      username
+      name
+      registered
+      recipes { id category title cookingTime published }
+      followees { username }
+      followers { username }
+    }
+  `),
+
+  // Count all registered users
 
   getUserCount: async () =>
     await prisma
       .usersConnection()
       .aggregate()
       .count(),
-
-  getRecipesByUserId: async id => await prisma.user({ id }).recipes(),
-
-  getRecipeCountByUserId: async id => {
-    const recipes = await prisma.user({ id }).recipes();
-    return recipes.length;
-  },
-
-  getFolloweesByUserId: async id => {
-    const followees = await prisma.user({ id }).followees();
-    return followees.length;
-  },
-
-  getFollowersByUserId: async id => {
-    const followers = await prisma.user({ id }).followers();
-    return followers.length;
-  },
-
-  getLikedRecipesByUserId: async id => {
-    const likedRecipes = await prisma.user({ id }).likedRecipes();
-    return likedRecipes.length;
-  },
 
   // MUTATIONS:
 

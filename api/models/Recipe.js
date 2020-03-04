@@ -8,69 +8,252 @@ const validator = require('../utils/validator');
 
 // TODO: Validations and error handling
 
+const fullRecipeFragment = `
+fragment FullRecipe on Recipe {
+  id
+  title
+  author {
+    id
+  }
+  category
+  description
+  cookingTime
+  difficulty
+  ingredients
+  method
+  notes
+  tags
+  source
+  created
+  updated
+  published
+  likedBy {
+    name
+    username
+  }
+  comments {
+    id
+    author {
+      username
+    }
+    content
+  }
+  ratings {
+    id
+    rater {
+      username
+    }
+    grade
+  }
+}
+`;
+
 const generateRecipeModel = currentUser => ({
   // QUERIES:
 
-  getAll: async () => await prisma.recipes(),
+  getAll: async () => {
+    const recipes = await prisma.recipes().$fragment(fullRecipeFragment);
 
-  getById: async id => await prisma.recipe(id),
-
-  getUserByRecipeId: async id => {
-    const recipe = await prisma.recipe({ id });
-    const recipeAuthor = await prisma.recipe({ id }).author();
-    return recipeAuthor;
+    return recipes;
   },
 
-  getRecipeCount: async () =>
-    await prisma
-      .recipesConnection()
-      .aggregate()
-      .count(),
+  // Retrieval of full recipe delails by recipe id => moved to dataloaders
+
+  getById: async id => await prisma.recipe(id).$fragment(fullRecipeFragment),
+
+  // Count all PUBLISHED recipes in database
+
+  getPublishedRecipeCount: async () => {
+    const publishedRecipes = await prisma.recipes({
+      where: { published: true }
+    });
+
+    return publishedRecipes.length;
+  },
 
   // MUTATIONS:
 
   createRecipe: async input => {
     if (!currentUser) return null;
 
-    return await prisma.createRecipe({
-      author: {
-        connect: { id: currentUser.id }
-      },
-      category: input.category,
-      title: input.title,
-      description: input.description,
-      cookingTime: input.cookingTime,
-      difficulty: input.difficulty,
-      ingredients: { set: input.ingredients },
-      method: { set: input.method },
-      notes: { set: input.notes || null },
-      tags: { set: input.tags || null }
-    });
+    return await prisma
+      .createRecipe({
+        author: {
+          connect: { id: currentUser.id }
+        },
+        category: input.category,
+        title: input.title,
+        description: input.description,
+        cookingTime: input.cookingTime,
+        difficulty: input.difficulty,
+        ingredients: { set: input.ingredients },
+        method: { set: input.method },
+        notes: { set: input.notes || null },
+        tags: { set: input.tags || null }
+      })
+      .$fragment(fullRecipeFragment);
   },
 
   updateRecipe: async input => {
     if (!currentUser) return null;
-    // TODO
+
+    const { id, ...recipeData } = input;
+
+    const updatedRecipe = await prisma
+      .updateRecipe({
+        where: { id },
+        data: recipeData
+      })
+      .$fragment(fullRecipeFragment);
+
+    return updatedRecipe;
   },
 
-  publishRecipe: async input => {
+  togglePublishRecipe: async input => {
     if (!currentUser) return null;
-    // TODO
+
+    const recipe = await prisma.recipe({ id: input.id }).$fragment(`
+    fragment AuthorAndPublished on Recipe {
+      author {
+        id
+      }
+      published
+    }
+    `);
+
+    // Check recipe existence
+
+    if (!recipe) throw new UserInputError('recipe does not exist');
+
+    // Validate recipe author
+
+    if (recipe.author.id !== currentUser.id)
+      throw new ForbiddenError('forbidden');
+
+    const updatedRecipe = await prisma
+      .updateRecipe({
+        where: { id: input.id },
+        data: {
+          published: !recipe.published
+        }
+      })
+      .$fragment(fullRecipeFragment);
+
+    return updatedRecipe;
   },
 
   commentRecipe: async input => {
     if (!currentUser) return null;
-    // TODO
+
+    const updatedRecipe = await prisma
+      .updateRecipe({
+        where: { id: input.id },
+        data: {
+          comments: {
+            create: [
+              {
+                author: {
+                  connect: { id: currentUser.id }
+                },
+                content: input.content
+              }
+            ]
+          }
+        }
+      })
+      .$fragment(fullRecipeFragment);
+
+    return updatedRecipe;
   },
 
   updateComment: async input => {
     if (!currentUser) return null;
-    // TODO
+
+    const { recipeId, commentId, content } = input;
+
+    const recipe = await prisma.recipe({ id: recipeId }).$fragment(`
+    fragment Comments on Recipe {
+      comments {
+        id
+        author {
+          id
+        }
+        content
+      }
+    }
+    `);
+
+    // Check recipe existence
+
+    if (!recipe) throw new UserInputError('recipe does not exist');
+
+    const comment = recipe.comments.find(comment => comment.id === commentId);
+
+    // Validate comment author
+
+    if (!comment || comment.author.id !== currentUser.id)
+      throw new ForbiddenError('forbidden');
+
+    const updatedRecipe = await prisma
+      .updateRecipe({
+        where: { id: recipeId },
+        data: {
+          comments: {
+            updateMany: [
+              {
+                where: { id: commentId },
+                data: {
+                  content: content
+                }
+              }
+            ]
+          }
+        }
+      })
+      .$fragment(fullRecipeFragment);
+
+    console.log(updatedRecipe.comments);
+
+    return updatedRecipe;
   },
 
   deleteComment: async input => {
     if (!currentUser) return null;
-    // TODO
+
+    const { recipeId, commentId } = input;
+
+    const comment = await prisma
+      .recipe({ id: recipeId })
+      .comment({ id: commentId }).$fragment(`
+    fragment AuthorAndPublished on Recipe {
+      author {
+        id
+      }
+      published
+    }
+    `);
+
+    // Check recipe existence
+
+    if (!comment) throw new UserInputError('comment does not exist');
+
+    // Validate recipe author
+
+    if (comment.author.id !== currentUser.id)
+      throw new ForbiddenError('forbidden');
+
+    const updatedRecipe = await prisma
+      .updateRecipe({
+        where: { id: input.id },
+        data: {
+          comments: {
+            delete: { id: input.id }
+          }
+        }
+      })
+      .$fragment(fullRecipeFragment);
+
+    return updatedRecipe;
   },
 
   likeRecipe: async input => {

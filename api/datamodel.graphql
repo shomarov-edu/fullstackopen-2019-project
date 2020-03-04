@@ -12,7 +12,7 @@ type User {
   passwordHash: String!
   role: Role! @default(value: USER)
   registered: DateTime! @createdAt
-  recipes: [Recipe!]! @relation(name: "WrittenRecipes", link: INLINE)
+  recipes: [Recipe!]! @relation(name: "WrittenRecipes")
   likedRecipes: [Recipe!]! @relation(name: "LikedRecipes", link: INLINE)
   followees: [User!]! @relation(name: "FollowRelation", link: INLINE)
   followers: [User!]! @relation(name: "FollowRelation")
@@ -34,7 +34,7 @@ enum Difficulty {
 
 type Recipe {
   id: ID! @id
-  author: User! @relation(name: "WrittenRecipes")
+  author: User! @relation(name: "WrittenRecipes", link: INLINE)
   category: Category!
   title: String!
   description: String!
@@ -54,13 +54,15 @@ type Recipe {
 }
 
 type Comment @embedded {
-  id: ID!
+  id: ID! @id
   author: User! @relation(link: INLINE)
   content: String!
+  created: DateTime! @createdAt
+  updated: DateTime! @updatedAt
 }
 
 type Grade @embedded {
-  id: ID!
+  id: ID! @id
   rater: User! @relation(link: INLINE)
   grade: Int!
 }

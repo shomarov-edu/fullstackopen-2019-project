@@ -11,6 +11,8 @@ const schema = makeExecutableSchema({
   resolvers
 });
 
+// TODO: formatError function
+
 const apollo = new ApolloServer({
   schema,
   context

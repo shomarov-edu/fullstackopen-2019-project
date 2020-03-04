@@ -11,10 +11,12 @@ type User {
   name: String!
   email: String!
   username: String!
-  role: String!
+  role: String
   registered: String!
   recipes: [Recipe!]
   recipeCount: Int!
+  publishedRecipes: [Recipe!]
+  publishedRecipeCount: Int!
   likedRecipes: [Recipe!]
   likedRecipeCount: Int!
   followees: [User!]
@@ -147,7 +149,7 @@ extend type Mutation {
   updateRecipe(input: UpdateRecipeInput!): Recipe!
   publishRecipe(input: PublishRecipeInput!): Recipe!
   commentRecipe(input: CommentRecipeInput!): Recipe!
-  updateComment(input: CommentRecipeInput!): Recipe!
+  updateComment(input: UpdateCommentInput!): Recipe!
   deleteComment(input: DeleteCommentInput!): Recipe!
   likeRecipe(input: LikeRecipeInput!): Recipe!
   unlikeRecipe(input: UnlikeRecipeInput!): Recipe!
@@ -186,16 +188,19 @@ input PublishRecipeInput {
 }
 
 input CommentRecipeInput {
+  id: ID!
   content: String!
 }
 
 input UpdateCommentInput {
-  id: ID!
+  recipeId: ID!
+  commentId: ID!
   content: String!
 }
 
 input DeleteCommentInput {
-  id: ID!
+  recipeId: ID!
+  commentId: ID!
 }
 
 input LikeRecipeInput {

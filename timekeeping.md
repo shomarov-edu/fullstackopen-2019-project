@@ -54,3 +54,4 @@
 | 29.02 | 2    | schema review                                            |
 | 01.03 | 6    | backend development                                      |
 | 02.03 | 6    | backend development                                      |
+| 03.03 | 6    | backend development                                      |

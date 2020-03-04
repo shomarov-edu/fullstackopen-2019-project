@@ -35,7 +35,7 @@ const authentication = {
     const userForToken = {
       id: user.id,
       username: user.username,
-      roles: user.role
+      role: user.role
     };
 
     return {

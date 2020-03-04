@@ -588,7 +588,7 @@ export interface CommentCreateManyInput {
 }
 
 export interface CommentCreateInput {
-  id: ID_Input;
+  id?: Maybe<ID_Input>;
   author: UserCreateOneInput;
   content: String;
 }
@@ -698,7 +698,7 @@ export interface GradeCreateManyInput {
 }
 
 export interface GradeCreateInput {
-  id: ID_Input;
+  id?: Maybe<ID_Input>;
   rater: UserCreateOneInput;
   grade: Int;
 }
@@ -802,6 +802,15 @@ export interface RecipeUpdatetagsInput {
 
 export interface CommentUpdateManyInput {
   create?: Maybe<CommentCreateInput[] | CommentCreateInput>;
+  update?: Maybe<
+    | CommentUpdateWithWhereUniqueNestedInput[]
+    | CommentUpdateWithWhereUniqueNestedInput
+  >;
+  upsert?: Maybe<
+    | CommentUpsertWithWhereUniqueNestedInput[]
+    | CommentUpsertWithWhereUniqueNestedInput
+  >;
+  delete?: Maybe<CommentWhereUniqueInput[] | CommentWhereUniqueInput>;
   deleteMany?: Maybe<CommentScalarWhereInput[] | CommentScalarWhereInput>;
   updateMany?: Maybe<
     | CommentUpdateManyWithWhereNestedInput[]
@@ -809,7 +818,167 @@ export interface CommentUpdateManyInput {
   >;
 }
 
-export interface CommentScalarWhereInput {
+export interface CommentUpdateWithWhereUniqueNestedInput {
+  where: CommentWhereUniqueInput;
+  data: CommentUpdateDataInput;
+}
+
+export type CommentWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+}>;
+
+export interface CommentUpdateDataInput {
+  author?: Maybe<UserUpdateOneRequiredInput>;
+  content?: Maybe<String>;
+}
+
+export interface UserUpdateOneRequiredInput {
+  create?: Maybe<UserCreateInput>;
+  update?: Maybe<UserUpdateDataInput>;
+  upsert?: Maybe<UserUpsertNestedInput>;
+  connect?: Maybe<UserWhereUniqueInput>;
+}
+
+export interface UserUpdateDataInput {
+  name?: Maybe<String>;
+  email?: Maybe<String>;
+  username?: Maybe<String>;
+  passwordHash?: Maybe<String>;
+  role?: Maybe<Role>;
+  recipes?: Maybe<RecipeUpdateManyWithoutAuthorInput>;
+  likedRecipes?: Maybe<RecipeUpdateManyWithoutLikedByInput>;
+  followees?: Maybe<UserUpdateManyWithoutFollowersInput>;
+  followers?: Maybe<UserUpdateManyWithoutFolloweesInput>;
+}
+
+export interface RecipeUpdateManyWithoutAuthorInput {
+  create?: Maybe<
+    RecipeCreateWithoutAuthorInput[] | RecipeCreateWithoutAuthorInput
+  >;
+  delete?: Maybe<RecipeWhereUniqueInput[] | RecipeWhereUniqueInput>;
+  connect?: Maybe<RecipeWhereUniqueInput[] | RecipeWhereUniqueInput>;
+  set?: Maybe<RecipeWhereUniqueInput[] | RecipeWhereUniqueInput>;
+  disconnect?: Maybe<RecipeWhereUniqueInput[] | RecipeWhereUniqueInput>;
+  update?: Maybe<
+    | RecipeUpdateWithWhereUniqueWithoutAuthorInput[]
+    | RecipeUpdateWithWhereUniqueWithoutAuthorInput
+  >;
+  upsert?: Maybe<
+    | RecipeUpsertWithWhereUniqueWithoutAuthorInput[]
+    | RecipeUpsertWithWhereUniqueWithoutAuthorInput
+  >;
+  deleteMany?: Maybe<RecipeScalarWhereInput[] | RecipeScalarWhereInput>;
+  updateMany?: Maybe<
+    | RecipeUpdateManyWithWhereNestedInput[]
+    | RecipeUpdateManyWithWhereNestedInput
+  >;
+}
+
+export interface RecipeUpdateWithWhereUniqueWithoutAuthorInput {
+  where: RecipeWhereUniqueInput;
+  data: RecipeUpdateWithoutAuthorDataInput;
+}
+
+export interface RecipeUpdateWithoutAuthorDataInput {
+  category?: Maybe<Category>;
+  title?: Maybe<String>;
+  description?: Maybe<String>;
+  cookingTime?: Maybe<Int>;
+  difficulty?: Maybe<Difficulty>;
+  ingredients?: Maybe<RecipeUpdateingredientsInput>;
+  method?: Maybe<RecipeUpdatemethodInput>;
+  notes?: Maybe<RecipeUpdatenotesInput>;
+  tags?: Maybe<RecipeUpdatetagsInput>;
+  source?: Maybe<String>;
+  published?: Maybe<Boolean>;
+  likedBy?: Maybe<UserUpdateManyWithoutLikedRecipesInput>;
+  comments?: Maybe<CommentUpdateManyInput>;
+  ratings?: Maybe<GradeUpdateManyInput>;
+}
+
+export interface UserUpdateManyWithoutLikedRecipesInput {
+  create?: Maybe<
+    UserCreateWithoutLikedRecipesInput[] | UserCreateWithoutLikedRecipesInput
+  >;
+  delete?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
+  connect?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
+  set?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
+  disconnect?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
+  update?: Maybe<
+    | UserUpdateWithWhereUniqueWithoutLikedRecipesInput[]
+    | UserUpdateWithWhereUniqueWithoutLikedRecipesInput
+  >;
+  upsert?: Maybe<
+    | UserUpsertWithWhereUniqueWithoutLikedRecipesInput[]
+    | UserUpsertWithWhereUniqueWithoutLikedRecipesInput
+  >;
+  deleteMany?: Maybe<UserScalarWhereInput[] | UserScalarWhereInput>;
+  updateMany?: Maybe<
+    UserUpdateManyWithWhereNestedInput[] | UserUpdateManyWithWhereNestedInput
+  >;
+}
+
+export interface UserUpdateWithWhereUniqueWithoutLikedRecipesInput {
+  where: UserWhereUniqueInput;
+  data: UserUpdateWithoutLikedRecipesDataInput;
+}
+
+export interface UserUpdateWithoutLikedRecipesDataInput {
+  name?: Maybe<String>;
+  email?: Maybe<String>;
+  username?: Maybe<String>;
+  passwordHash?: Maybe<String>;
+  role?: Maybe<Role>;
+  recipes?: Maybe<RecipeUpdateManyWithoutAuthorInput>;
+  followees?: Maybe<UserUpdateManyWithoutFollowersInput>;
+  followers?: Maybe<UserUpdateManyWithoutFolloweesInput>;
+}
+
+export interface UserUpdateManyWithoutFollowersInput {
+  create?: Maybe<
+    UserCreateWithoutFollowersInput[] | UserCreateWithoutFollowersInput
+  >;
+  delete?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
+  connect?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
+  set?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
+  disconnect?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
+  update?: Maybe<
+    | UserUpdateWithWhereUniqueWithoutFollowersInput[]
+    | UserUpdateWithWhereUniqueWithoutFollowersInput
+  >;
+  upsert?: Maybe<
+    | UserUpsertWithWhereUniqueWithoutFollowersInput[]
+    | UserUpsertWithWhereUniqueWithoutFollowersInput
+  >;
+  deleteMany?: Maybe<UserScalarWhereInput[] | UserScalarWhereInput>;
+  updateMany?: Maybe<
+    UserUpdateManyWithWhereNestedInput[] | UserUpdateManyWithWhereNestedInput
+  >;
+}
+
+export interface UserUpdateWithWhereUniqueWithoutFollowersInput {
+  where: UserWhereUniqueInput;
+  data: UserUpdateWithoutFollowersDataInput;
+}
+
+export interface UserUpdateWithoutFollowersDataInput {
+  name?: Maybe<String>;
+  email?: Maybe<String>;
+  username?: Maybe<String>;
+  passwordHash?: Maybe<String>;
+  role?: Maybe<Role>;
+  recipes?: Maybe<RecipeUpdateManyWithoutAuthorInput>;
+  likedRecipes?: Maybe<RecipeUpdateManyWithoutLikedByInput>;
+  followees?: Maybe<UserUpdateManyWithoutFollowersInput>;
+}
+
+export interface UserUpsertWithWhereUniqueWithoutFollowersInput {
+  where: UserWhereUniqueInput;
+  update: UserUpdateWithoutFollowersDataInput;
+  create: UserCreateWithoutFollowersInput;
+}
+
+export interface UserScalarWhereInput {
   id?: Maybe<ID_Input>;
   id_not?: Maybe<ID_Input>;
   id_in?: Maybe<ID_Input[] | ID_Input>;
@@ -824,41 +993,177 @@ export interface CommentScalarWhereInput {
   id_not_starts_with?: Maybe<ID_Input>;
   id_ends_with?: Maybe<ID_Input>;
   id_not_ends_with?: Maybe<ID_Input>;
-  content?: Maybe<String>;
-  content_not?: Maybe<String>;
-  content_in?: Maybe<String[] | String>;
-  content_not_in?: Maybe<String[] | String>;
-  content_lt?: Maybe<String>;
-  content_lte?: Maybe<String>;
-  content_gt?: Maybe<String>;
-  content_gte?: Maybe<String>;
-  content_contains?: Maybe<String>;
-  content_not_contains?: Maybe<String>;
-  content_starts_with?: Maybe<String>;
-  content_not_starts_with?: Maybe<String>;
-  content_ends_with?: Maybe<String>;
-  content_not_ends_with?: Maybe<String>;
-  AND?: Maybe<CommentScalarWhereInput[] | CommentScalarWhereInput>;
-  OR?: Maybe<CommentScalarWhereInput[] | CommentScalarWhereInput>;
-  NOT?: Maybe<CommentScalarWhereInput[] | CommentScalarWhereInput>;
+  name?: Maybe<String>;
+  name_not?: Maybe<String>;
+  name_in?: Maybe<String[] | String>;
+  name_not_in?: Maybe<String[] | String>;
+  name_lt?: Maybe<String>;
+  name_lte?: Maybe<String>;
+  name_gt?: Maybe<String>;
+  name_gte?: Maybe<String>;
+  name_contains?: Maybe<String>;
+  name_not_contains?: Maybe<String>;
+  name_starts_with?: Maybe<String>;
+  name_not_starts_with?: Maybe<String>;
+  name_ends_with?: Maybe<String>;
+  name_not_ends_with?: Maybe<String>;
+  email?: Maybe<String>;
+  email_not?: Maybe<String>;
+  email_in?: Maybe<String[] | String>;
+  email_not_in?: Maybe<String[] | String>;
+  email_lt?: Maybe<String>;
+  email_lte?: Maybe<String>;
+  email_gt?: Maybe<String>;
+  email_gte?: Maybe<String>;
+  email_contains?: Maybe<String>;
+  email_not_contains?: Maybe<String>;
+  email_starts_with?: Maybe<String>;
+  email_not_starts_with?: Maybe<String>;
+  email_ends_with?: Maybe<String>;
+  email_not_ends_with?: Maybe<String>;
+  username?: Maybe<String>;
+  username_not?: Maybe<String>;
+  username_in?: Maybe<String[] | String>;
+  username_not_in?: Maybe<String[] | String>;
+  username_lt?: Maybe<String>;
+  username_lte?: Maybe<String>;
+  username_gt?: Maybe<String>;
+  username_gte?: Maybe<String>;
+  username_contains?: Maybe<String>;
+  username_not_contains?: Maybe<String>;
+  username_starts_with?: Maybe<String>;
+  username_not_starts_with?: Maybe<String>;
+  username_ends_with?: Maybe<String>;
+  username_not_ends_with?: Maybe<String>;
+  passwordHash?: Maybe<String>;
+  passwordHash_not?: Maybe<String>;
+  passwordHash_in?: Maybe<String[] | String>;
+  passwordHash_not_in?: Maybe<String[] | String>;
+  passwordHash_lt?: Maybe<String>;
+  passwordHash_lte?: Maybe<String>;
+  passwordHash_gt?: Maybe<String>;
+  passwordHash_gte?: Maybe<String>;
+  passwordHash_contains?: Maybe<String>;
+  passwordHash_not_contains?: Maybe<String>;
+  passwordHash_starts_with?: Maybe<String>;
+  passwordHash_not_starts_with?: Maybe<String>;
+  passwordHash_ends_with?: Maybe<String>;
+  passwordHash_not_ends_with?: Maybe<String>;
+  role?: Maybe<Role>;
+  role_not?: Maybe<Role>;
+  role_in?: Maybe<Role[] | Role>;
+  role_not_in?: Maybe<Role[] | Role>;
+  registered?: Maybe<DateTimeInput>;
+  registered_not?: Maybe<DateTimeInput>;
+  registered_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  registered_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  registered_lt?: Maybe<DateTimeInput>;
+  registered_lte?: Maybe<DateTimeInput>;
+  registered_gt?: Maybe<DateTimeInput>;
+  registered_gte?: Maybe<DateTimeInput>;
+  AND?: Maybe<UserScalarWhereInput[] | UserScalarWhereInput>;
+  OR?: Maybe<UserScalarWhereInput[] | UserScalarWhereInput>;
+  NOT?: Maybe<UserScalarWhereInput[] | UserScalarWhereInput>;
 }
 
-export interface CommentUpdateManyWithWhereNestedInput {
-  where: CommentScalarWhereInput;
-  data: CommentUpdateManyDataInput;
+export interface UserUpdateManyWithWhereNestedInput {
+  where: UserScalarWhereInput;
+  data: UserUpdateManyDataInput;
 }
 
-export interface CommentUpdateManyDataInput {
-  id?: Maybe<ID_Input>;
-  content?: Maybe<String>;
+export interface UserUpdateManyDataInput {
+  name?: Maybe<String>;
+  email?: Maybe<String>;
+  username?: Maybe<String>;
+  passwordHash?: Maybe<String>;
+  role?: Maybe<Role>;
+}
+
+export interface UserUpdateManyWithoutFolloweesInput {
+  create?: Maybe<
+    UserCreateWithoutFolloweesInput[] | UserCreateWithoutFolloweesInput
+  >;
+  delete?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
+  connect?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
+  set?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
+  disconnect?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
+  update?: Maybe<
+    | UserUpdateWithWhereUniqueWithoutFolloweesInput[]
+    | UserUpdateWithWhereUniqueWithoutFolloweesInput
+  >;
+  upsert?: Maybe<
+    | UserUpsertWithWhereUniqueWithoutFolloweesInput[]
+    | UserUpsertWithWhereUniqueWithoutFolloweesInput
+  >;
+  deleteMany?: Maybe<UserScalarWhereInput[] | UserScalarWhereInput>;
+  updateMany?: Maybe<
+    UserUpdateManyWithWhereNestedInput[] | UserUpdateManyWithWhereNestedInput
+  >;
+}
+
+export interface UserUpdateWithWhereUniqueWithoutFolloweesInput {
+  where: UserWhereUniqueInput;
+  data: UserUpdateWithoutFolloweesDataInput;
+}
+
+export interface UserUpdateWithoutFolloweesDataInput {
+  name?: Maybe<String>;
+  email?: Maybe<String>;
+  username?: Maybe<String>;
+  passwordHash?: Maybe<String>;
+  role?: Maybe<Role>;
+  recipes?: Maybe<RecipeUpdateManyWithoutAuthorInput>;
+  likedRecipes?: Maybe<RecipeUpdateManyWithoutLikedByInput>;
+  followers?: Maybe<UserUpdateManyWithoutFolloweesInput>;
+}
+
+export interface UserUpsertWithWhereUniqueWithoutFolloweesInput {
+  where: UserWhereUniqueInput;
+  update: UserUpdateWithoutFolloweesDataInput;
+  create: UserCreateWithoutFolloweesInput;
+}
+
+export interface UserUpsertWithWhereUniqueWithoutLikedRecipesInput {
+  where: UserWhereUniqueInput;
+  update: UserUpdateWithoutLikedRecipesDataInput;
+  create: UserCreateWithoutLikedRecipesInput;
 }
 
 export interface GradeUpdateManyInput {
   create?: Maybe<GradeCreateInput[] | GradeCreateInput>;
+  update?: Maybe<
+    | GradeUpdateWithWhereUniqueNestedInput[]
+    | GradeUpdateWithWhereUniqueNestedInput
+  >;
+  upsert?: Maybe<
+    | GradeUpsertWithWhereUniqueNestedInput[]
+    | GradeUpsertWithWhereUniqueNestedInput
+  >;
+  delete?: Maybe<GradeWhereUniqueInput[] | GradeWhereUniqueInput>;
   deleteMany?: Maybe<GradeScalarWhereInput[] | GradeScalarWhereInput>;
   updateMany?: Maybe<
     GradeUpdateManyWithWhereNestedInput[] | GradeUpdateManyWithWhereNestedInput
   >;
+}
+
+export interface GradeUpdateWithWhereUniqueNestedInput {
+  where: GradeWhereUniqueInput;
+  data: GradeUpdateDataInput;
+}
+
+export type GradeWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+}>;
+
+export interface GradeUpdateDataInput {
+  rater?: Maybe<UserUpdateOneRequiredInput>;
+  grade?: Maybe<Int>;
+}
+
+export interface GradeUpsertWithWhereUniqueNestedInput {
+  where: GradeWhereUniqueInput;
+  update: GradeUpdateDataInput;
+  create: GradeCreateInput;
 }
 
 export interface GradeScalarWhereInput {
@@ -895,14 +1200,13 @@ export interface GradeUpdateManyWithWhereNestedInput {
 }
 
 export interface GradeUpdateManyDataInput {
-  id?: Maybe<ID_Input>;
   grade?: Maybe<Int>;
 }
 
-export interface RecipeUpsertWithWhereUniqueWithoutLikedByInput {
+export interface RecipeUpsertWithWhereUniqueWithoutAuthorInput {
   where: RecipeWhereUniqueInput;
-  update: RecipeUpdateWithoutLikedByDataInput;
-  create: RecipeCreateWithoutLikedByInput;
+  update: RecipeUpdateWithoutAuthorDataInput;
+  create: RecipeCreateWithoutAuthorInput;
 }
 
 export interface RecipeScalarWhereInput {
@@ -1020,172 +1324,18 @@ export interface RecipeUpdateManyDataInput {
   published?: Maybe<Boolean>;
 }
 
-export interface UserUpdateManyWithoutFollowersInput {
-  create?: Maybe<
-    UserCreateWithoutFollowersInput[] | UserCreateWithoutFollowersInput
-  >;
-  delete?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
-  connect?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
-  set?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
-  disconnect?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
-  update?: Maybe<
-    | UserUpdateWithWhereUniqueWithoutFollowersInput[]
-    | UserUpdateWithWhereUniqueWithoutFollowersInput
-  >;
-  upsert?: Maybe<
-    | UserUpsertWithWhereUniqueWithoutFollowersInput[]
-    | UserUpsertWithWhereUniqueWithoutFollowersInput
-  >;
-  deleteMany?: Maybe<UserScalarWhereInput[] | UserScalarWhereInput>;
-  updateMany?: Maybe<
-    UserUpdateManyWithWhereNestedInput[] | UserUpdateManyWithWhereNestedInput
-  >;
+export interface UserUpsertNestedInput {
+  update: UserUpdateDataInput;
+  create: UserCreateInput;
 }
 
-export interface UserUpdateWithWhereUniqueWithoutFollowersInput {
-  where: UserWhereUniqueInput;
-  data: UserUpdateWithoutFollowersDataInput;
+export interface CommentUpsertWithWhereUniqueNestedInput {
+  where: CommentWhereUniqueInput;
+  update: CommentUpdateDataInput;
+  create: CommentCreateInput;
 }
 
-export interface UserUpdateWithoutFollowersDataInput {
-  name?: Maybe<String>;
-  email?: Maybe<String>;
-  username?: Maybe<String>;
-  passwordHash?: Maybe<String>;
-  role?: Maybe<Role>;
-  recipes?: Maybe<RecipeUpdateManyWithoutAuthorInput>;
-  likedRecipes?: Maybe<RecipeUpdateManyWithoutLikedByInput>;
-  followees?: Maybe<UserUpdateManyWithoutFollowersInput>;
-}
-
-export interface RecipeUpdateManyWithoutAuthorInput {
-  create?: Maybe<
-    RecipeCreateWithoutAuthorInput[] | RecipeCreateWithoutAuthorInput
-  >;
-  delete?: Maybe<RecipeWhereUniqueInput[] | RecipeWhereUniqueInput>;
-  connect?: Maybe<RecipeWhereUniqueInput[] | RecipeWhereUniqueInput>;
-  set?: Maybe<RecipeWhereUniqueInput[] | RecipeWhereUniqueInput>;
-  disconnect?: Maybe<RecipeWhereUniqueInput[] | RecipeWhereUniqueInput>;
-  update?: Maybe<
-    | RecipeUpdateWithWhereUniqueWithoutAuthorInput[]
-    | RecipeUpdateWithWhereUniqueWithoutAuthorInput
-  >;
-  upsert?: Maybe<
-    | RecipeUpsertWithWhereUniqueWithoutAuthorInput[]
-    | RecipeUpsertWithWhereUniqueWithoutAuthorInput
-  >;
-  deleteMany?: Maybe<RecipeScalarWhereInput[] | RecipeScalarWhereInput>;
-  updateMany?: Maybe<
-    | RecipeUpdateManyWithWhereNestedInput[]
-    | RecipeUpdateManyWithWhereNestedInput
-  >;
-}
-
-export interface RecipeUpdateWithWhereUniqueWithoutAuthorInput {
-  where: RecipeWhereUniqueInput;
-  data: RecipeUpdateWithoutAuthorDataInput;
-}
-
-export interface RecipeUpdateWithoutAuthorDataInput {
-  category?: Maybe<Category>;
-  title?: Maybe<String>;
-  description?: Maybe<String>;
-  cookingTime?: Maybe<Int>;
-  difficulty?: Maybe<Difficulty>;
-  ingredients?: Maybe<RecipeUpdateingredientsInput>;
-  method?: Maybe<RecipeUpdatemethodInput>;
-  notes?: Maybe<RecipeUpdatenotesInput>;
-  tags?: Maybe<RecipeUpdatetagsInput>;
-  source?: Maybe<String>;
-  published?: Maybe<Boolean>;
-  likedBy?: Maybe<UserUpdateManyWithoutLikedRecipesInput>;
-  comments?: Maybe<CommentUpdateManyInput>;
-  ratings?: Maybe<GradeUpdateManyInput>;
-}
-
-export interface UserUpdateManyWithoutLikedRecipesInput {
-  create?: Maybe<
-    UserCreateWithoutLikedRecipesInput[] | UserCreateWithoutLikedRecipesInput
-  >;
-  delete?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
-  connect?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
-  set?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
-  disconnect?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
-  update?: Maybe<
-    | UserUpdateWithWhereUniqueWithoutLikedRecipesInput[]
-    | UserUpdateWithWhereUniqueWithoutLikedRecipesInput
-  >;
-  upsert?: Maybe<
-    | UserUpsertWithWhereUniqueWithoutLikedRecipesInput[]
-    | UserUpsertWithWhereUniqueWithoutLikedRecipesInput
-  >;
-  deleteMany?: Maybe<UserScalarWhereInput[] | UserScalarWhereInput>;
-  updateMany?: Maybe<
-    UserUpdateManyWithWhereNestedInput[] | UserUpdateManyWithWhereNestedInput
-  >;
-}
-
-export interface UserUpdateWithWhereUniqueWithoutLikedRecipesInput {
-  where: UserWhereUniqueInput;
-  data: UserUpdateWithoutLikedRecipesDataInput;
-}
-
-export interface UserUpdateWithoutLikedRecipesDataInput {
-  name?: Maybe<String>;
-  email?: Maybe<String>;
-  username?: Maybe<String>;
-  passwordHash?: Maybe<String>;
-  role?: Maybe<Role>;
-  recipes?: Maybe<RecipeUpdateManyWithoutAuthorInput>;
-  followees?: Maybe<UserUpdateManyWithoutFollowersInput>;
-  followers?: Maybe<UserUpdateManyWithoutFolloweesInput>;
-}
-
-export interface UserUpdateManyWithoutFolloweesInput {
-  create?: Maybe<
-    UserCreateWithoutFolloweesInput[] | UserCreateWithoutFolloweesInput
-  >;
-  delete?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
-  connect?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
-  set?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
-  disconnect?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
-  update?: Maybe<
-    | UserUpdateWithWhereUniqueWithoutFolloweesInput[]
-    | UserUpdateWithWhereUniqueWithoutFolloweesInput
-  >;
-  upsert?: Maybe<
-    | UserUpsertWithWhereUniqueWithoutFolloweesInput[]
-    | UserUpsertWithWhereUniqueWithoutFolloweesInput
-  >;
-  deleteMany?: Maybe<UserScalarWhereInput[] | UserScalarWhereInput>;
-  updateMany?: Maybe<
-    UserUpdateManyWithWhereNestedInput[] | UserUpdateManyWithWhereNestedInput
-  >;
-}
-
-export interface UserUpdateWithWhereUniqueWithoutFolloweesInput {
-  where: UserWhereUniqueInput;
-  data: UserUpdateWithoutFolloweesDataInput;
-}
-
-export interface UserUpdateWithoutFolloweesDataInput {
-  name?: Maybe<String>;
-  email?: Maybe<String>;
-  username?: Maybe<String>;
-  passwordHash?: Maybe<String>;
-  role?: Maybe<Role>;
-  recipes?: Maybe<RecipeUpdateManyWithoutAuthorInput>;
-  likedRecipes?: Maybe<RecipeUpdateManyWithoutLikedByInput>;
-  followers?: Maybe<UserUpdateManyWithoutFolloweesInput>;
-}
-
-export interface UserUpsertWithWhereUniqueWithoutFolloweesInput {
-  where: UserWhereUniqueInput;
-  update: UserUpdateWithoutFolloweesDataInput;
-  create: UserCreateWithoutFolloweesInput;
-}
-
-export interface UserScalarWhereInput {
+export interface CommentScalarWhereInput {
   id?: Maybe<ID_Input>;
   id_not?: Maybe<ID_Input>;
   id_in?: Maybe<ID_Input[] | ID_Input>;
@@ -1200,108 +1350,38 @@ export interface UserScalarWhereInput {
   id_not_starts_with?: Maybe<ID_Input>;
   id_ends_with?: Maybe<ID_Input>;
   id_not_ends_with?: Maybe<ID_Input>;
-  name?: Maybe<String>;
-  name_not?: Maybe<String>;
-  name_in?: Maybe<String[] | String>;
-  name_not_in?: Maybe<String[] | String>;
-  name_lt?: Maybe<String>;
-  name_lte?: Maybe<String>;
-  name_gt?: Maybe<String>;
-  name_gte?: Maybe<String>;
-  name_contains?: Maybe<String>;
-  name_not_contains?: Maybe<String>;
-  name_starts_with?: Maybe<String>;
-  name_not_starts_with?: Maybe<String>;
-  name_ends_with?: Maybe<String>;
-  name_not_ends_with?: Maybe<String>;
-  email?: Maybe<String>;
-  email_not?: Maybe<String>;
-  email_in?: Maybe<String[] | String>;
-  email_not_in?: Maybe<String[] | String>;
-  email_lt?: Maybe<String>;
-  email_lte?: Maybe<String>;
-  email_gt?: Maybe<String>;
-  email_gte?: Maybe<String>;
-  email_contains?: Maybe<String>;
-  email_not_contains?: Maybe<String>;
-  email_starts_with?: Maybe<String>;
-  email_not_starts_with?: Maybe<String>;
-  email_ends_with?: Maybe<String>;
-  email_not_ends_with?: Maybe<String>;
-  username?: Maybe<String>;
-  username_not?: Maybe<String>;
-  username_in?: Maybe<String[] | String>;
-  username_not_in?: Maybe<String[] | String>;
-  username_lt?: Maybe<String>;
-  username_lte?: Maybe<String>;
-  username_gt?: Maybe<String>;
-  username_gte?: Maybe<String>;
-  username_contains?: Maybe<String>;
-  username_not_contains?: Maybe<String>;
-  username_starts_with?: Maybe<String>;
-  username_not_starts_with?: Maybe<String>;
-  username_ends_with?: Maybe<String>;
-  username_not_ends_with?: Maybe<String>;
-  passwordHash?: Maybe<String>;
-  passwordHash_not?: Maybe<String>;
-  passwordHash_in?: Maybe<String[] | String>;
-  passwordHash_not_in?: Maybe<String[] | String>;
-  passwordHash_lt?: Maybe<String>;
-  passwordHash_lte?: Maybe<String>;
-  passwordHash_gt?: Maybe<String>;
-  passwordHash_gte?: Maybe<String>;
-  passwordHash_contains?: Maybe<String>;
-  passwordHash_not_contains?: Maybe<String>;
-  passwordHash_starts_with?: Maybe<String>;
-  passwordHash_not_starts_with?: Maybe<String>;
-  passwordHash_ends_with?: Maybe<String>;
-  passwordHash_not_ends_with?: Maybe<String>;
-  role?: Maybe<Role>;
-  role_not?: Maybe<Role>;
-  role_in?: Maybe<Role[] | Role>;
-  role_not_in?: Maybe<Role[] | Role>;
-  registered?: Maybe<DateTimeInput>;
-  registered_not?: Maybe<DateTimeInput>;
-  registered_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  registered_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  registered_lt?: Maybe<DateTimeInput>;
-  registered_lte?: Maybe<DateTimeInput>;
-  registered_gt?: Maybe<DateTimeInput>;
-  registered_gte?: Maybe<DateTimeInput>;
-  AND?: Maybe<UserScalarWhereInput[] | UserScalarWhereInput>;
-  OR?: Maybe<UserScalarWhereInput[] | UserScalarWhereInput>;
-  NOT?: Maybe<UserScalarWhereInput[] | UserScalarWhereInput>;
+  content?: Maybe<String>;
+  content_not?: Maybe<String>;
+  content_in?: Maybe<String[] | String>;
+  content_not_in?: Maybe<String[] | String>;
+  content_lt?: Maybe<String>;
+  content_lte?: Maybe<String>;
+  content_gt?: Maybe<String>;
+  content_gte?: Maybe<String>;
+  content_contains?: Maybe<String>;
+  content_not_contains?: Maybe<String>;
+  content_starts_with?: Maybe<String>;
+  content_not_starts_with?: Maybe<String>;
+  content_ends_with?: Maybe<String>;
+  content_not_ends_with?: Maybe<String>;
+  AND?: Maybe<CommentScalarWhereInput[] | CommentScalarWhereInput>;
+  OR?: Maybe<CommentScalarWhereInput[] | CommentScalarWhereInput>;
+  NOT?: Maybe<CommentScalarWhereInput[] | CommentScalarWhereInput>;
 }
 
-export interface UserUpdateManyWithWhereNestedInput {
-  where: UserScalarWhereInput;
-  data: UserUpdateManyDataInput;
+export interface CommentUpdateManyWithWhereNestedInput {
+  where: CommentScalarWhereInput;
+  data: CommentUpdateManyDataInput;
 }
 
-export interface UserUpdateManyDataInput {
-  name?: Maybe<String>;
-  email?: Maybe<String>;
-  username?: Maybe<String>;
-  passwordHash?: Maybe<String>;
-  role?: Maybe<Role>;
+export interface CommentUpdateManyDataInput {
+  content?: Maybe<String>;
 }
 
-export interface UserUpsertWithWhereUniqueWithoutLikedRecipesInput {
-  where: UserWhereUniqueInput;
-  update: UserUpdateWithoutLikedRecipesDataInput;
-  create: UserCreateWithoutLikedRecipesInput;
-}
-
-export interface RecipeUpsertWithWhereUniqueWithoutAuthorInput {
+export interface RecipeUpsertWithWhereUniqueWithoutLikedByInput {
   where: RecipeWhereUniqueInput;
-  update: RecipeUpdateWithoutAuthorDataInput;
-  create: RecipeCreateWithoutAuthorInput;
-}
-
-export interface UserUpsertWithWhereUniqueWithoutFollowersInput {
-  where: UserWhereUniqueInput;
-  update: UserUpdateWithoutFollowersDataInput;
-  create: UserCreateWithoutFollowersInput;
+  update: RecipeUpdateWithoutLikedByDataInput;
+  create: RecipeCreateWithoutLikedByInput;
 }
 
 export interface UserUpsertWithoutRecipesInput {
