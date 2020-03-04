@@ -412,6 +412,22 @@ export interface CommentWhereInput {
   content_not_starts_with?: Maybe<String>;
   content_ends_with?: Maybe<String>;
   content_not_ends_with?: Maybe<String>;
+  created?: Maybe<DateTimeInput>;
+  created_not?: Maybe<DateTimeInput>;
+  created_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  created_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  created_lt?: Maybe<DateTimeInput>;
+  created_lte?: Maybe<DateTimeInput>;
+  created_gt?: Maybe<DateTimeInput>;
+  created_gte?: Maybe<DateTimeInput>;
+  updated?: Maybe<DateTimeInput>;
+  updated_not?: Maybe<DateTimeInput>;
+  updated_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updated_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updated_lt?: Maybe<DateTimeInput>;
+  updated_lte?: Maybe<DateTimeInput>;
+  updated_gt?: Maybe<DateTimeInput>;
+  updated_gte?: Maybe<DateTimeInput>;
   AND?: Maybe<CommentWhereInput[] | CommentWhereInput>;
 }
 
@@ -444,6 +460,22 @@ export interface CommentRestrictedWhereInput {
   content_not_starts_with?: Maybe<String>;
   content_ends_with?: Maybe<String>;
   content_not_ends_with?: Maybe<String>;
+  created?: Maybe<DateTimeInput>;
+  created_not?: Maybe<DateTimeInput>;
+  created_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  created_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  created_lt?: Maybe<DateTimeInput>;
+  created_lte?: Maybe<DateTimeInput>;
+  created_gt?: Maybe<DateTimeInput>;
+  created_gte?: Maybe<DateTimeInput>;
+  updated?: Maybe<DateTimeInput>;
+  updated_not?: Maybe<DateTimeInput>;
+  updated_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updated_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updated_lt?: Maybe<DateTimeInput>;
+  updated_lte?: Maybe<DateTimeInput>;
+  updated_gt?: Maybe<DateTimeInput>;
+  updated_gte?: Maybe<DateTimeInput>;
   AND?: Maybe<CommentRestrictedWhereInput[] | CommentRestrictedWhereInput>;
 }
 
@@ -1364,6 +1396,22 @@ export interface CommentScalarWhereInput {
   content_not_starts_with?: Maybe<String>;
   content_ends_with?: Maybe<String>;
   content_not_ends_with?: Maybe<String>;
+  created?: Maybe<DateTimeInput>;
+  created_not?: Maybe<DateTimeInput>;
+  created_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  created_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  created_lt?: Maybe<DateTimeInput>;
+  created_lte?: Maybe<DateTimeInput>;
+  created_gt?: Maybe<DateTimeInput>;
+  created_gte?: Maybe<DateTimeInput>;
+  updated?: Maybe<DateTimeInput>;
+  updated_not?: Maybe<DateTimeInput>;
+  updated_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updated_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updated_lt?: Maybe<DateTimeInput>;
+  updated_lte?: Maybe<DateTimeInput>;
+  updated_gt?: Maybe<DateTimeInput>;
+  updated_gte?: Maybe<DateTimeInput>;
   AND?: Maybe<CommentScalarWhereInput[] | CommentScalarWhereInput>;
   OR?: Maybe<CommentScalarWhereInput[] | CommentScalarWhereInput>;
   NOT?: Maybe<CommentScalarWhereInput[] | CommentScalarWhereInput>;
@@ -1710,12 +1758,16 @@ export interface UserNullablePromise
 export interface Comment {
   id: ID_Output;
   content: String;
+  created: DateTimeOutput;
+  updated: DateTimeOutput;
 }
 
 export interface CommentPromise extends Promise<Comment>, Fragmentable {
   id: () => Promise<ID_Output>;
   author: <T = UserPromise>() => T;
   content: () => Promise<String>;
+  created: () => Promise<DateTimeOutput>;
+  updated: () => Promise<DateTimeOutput>;
 }
 
 export interface CommentSubscription
@@ -1724,6 +1776,8 @@ export interface CommentSubscription
   id: () => Promise<AsyncIterator<ID_Output>>;
   author: <T = UserSubscription>() => T;
   content: () => Promise<AsyncIterator<String>>;
+  created: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updated: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
 export interface CommentNullablePromise
@@ -1732,6 +1786,8 @@ export interface CommentNullablePromise
   id: () => Promise<ID_Output>;
   author: <T = UserPromise>() => T;
   content: () => Promise<String>;
+  created: () => Promise<DateTimeOutput>;
+  updated: () => Promise<DateTimeOutput>;
 }
 
 export interface Grade {

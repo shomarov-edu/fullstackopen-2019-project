@@ -84,7 +84,7 @@ const resolvers = {
     },
 
     recipes: async (user, _, { loaders }) =>
-      await loaders.recipe.recipesByUserId.load(user.id),
+      await loaders.recipe.recipesByUserIdLoader.load(user.id),
 
     followeeCount: async user => user.followees.length,
 

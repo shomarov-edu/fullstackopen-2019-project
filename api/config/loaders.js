@@ -79,6 +79,7 @@ const createRecipeLoader = () => ({
       id
       title
       author {
+        id
         name
         username
       }
@@ -125,60 +126,67 @@ const createRecipeLoader = () => ({
     );
   }),
 
-  recipesByUserId: new DataLoader(async userIds => {
-    console.log(userIds);
+  recipesByUserIdLoader: new DataLoader(async userIds => {
     const users = await prisma.users({
       where: {
         id_in: userIds
       }
-    }).$fragment(`
-    fragment UserRecipes on User {
-      recipes {
+    });
+
+    // console.log(userIds);
+
+    // const usersById = keyBy(users, 'id');
+
+    // console.log(usersById);
+
+    const promiseArray = userIds.map(
+      async userId =>
+        (await prisma.user({ id: userId }).recipes().$fragment(`
+    fragment FullRecipe on Recipe {
+      id
+      title
+      author {
         id
-        title
+      }
+      category
+      description
+      cookingTime
+      difficulty
+      ingredients
+      method
+      notes
+      tags
+      source
+      created
+      updated
+      published
+      likedBy {
+        name
+        username
+      }
+      comments {
+        id
         author {
-          id
-        }
-        category
-        description
-        cookingTime
-        difficulty
-        ingredients
-        method
-        notes
-        tags
-        source
-        created
-        updated
-        published
-        likedBy {
-          name
           username
         }
-        comments {
-          id
-          author {
-            username
-          }
-          content
-        }
-        ratings {
-          id
-          rater {
-            username
-          }
-          grade
-        }
+        content
       }
-    `);
-
-    const usersById = keyBy(users, 'id');
-
-    console.log('recipe arrays loaded with recipeByIdLoader: ', users.length);
-
-    return userIds.map(
-      userId => usersById[userId] || new Error(`No result for ${userId}`)
+      ratings {
+        id
+        rater {
+          username
+        }
+        grade
+      }
+    }
+`)) || new Error(`No result for ${userId}`)
     );
+
+    const recipes = await Promise.all(promiseArray);
+
+    console.log(recipes);
+
+    return recipes;
   })
 });
 

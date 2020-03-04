@@ -27,6 +27,8 @@ type Comment {
   id: ID!
   author: User!
   content: String!
+  created: DateTime!
+  updated: DateTime!
 }
 
 input CommentCreateInput {
@@ -68,6 +70,22 @@ input CommentRestrictedWhereInput {
   content_not_starts_with: String
   content_ends_with: String
   content_not_ends_with: String
+  created: DateTime
+  created_not: DateTime
+  created_in: [DateTime!]
+  created_not_in: [DateTime!]
+  created_lt: DateTime
+  created_lte: DateTime
+  created_gt: DateTime
+  created_gte: DateTime
+  updated: DateTime
+  updated_not: DateTime
+  updated_in: [DateTime!]
+  updated_not_in: [DateTime!]
+  updated_lt: DateTime
+  updated_lte: DateTime
+  updated_gt: DateTime
+  updated_gte: DateTime
   AND: [CommentRestrictedWhereInput!]
 }
 
@@ -100,6 +118,22 @@ input CommentScalarWhereInput {
   content_not_starts_with: String
   content_ends_with: String
   content_not_ends_with: String
+  created: DateTime
+  created_not: DateTime
+  created_in: [DateTime!]
+  created_not_in: [DateTime!]
+  created_lt: DateTime
+  created_lte: DateTime
+  created_gt: DateTime
+  created_gte: DateTime
+  updated: DateTime
+  updated_not: DateTime
+  updated_in: [DateTime!]
+  updated_not_in: [DateTime!]
+  updated_lt: DateTime
+  updated_lte: DateTime
+  updated_gt: DateTime
+  updated_gte: DateTime
   AND: [CommentScalarWhereInput!]
   OR: [CommentScalarWhereInput!]
   NOT: [CommentScalarWhereInput!]
@@ -169,6 +203,22 @@ input CommentWhereInput {
   content_not_starts_with: String
   content_ends_with: String
   content_not_ends_with: String
+  created: DateTime
+  created_not: DateTime
+  created_in: [DateTime!]
+  created_not_in: [DateTime!]
+  created_lt: DateTime
+  created_lte: DateTime
+  created_gt: DateTime
+  created_gte: DateTime
+  updated: DateTime
+  updated_not: DateTime
+  updated_in: [DateTime!]
+  updated_not_in: [DateTime!]
+  updated_lt: DateTime
+  updated_lte: DateTime
+  updated_gt: DateTime
+  updated_gte: DateTime
   AND: [CommentWhereInput!]
 }
 
