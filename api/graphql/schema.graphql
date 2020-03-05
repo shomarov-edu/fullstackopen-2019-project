@@ -26,6 +26,8 @@ type User {
 }
 
 type Token {
+  id: ID!
+  username: String!
   token: String!
 }
 
@@ -136,6 +138,7 @@ type Comment {
 
 extend type Query {
   recipes: [Recipe!]!
+  publishedRecipes: [Recipe!]!
   recipe(input: RecipeInput!): Recipe
   recipeCount: Int!
 }

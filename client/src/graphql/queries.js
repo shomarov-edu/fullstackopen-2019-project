@@ -120,6 +120,41 @@ const queries = {
     }
   `,
 
+  publishedRecipes: gql`
+    query {
+      publishedRecipes {
+        id
+        author {
+          username
+        }
+        category
+        title
+        description
+        cookingTime
+        difficulty
+        ingredients
+        method
+        notes
+        tags
+        source
+        created
+        updated
+        published
+        likedBy {
+          username
+        }
+        comments {
+          id
+          author {
+            username
+          }
+          content
+        }
+        rating
+      }
+    }
+  `,
+
   recipe: gql`
     query recipe($id: ID!) {
       recipe(input: { id: $id }) {

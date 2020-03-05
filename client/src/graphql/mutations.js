@@ -1,16 +1,26 @@
 import { gql } from '@apollo/client';
 
+// AUTHENTICATION:
+
 const mutations = {
-  login: gql`
-    mutation login($username: String!, $password: String!) {
-      login(input: { username: $username, password: $password }) {
+  LOGIN: gql`
+    mutation LogIn($usernameOrEmail: String!, $password: String!) {
+      login(input: { usernameOrEmail: $usernameOrEmail, password: $password }) {
+        id
+        username
         token
       }
     }
   `,
 
-  signup: gql`
-    mutation signup($username: String!, $firstname: String!, $lastname: String!, $email: String!, $password: String! {
+  SIGNUP: gql`
+    mutation SignUp(
+      $username: String!
+      $firstname: String!
+      $lastname: String!
+      $email: String!
+      $password: String!
+    ) {
       signup(
         input: {
           username: $username
@@ -23,5 +33,7 @@ const mutations = {
     }
   `
 };
+
+// TODO: RECIPE MUTATIONS
 
 export default mutations;

@@ -13,7 +13,7 @@ fragment FullRecipe on Recipe {
   id
   title
   author {
-    id
+    username
   }
   category
   description
@@ -61,6 +61,15 @@ const generateRecipeModel = currentUser => ({
 
   getById: async id => await prisma.recipe(id).$fragment(fullRecipeFragment),
 
+  // Fetch all published recipes
+
+  getPublishedRecipes: async () =>
+    await prisma
+      .recipes({
+        where: { published: true }
+      })
+      .$fragment(fullRecipeFragment),
+
   // Count all PUBLISHED recipes in database
 
   getPublishedRecipeCount: async () => {
@@ -98,6 +107,23 @@ const generateRecipeModel = currentUser => ({
     if (!currentUser) return null;
 
     const { id, ...recipeData } = input;
+
+    // Check recipe existence
+
+    const recipe = await prisma.recipe({ id }).$fragment(`
+    fragment AuthorAndPublished on Recipe {
+      author {
+        id
+      }
+    }
+    `);
+
+    if (!recipe) throw new UserInputError('recipe does not exist');
+
+    // Validate recipe author
+
+    if (recipe.author.id !== currentUser.id)
+      throw new ForbiddenError('forbidden');
 
     const updatedRecipe = await prisma
       .updateRecipe({
@@ -222,22 +248,27 @@ const generateRecipeModel = currentUser => ({
 
     const { recipeId, commentId } = input;
 
-    const comment = await prisma
-      .recipe({ id: recipeId })
-      .comment({ id: commentId }).$fragment(`
-    fragment AuthorAndPublished on Recipe {
-      author {
+    const recipe = await prisma.recipe({ id: recipeId }).$fragment(`
+    fragment Comments on Recipe {
+      comments {
         id
+        author {
+          id
+        }
+        content
       }
-      published
     }
     `);
 
     // Check recipe existence
 
+    if (!recipe) throw new UserInputError('recipe does not exist');
+
+    const comment = recipe.comments.find(comment => comment.id === commentId);
+
     if (!comment) throw new UserInputError('comment does not exist');
 
-    // Validate recipe author
+    // Validate comment author
 
     if (comment.author.id !== currentUser.id)
       throw new ForbiddenError('forbidden');

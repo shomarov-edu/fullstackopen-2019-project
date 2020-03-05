@@ -2,23 +2,27 @@ const DataLoader = require('dataloader');
 const { prisma } = require('../prisma');
 const keyBy = require('lodash.keyby');
 
+const fragmentUserDetails = `
+fragment UserDetails on User {
+  username
+  name
+  registered
+  recipes { id }
+  followees { id username }
+  followers { id username }
+}
+`;
+
+const createUserLoader = () => ({ userByIdLoader, userByUsernameLoader });
+
 const userByIdLoader = new DataLoader(async userIds => {
-  const loadedUsers = await prisma.users({
-    where: {
-      id_in: userIds
-    }
-  }).$fragment(`
-    fragment UserDetails on User {
-      id
-      username
-      name
-      registered
-      role
-      recipes { id author {id} category title cookingTime published }
-      followees { username }
-      followers { username }
-    }
-  `);
+  const loadedUsers = await prisma
+    .users({
+      where: {
+        id_in: userIds
+      }
+    })
+    .$fragment(fragmentUserDetails);
 
   const usersById = keyBy(loadedUsers, 'id');
 
@@ -36,21 +40,13 @@ const userByIdLoader = new DataLoader(async userIds => {
 });
 
 const userByUsernameLoader = new DataLoader(async usernames => {
-  const loadedUsers = await prisma.users({
-    where: {
-      username_in: usernames
-    }
-  }).$fragment(`
-    fragment UserDetails on User {
-      username
-      name
-      registered
-      role
-      recipes { id category title cookingTime published }
-      followees { id username }
-      followers { id username }
-    }
-  `);
+  const loadedUsers = await prisma
+    .users({
+      where: {
+        username_in: usernames
+      }
+    })
+    .$fragment(fragmentUserDetails);
 
   const usersByUsername = keyBy(loadedUsers, 'username');
 
@@ -127,18 +123,6 @@ const createRecipeLoader = () => ({
   }),
 
   recipesByUserIdLoader: new DataLoader(async userIds => {
-    const users = await prisma.users({
-      where: {
-        id_in: userIds
-      }
-    });
-
-    // console.log(userIds);
-
-    // const usersById = keyBy(users, 'id');
-
-    // console.log(usersById);
-
     const promiseArray = userIds.map(
       async userId =>
         (await prisma.user({ id: userId }).recipes().$fragment(`
@@ -184,13 +168,9 @@ const createRecipeLoader = () => ({
 
     const recipes = await Promise.all(promiseArray);
 
-    console.log(recipes);
-
     return recipes;
   })
 });
-
-const createUserLoader = () => ({ userByIdLoader, userByUsernameLoader });
 
 module.exports = () => ({
   user: createUserLoader(),

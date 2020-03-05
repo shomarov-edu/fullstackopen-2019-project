@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
+import { gql, useMutation } from '@apollo/client';
 import useField from '../hooks/useField';
+import mutations from '../graphql/mutations';
 
 const SignUp = ({ history }) => {
   const username = useField('text');
@@ -9,10 +11,12 @@ const SignUp = ({ history }) => {
   const email = useField('email');
   const password = useField('password');
 
+  const [signup] = useMutation(mutations.signup);
+
   const handleSignUp = async event => {
     event.preventDefault();
 
-    const user = {
+    const variables = {
       username: username.input.value,
       firstname: firstname.input.value,
       lastname: lastname.input.value,
@@ -20,17 +24,15 @@ const SignUp = ({ history }) => {
       password: password.input.value
     };
 
-    try {
-      username.reset();
-      firstname.reset();
-      lastname.reset();
-      email.reset();
-      password.reset();
+    signup({ variables });
 
-      history.push('/');
-    } catch (exception) {
-      console.log(exception);
-    }
+    username.reset();
+    firstname.reset();
+    lastname.reset();
+    email.reset();
+    password.reset();
+
+    history.push('/');
   };
 
   return (

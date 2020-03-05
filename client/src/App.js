@@ -9,47 +9,24 @@ import Recipe from './components/Recipe';
 import AllRecipes from './components/AllRecipes';
 import Recipes from './components/Recipes';
 import Profile from './components/Profile';
+import queries from './graphql/queries';
 
 const App = () => {
   const [localStorageUser, setLocalStorageUser] = useState(null);
   const [loggedInUser, setLoggedInUser] = useState(null);
-  const [allRecipes, setAllRecipes] = useState([]);
   const [userToFetch, setUserToFetch] = useState(null);
   const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('loggedInUser'));
-    console.log('user', user);
-    if (user) {
-      setLocalStorageUser(user);
-    }
-  }, []);
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      if (localStorageUser) {
-        console.log('localStorageUser', localStorageUser);
-        console.log('user2', user);
-        setLoggedInUser(user);
-      }
-    };
-
-    fetchUser();
-  }, [localStorageUser]);
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      if (userToFetch) {
-        setUser(null);
-      }
-    };
-
-    fetchUser();
-  }, [userToFetch]);
+  const [publishedRecipes, setPublishedRecipes] = useState([]);
 
   const recipeById = recipeId => {
-    return allRecipes.find(recipe => recipe.id === recipeId);
+    return recipes.find(recipe => recipe.id === recipeId);
   };
+
+  const publishedRecipesQuery = useQuery(queries.publishedRecipes);
+
+  if (publishedRecipesQuery.loading) return <div>loading...</div>;
+
+  const recipes = publishedRecipesQuery.data.publishedRecipes;
 
   return (
     <React.Fragment>
@@ -61,7 +38,7 @@ const App = () => {
         <Route
           exact
           path="/recipes"
-          render={() => <AllRecipes recipes={allRecipes} />}
+          render={() => <AllRecipes recipes={recipes} />}
         />
         <Route
           exact
@@ -86,8 +63,6 @@ const App = () => {
                 loggedInUser={loggedInUser}
                 user={user}
                 recipe={recipeById(match.params.recipeId)}
-                allRecipes={allRecipes}
-                setAllRecipes={setAllRecipes}
               />
             );
           }}

@@ -1,11 +1,14 @@
-const validator = require('validator');
+const { Validator } = require('class-validator');
+const validator = new Validator();
 
 const resolvers = {
   Query: {
+    // Fetch current user
     me: async (_, __, { models }) => {
       return await models.User.me();
     },
 
+    // Fetch all users. Do I need this?
     users: async (_, { input }, { models }) => await models.User.getAll(input),
 
     user: async (_, { input }, { loaders }) => {
@@ -18,6 +21,9 @@ const resolvers = {
     userCount: async (_, __, { models }) => await models.User.getUserCount(),
 
     recipes: async (_, __, { models }) => await models.Recipe.getAll(),
+
+    publishedRecipes: async (_, __, { models }) =>
+      await models.Recipe.getPublishedRecipes(),
 
     recipe: async (_, { input }, { loaders }) =>
       await loaders.recipe.recipeByIdLoader.load(input.id),
@@ -78,6 +84,11 @@ const resolvers = {
   },
 
   User: {
+    email: (user, _, { currentUser }) => {
+      if (user.id !== currentUser.id || currentUser.role !== 'ADMIN')
+        return null;
+    },
+
     role: (user, _, { currentUser }) => {
       if (!currentUser || currentUser.role !== 'ADMIN') return null;
       return user.role;
@@ -86,13 +97,25 @@ const resolvers = {
     recipes: async (user, _, { loaders }) =>
       await loaders.recipe.recipesByUserIdLoader.load(user.id),
 
+    recipeCount: async user => user.recipes.length,
+
+    // Should I put this in loaders or models?
+    // followees: async (user, { loaders }) =>
+    //   loaders.user.followeesByUserIdLoader.load(user.id),
+
     followeeCount: async user => user.followees.length,
+
+    // Should I put this in loaders or models?
+    // followers: async (user, { loaders }) =>
+    //   loaders.user.followersByUserIdLoader.load(user.id),
 
     followerCount: async user => user.followers.length,
 
-    recipeCount: async (user, _, { models }) => user.recipes.length,
+    publishedRecipes: user => {
+      console.log(user);
 
-    publishedRecipes: (user, _, __) => user.recipes.filter(r => r.published),
+      return user.recipes.filter(r => r.published);
+    },
 
     publishedRecipeCount: (user, _, __) =>
       user.recipes.filter(r => r.published).length,
@@ -102,7 +125,9 @@ const resolvers = {
 
   Recipe: {
     author: async (recipe, _, { loaders }) => {
-      return await loaders.user.userByIdLoader.load(recipe.author.id);
+      return await loaders.user.userByUsernameLoader.load(
+        recipe.author.username
+      );
     },
 
     rating: async (recipe, args, { models }) =>
