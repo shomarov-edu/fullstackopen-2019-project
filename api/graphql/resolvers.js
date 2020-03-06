@@ -12,6 +12,8 @@ const resolvers = {
     users: async (_, { input }, { models }) => await models.User.getAll(input),
 
     user: async (_, { input }, { loaders }) => {
+      console.log(input);
+
       if (input.id && validator.isMongoId(input.id))
         return await loaders.user.userByIdLoader.load(input.id);
 
@@ -84,8 +86,13 @@ const resolvers = {
   },
 
   User: {
+    // E-Mail field viewable only to owner and admin
     email: (user, _, { currentUser }) => {
-      if (user.id !== currentUser.id || currentUser.role !== 'ADMIN')
+      if (
+        !currentUser ||
+        user.id !== currentUser.id ||
+        currentUser.role !== 'ADMIN'
+      )
         return null;
     },
 

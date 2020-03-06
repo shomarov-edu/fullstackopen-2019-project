@@ -1,6 +1,6 @@
 # types for User object
 
-enum ROLE {
+enum Role {
   ADMIN
   MODERATOR
   USER
@@ -9,7 +9,7 @@ enum ROLE {
 type User {
   id: ID!
   name: String!
-  email: String!
+  email: String
   username: String!
   role: String
   registered: String!
@@ -26,8 +26,6 @@ type User {
 }
 
 type Token {
-  id: ID!
-  username: String!
   token: String!
 }
 

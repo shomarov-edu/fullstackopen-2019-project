@@ -8,7 +8,7 @@ const users = require('./users');
 
   users.forEach(async user => {
     const { password, ...userInput } = user;
-    const savedUser = await prisma.createUser({
+    await prisma.createUser({
       ...userInput,
       passwordHash: await encryptPassword(password)
     });

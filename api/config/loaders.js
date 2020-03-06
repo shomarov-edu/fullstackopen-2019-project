@@ -4,6 +4,7 @@ const keyBy = require('lodash.keyby');
 
 const fragmentUserDetails = `
 fragment UserDetails on User {
+  id
   username
   name
   registered

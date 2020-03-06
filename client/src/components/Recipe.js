@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { gql, useQuery, useLazyQuery } from '@apollo/client';
 import useField from '../hooks/useField';
+import queries from '../graphql/queries';
 import Comments from './Comments';
 
-const Recipe = ({ loggedInUser, user, recipe, allRecipes, setAllRecipes }) => {
+const Recipe = ({ currentUser, recipeId }) => {
   const [edit, setEdit] = useState(false);
   const [showComments, setShowComments] = useState(false);
-
   const title = useField('text');
   const description = useField('text');
   const time = useField('number');
@@ -16,7 +17,19 @@ const Recipe = ({ loggedInUser, user, recipe, allRecipes, setAllRecipes }) => {
   const [notes, setNotes] = useState([]);
   const source = useField('text');
 
-  if (!recipe || !loggedInUser || !user) return null;
+  const { loading, error, data } = useQuery(queries.RECIPE, {
+    variables: { id: recipeId }
+  });
+  console.log(data);
+
+  if (loading) return <div>loading...</div>;
+  if (error) return <div>error recipe: {error.message}</div>;
+
+  const recipe = data.recipe;
+
+  console.log(data);
+
+  if (!recipe) return null;
 
   const handleEdit = () => {
     setEdit(!edit);
@@ -198,13 +211,13 @@ const Recipe = ({ loggedInUser, user, recipe, allRecipes, setAllRecipes }) => {
     <React.Fragment>
       <p>
         {`Author: `}
-        <Link to={`/${recipe.author.username}`}>
-          {recipe.author.firstname} {recipe.author.lastname}
+        <Link to={`/users/${recipe.author.username}`}>
+          {recipe.author.name}
         </Link>
       </p>
       <p>{recipe.title}</p>
       <p>{recipe.description}</p>
-      <p>Cooking time: {recipe.time}</p>
+      <p>Cooking time: {recipe.cookingTime} minutes</p>
       <p>Difficulty: {recipe.difficulty}</p>
       Ingredients:
       <ul>
@@ -225,8 +238,8 @@ const Recipe = ({ loggedInUser, user, recipe, allRecipes, setAllRecipes }) => {
         ))}
       </ul>
       <p>Source: {recipe.source}</p>
-      <p>Date added: {recipe.date}</p>
-      {loggedInUser.username === user.username ? (
+      <p>Date added: {recipe.created}</p>
+      {currentUser && currentUser.username === recipe.author.username ? (
         <React.Fragment>
           <button onClick={() => handleEdit()}>edit recipe</button>
           <button onClick={() => handleDelete()}>delete recipe</button>
@@ -240,12 +253,7 @@ const Recipe = ({ loggedInUser, user, recipe, allRecipes, setAllRecipes }) => {
       <br />
       <br />
       {showComments ? (
-        <Comments
-          loggedInUser={loggedInUser}
-          recipe={recipe}
-          allRecipes={allRecipes}
-          setAllRecipes={setAllRecipes}
-        />
+        <Comments currentUser={currentUser} recipe={recipe} />
       ) : null}
     </React.Fragment>
   );

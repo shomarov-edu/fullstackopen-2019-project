@@ -6,6 +6,7 @@ const getUser = async tokenWithBearer => {
     const token = tokenWithBearer.substring(7);
     return jwt.verify(token, process.env.SECRET);
   } catch (error) {
+    console.log(error);
     throw new AuthenticationError('invalid token');
   }
 };

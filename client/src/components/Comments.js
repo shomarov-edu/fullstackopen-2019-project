@@ -39,8 +39,6 @@ const Comments = ({ loggedInUser, recipe, allRecipes, setAllRecipes }) => {
             loggedInUser={loggedInUser}
             comment={comment}
             recipe={recipe}
-            allRecipes={allRecipes}
-            setAllRecipes={setAllRecipes}
           />
         );
       })}

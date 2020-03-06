@@ -1,23 +1,22 @@
 import { gql } from '@apollo/client';
 
 const queries = {
-  me: gql`
-    query {
+  ME: gql`
+    query Me {
       me {
         id
         username
         email
-        firstname
-        lastname
+        name
         role
         registered
         recipes {
           title
         }
-        likes {
+        likedRecipes {
           title
         }
-        following {
+        followees {
           username
         }
         followers {
@@ -53,39 +52,28 @@ const queries = {
     }
   `,
 
-  user: gql`
-    query {
-      user(input: { username: "user" }) {
+  USER: gql`
+    query user($username: String!) {
+      user(input: { username: $username }) {
         id
+        name
         username
-        email
-        firstname
-        lastname
-        role
         registered
         recipes {
+          id
           title
-        }
-        likes {
-          title
-        }
-        following {
-          username
-        }
-        followers {
-          username
         }
       }
     }
   `,
 
-  userCount: gql`
+  USER_COUNT: gql`
     query {
       userCount
     }
   `,
 
-  recipes: gql`
+  RECIPES: gql`
     query {
       recipes {
         id
@@ -120,7 +108,7 @@ const queries = {
     }
   `,
 
-  publishedRecipes: gql`
+  PUBLISHED_RECIPES: gql`
     query {
       publishedRecipes {
         id
@@ -155,11 +143,12 @@ const queries = {
     }
   `,
 
-  recipe: gql`
+  RECIPE: gql`
     query recipe($id: ID!) {
       recipe(input: { id: $id }) {
         id
         author {
+          name
           username
         }
         category
@@ -190,7 +179,7 @@ const queries = {
     }
   `,
 
-  recipeCount: gql`
+  RECIPE_COUNT: gql`
     query {
       recipeCount
     }

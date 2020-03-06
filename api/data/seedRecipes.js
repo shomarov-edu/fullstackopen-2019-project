@@ -14,7 +14,9 @@ const createRecipe = async (user, input) => {
     ingredients: { set: input.ingredients },
     method: { set: input.method },
     notes: { set: input.notes },
-    tags: { set: input.tags }
+    tags: { set: input.tags },
+    source: input.source,
+    published: true
   });
 };
 

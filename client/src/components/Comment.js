@@ -1,13 +1,7 @@
 import React, { useState } from 'react';
 import useField from '../hooks/useField';
 
-const Comment = ({
-  loggedInUser,
-  comment,
-  recipe,
-  allRecipes,
-  setAllRecipes
-}) => {
+const Comment = ({ loggedInUser, comment, recipe }) => {
   const commentField = useField('text');
   const [editing, setEditing] = useState(false);
 

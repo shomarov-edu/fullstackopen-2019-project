@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link, withRouter } from 'react-router-dom';
-import { gql, useMutation } from '@apollo/client';
+import { gql, useLazyQuery, useMutation } from '@apollo/client';
 import useField from '../hooks/useField';
+import queries from '../graphql/queries';
 import mutations from '../graphql/mutations';
 
-const Login = ({ setLocalStorageUser, history }) => {
+const Login = ({ getCurrentUser, setCurrentUser, history }) => {
   const usernameOrEmail = useField('text');
   const password = useField('password');
-  const [login, { data }] = useMutation(mutations.LOGIN);
+  const [login] = useMutation(mutations.LOGIN);
 
   const handleLogin = async event => {
     event.preventDefault();
@@ -17,15 +18,11 @@ const Login = ({ setLocalStorageUser, history }) => {
       password: password.input.value
     };
 
-    console.log(variables);
-
     const result = await login({ variables });
-    const currentUser = result.data.login;
+    const token = result.data.login.token;
 
-    setLocalStorageUser(currentUser);
-
-    localStorage.setItem('currentUser', JSON.stringify(currentUser));
-
+    localStorage.setItem('token', token);
+    getCurrentUser();
     history.push('/');
   };
 

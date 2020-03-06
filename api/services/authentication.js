@@ -39,8 +39,6 @@ const authentication = {
     };
 
     return {
-      id: user.id,
-      username: user.username,
       token: jwt.sign(userForToken, process.env.SECRET, {
         expiresIn: '7 days'
       })

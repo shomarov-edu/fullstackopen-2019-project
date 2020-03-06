@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { gql, useQuery } from '@apollo/client';
+import { gql, useQuery, useLazyQuery } from '@apollo/client';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Navigation from './components/Navigation';
 import Login from './components/Login';
@@ -12,73 +12,69 @@ import Profile from './components/Profile';
 import queries from './graphql/queries';
 
 const App = () => {
-  const [localStorageUser, setLocalStorageUser] = useState(null);
-  const [loggedInUser, setLoggedInUser] = useState(null);
-  const [userToFetch, setUserToFetch] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
   const [user, setUser] = useState(null);
-  const [publishedRecipes, setPublishedRecipes] = useState([]);
+  const [getCurrentUser, { loading, data }] = useLazyQuery(queries.ME);
 
-  const recipeById = recipeId => {
-    return recipes.find(recipe => recipe.id === recipeId);
-  };
+  useEffect(() => {
+    if (data) {
+      setCurrentUser(data.me);
+      console.log(data.me);
+    }
+  }, [data]);
 
-  const publishedRecipesQuery = useQuery(queries.publishedRecipes);
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      getCurrentUser();
+    }
 
-  if (publishedRecipesQuery.loading) return <div>loading...</div>;
-
-  const recipes = publishedRecipesQuery.data.publishedRecipes;
+    if (data && data.me) {
+      setCurrentUser(data.me);
+    }
+  }, [getCurrentUser]);
 
   return (
     <React.Fragment>
       <Router>
-        <Navigation
-          loggedInUser={loggedInUser}
-          setLoggedInUser={setLoggedInUser}
-        />
+        <Navigation currentUser={currentUser} setCurrentUser={setCurrentUser} />
+        <Route exact path="/recipes" render={() => <AllRecipes />} />
         <Route
           exact
-          path="/recipes"
-          render={() => <AllRecipes recipes={recipes} />}
-        />
-        <Route
-          exact
-          path="/:username"
+          path="/users/:username"
           render={({ match }) => {
-            if (
-              match.params.username !== 'recipes' &&
-              match.params.username !== 'login'
-            ) {
-              setUserToFetch(match.params.username);
-              return <Profile loggedInUser={loggedInUser} user={user} />;
-            }
-          }}
-        />
-        <Route
-          exact
-          path="/:username/recipes/:recipeId"
-          render={({ match }) => {
-            setUserToFetch(match.params.username);
             return (
-              <Recipe
-                loggedInUser={loggedInUser}
-                user={user}
-                recipe={recipeById(match.params.recipeId)}
+              <Profile
+                currentUser={currentUser}
+                username={match.params.username}
               />
             );
           }}
         />
-        {loggedInUser ? (
+        <Route
+          exact
+          path="/recipes/:recipeId"
+          render={({ match }) => {
+            return (
+              <Recipe
+                currentUser={currentUser}
+                recipeId={match.params.recipeId}
+              />
+            );
+          }}
+        />
+        {currentUser ? (
           <Route
             exact
-            path={`/${loggedInUser.username}/recipes`}
-            render={() => <Recipes user={loggedInUser} />}
+            path={`/users/${currentUser.username}/recipes`}
+            render={() => <Recipes user={user} />}
           />
         ) : null}
-        {loggedInUser ? (
+        {currentUser ? (
           <Route
             exact
-            path={`/${loggedInUser.username}/recipes/new`}
-            render={() => <NewRecipeForm user={loggedInUser} />}
+            path={`/users/${currentUser.username}/recipes/new`}
+            render={() => <NewRecipeForm user={user} />}
           />
         ) : null}
         <Route
@@ -86,8 +82,8 @@ const App = () => {
           path="/login"
           render={() => (
             <Login
-              loggedInUser={loggedInUser}
-              setLocalStorageUser={setLocalStorageUser}
+              getCurrentUser={getCurrentUser}
+              setCurrentUser={setCurrentUser}
             />
           )}
         />

@@ -6,8 +6,6 @@ const mutations = {
   LOGIN: gql`
     mutation LogIn($usernameOrEmail: String!, $password: String!) {
       login(input: { usernameOrEmail: $usernameOrEmail, password: $password }) {
-        id
-        username
         token
       }
     }
@@ -15,18 +13,16 @@ const mutations = {
 
   SIGNUP: gql`
     mutation SignUp(
-      $username: String!
-      $firstname: String!
-      $lastname: String!
+      $name: String!
       $email: String!
+      $username: String!
       $password: String!
     ) {
       signup(
         input: {
-          username: $username
-          firstname: $firstname
-          lastname: $lastname
+          name: $name
           email: $email
+          username: $username
           password: $password
         }
       )

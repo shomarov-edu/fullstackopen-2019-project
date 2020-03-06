@@ -57,3 +57,4 @@
 | 03.03 | 6    | backend development                                      |
 | 04.03 | 6    | backend development                                      |
 | 05.03 | 2    | frontend development                                     |
+| 06.03 | 8    | frontend development                                     |

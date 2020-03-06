@@ -5,21 +5,19 @@ import useField from '../hooks/useField';
 import mutations from '../graphql/mutations';
 
 const SignUp = ({ history }) => {
+  const name = useField('text');
   const username = useField('text');
-  const firstname = useField('text');
-  const lastname = useField('text');
   const email = useField('email');
   const password = useField('password');
 
-  const [signup] = useMutation(mutations.signup);
+  const [signup] = useMutation(mutations.SIGNUP);
 
   const handleSignUp = async event => {
     event.preventDefault();
 
     const variables = {
+      name: name.input.value,
       username: username.input.value,
-      firstname: firstname.input.value,
-      lastname: lastname.input.value,
       email: email.input.value,
       password: password.input.value
     };
@@ -27,26 +25,22 @@ const SignUp = ({ history }) => {
     signup({ variables });
 
     username.reset();
-    firstname.reset();
-    lastname.reset();
+    name.reset();
     email.reset();
     password.reset();
 
-    history.push('/');
+    history.push('/recipes');
   };
 
   return (
     <div>
       <h2>Sign up</h2>
       <form onSubmit={handleSignUp}>
+        Name:
+        <input {...name.input} name="firstname" autoFocus />
+        <br />
         Username:
-        <input {...username.input} name="firstname" autoFocus />
-        <br />
-        First Name:
-        <input {...firstname.input} name="firstname" />
-        <br />
-        Last Name:
-        <input {...lastname.input} />
+        <input {...username.input} name="firstname" />
         <br />
         Email Address:
         <input {...email.input} />

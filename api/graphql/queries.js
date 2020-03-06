@@ -7,8 +7,7 @@ const queries = {
         id
         username
         email
-        firstname
-        lastname
+        name
         role
         registered
         recipes {
