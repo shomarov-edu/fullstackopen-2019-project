@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link, withRouter } from 'react-router-dom';
-import { gql, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import useField from '../hooks/useField';
 import mutations from '../graphql/mutations';
 
@@ -9,33 +9,38 @@ const SignUp = ({ history }) => {
   const username = useField('text');
   const email = useField('email');
   const password = useField('password');
+  const [signup, { error, data }] = useMutation(mutations.SIGNUP);
 
-  const [signup] = useMutation(mutations.SIGNUP);
+  useEffect(() => {
+    if (data && data.signup) {
+      history.push('/recipes');
+    }
+  }, [data]);
 
-  const handleSignUp = async event => {
+  const handleSubmit = async event => {
     event.preventDefault();
 
-    const variables = {
+    const signUpData = {
       name: name.input.value,
       username: username.input.value,
       email: email.input.value,
       password: password.input.value
     };
 
-    signup({ variables });
+    signup({ variables: { signUpData } });
 
     username.reset();
     name.reset();
     email.reset();
     password.reset();
-
-    history.push('/recipes');
   };
+
+  if (error) return <div>error: {error.message}</div>;
 
   return (
     <div>
       <h2>Sign up</h2>
-      <form onSubmit={handleSignUp}>
+      <form onSubmit={handleSubmit}>
         Name:
         <input {...name.input} name="firstname" autoFocus />
         <br />

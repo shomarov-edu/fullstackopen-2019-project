@@ -13,13 +13,13 @@ type User {
   username: String!
   role: String
   registered: String!
-  recipes: [Recipe!]
+  recipes: [Recipe!]!
   recipeCount: Int!
-  publishedRecipes: [Recipe!]
+  publishedRecipes: [Recipe!]!
   publishedRecipeCount: Int!
   likedRecipes: [Recipe!]
   likedRecipeCount: Int!
-  followees: [User!]
+  following: [User!]
   followeeCount: Int!
   followers: [User!]
   followerCount: Int!
@@ -49,6 +49,7 @@ extend type Mutation {
   signup(input: SignUpInput!): Boolean!
   login(input: LogInInput!): Token
   followUser(input: FollowUserInput!): User!
+  unfollowUser(input: UnfollowUserInput!): User!
   updateUser(input: UpdateUserInput!): User!
   updateUsername(input: UpdateUsernameInput!): User!
   updatePassword(input: UpdatePasswordInput!): Boolean!
@@ -68,7 +69,11 @@ input LogInInput {
 }
 
 input FollowUserInput {
-  username: String!
+  idToFollow: ID!
+}
+
+input UnfollowUserInput {
+  idToUnfollow: ID!
 }
 
 input UpdateUserInput {
@@ -125,7 +130,8 @@ type Recipe {
   published: Boolean!
   likedBy: [User!]
   comments: [Comment!]!
-  rating: Float
+  ratings: [Grade!]!
+  rating: Float!
 }
 
 type Comment {
@@ -134,11 +140,18 @@ type Comment {
   content: String!
 }
 
+type Grade {
+  id: ID!
+  rater: User!
+  grade: Int!
+}
+
 extend type Query {
   recipes: [Recipe!]!
-  publishedRecipes: [Recipe!]!
-  recipe(input: RecipeInput!): Recipe
   recipeCount: Int!
+  publishedRecipes: [Recipe!]!
+  publishedRecipeCount: Int!
+  recipe(input: RecipeInput!): Recipe
 }
 
 input RecipeInput {
@@ -150,7 +163,7 @@ extend type Mutation {
   updateRecipe(input: UpdateRecipeInput!): Recipe!
   publishRecipe(input: PublishRecipeInput!): Recipe!
   commentRecipe(input: CommentRecipeInput!): Recipe!
-  updateComment(input: UpdateCommentInput!): Recipe!
+  editComment(input: EditCommentInput!): Recipe!
   deleteComment(input: DeleteCommentInput!): Recipe!
   likeRecipe(input: LikeRecipeInput!): Recipe!
   unlikeRecipe(input: UnlikeRecipeInput!): Recipe!
@@ -193,7 +206,7 @@ input CommentRecipeInput {
   content: String!
 }
 
-input UpdateCommentInput {
+input EditCommentInput {
   recipeId: ID!
   commentId: ID!
   content: String!

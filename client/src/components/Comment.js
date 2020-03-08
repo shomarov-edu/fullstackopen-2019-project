@@ -1,61 +1,48 @@
 import React, { useState } from 'react';
+import { useMutation } from '@apollo/client';
 import useField from '../hooks/useField';
+import mutations from '../graphql/mutations';
 
-const Comment = ({ loggedInUser, comment, recipe }) => {
+const Comment = ({ currentUser, comment, recipeId }) => {
   const commentField = useField('text');
   const [editing, setEditing] = useState(false);
+  const [editComment] = useMutation(mutations.EDIT_COMMENT);
+  const [deleteComment] = useMutation(mutations.DELETE_COMMENT);
 
   const showWhenEditing = { display: editing ? '' : 'none' };
   const hideWhenEditing = { display: editing ? 'none' : '' };
 
   const toggleVisibility = () => {
     setEditing(!editing);
-    commentField.setValue(comment.comment);
+    commentField.setValue(comment.content);
   };
 
   const handleEdit = async () => {
-    const newComment = {
-      _id: comment._id,
-      author: loggedInUser.id,
-      comment: commentField.input.value
+    const editedCommentData = {
+      recipeId,
+      commentId: comment.id,
+      content: commentField.input.value
     };
 
-    const updatedComments = recipe.comments.map(c =>
-      c._id !== comment._id
-        ? {
-            _id: c._id,
-            author: c.author.id !== undefined ? c.author.id : c.author,
-            comment: c.comment
-          }
-        : newComment
-    );
-
-    const updatedRecipe = {
-      ...recipe,
-      comments: updatedComments
-    };
+    editComment({
+      variables: { editedCommentData }
+    });
   };
 
   const handleDelete = async () => {
-    const updatedComments = recipe.comments
-      .filter(c => c._id !== comment._id)
-      .map(c => ({
-        _id: c._id,
-        author: c.author.id !== undefined ? c.author.id : c.author,
-        comment: c.comment
-      }));
-
-    const updatedRecipe = {
-      ...recipe,
-      comments: updatedComments
+    const commentToDelete = {
+      recipeId,
+      commentId: comment.id
     };
+
+    deleteComment({
+      variables: { commentToDelete }
+    });
   };
 
   return (
     <React.Fragment>
-      <p>
-        author: {comment.author.firstname} {comment.author.lastname}
-      </p>
+      <p>author: {comment.author.name}</p>
       {editing ? (
         <>
           <p>
@@ -70,10 +57,10 @@ const Comment = ({ loggedInUser, comment, recipe }) => {
         </>
       ) : (
         <React.Fragment>
-          <p>{comment.comment}</p>
+          <p>{comment.content}</p>
         </React.Fragment>
       )}
-      {loggedInUser.id === comment.author.id || comment.author ? (
+      {currentUser.id === comment.author.id || comment.author ? (
         <>
           <button style={hideWhenEditing} onClick={toggleVisibility}>
             edit

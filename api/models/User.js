@@ -6,31 +6,7 @@ const {
 } = require('apollo-server');
 const comparePasswords = require('../helpers/comparePasswords');
 const encryptPassword = require('../helpers/encryptPassword');
-
-const fragmentDetailsForCurrentUser = `
-fragment DetailsForCurrentUser on User {
-  id
-  name
-  email
-  username
-  registered
-  recipes { id author { id } category title description cookingTime difficulty ingredients method notes tags source created updated published }
-  likedRecipes { id }
-  followees { username }
-  followers { username }
-}
-`;
-
-const fragmentUserDetails = `
-fragment UserDetails on User {
-  username
-  name
-  registered
-  recipes { id }
-  followees { id username }
-  followers { id username }
-}
-`;
+const fragments = require('../graphql/fragments');
 
 // TODO: Input validations
 
@@ -42,13 +18,13 @@ const generateUserModel = currentUser => ({
 
     return await prisma
       .user({ id: currentUser.id })
-      .$fragment(fragmentDetailsForCurrentUser);
+      .$fragment(fragments.currentUserDetails);
   },
 
   // Only admins can view personal information of all users
 
   getAll: async input => {
-    const users = await prisma.users().$fragment(fragmentUserDetails);
+    const users = await prisma.users().$fragment(fragments.userDetails);
 
     if (!input || !input.name) return users;
 
@@ -59,12 +35,13 @@ const generateUserModel = currentUser => ({
 
   // Retrieval of user by user id => moved to dataloaders
 
-  getById: async id => await prisma.user({ id }).$fragment(fragmentUserDetails),
+  getById: async id =>
+    await prisma.user({ id }).$fragment(fragments.userDetails),
 
   // Retrieval of user by username => moved to dataloaders
 
   getByUsername: async username =>
-    await prisma.user({ username }).$fragment(fragmentUserDetails),
+    await prisma.user({ username }).$fragment(fragments.userDetails),
 
   // Count all registered users
 
@@ -76,10 +53,9 @@ const generateUserModel = currentUser => ({
 
   // MUTATIONS:
 
-  followUser: async input => {
+  followUser: async idToFollow => {
+    console.log(idToFollow);
     if (!currentUser) return null;
-
-    const { idToFollow } = input;
 
     const userExists = prisma.$exists.user({
       id: idToFollow
@@ -92,6 +68,25 @@ const generateUserModel = currentUser => ({
       data: {
         following: {
           connect: { id: idToFollow }
+        }
+      }
+    });
+  },
+
+  unfollowUser: async idToUnfollow => {
+    if (!currentUser) return null;
+
+    const userExists = prisma.$exists.user({
+      id: idToUnfollow
+    });
+
+    if (!userExists) throw new UserInputError('no such user');
+
+    return await prisma.updateUser({
+      where: { id: currentUser.id },
+      data: {
+        following: {
+          disconnect: { id: idToUnfollow }
         }
       }
     });

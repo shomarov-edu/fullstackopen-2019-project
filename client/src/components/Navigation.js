@@ -1,13 +1,9 @@
 import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
+import { useApolloClient } from '@apollo/client';
 
-const Navigation = ({
-  client,
-  currentUser,
-  setCurrentUser,
-  setToken,
-  history
-}) => {
+const Navigation = ({ currentUser, setCurrentUser, setToken, history }) => {
+  const client = useApolloClient();
   const padding = { padding: 5 };
 
   const handleLogout = () => {
@@ -27,8 +23,11 @@ const Navigation = ({
           <Link style={padding} to={`/users/${currentUser.username}`}>
             My Profile
           </Link>
-          <Link style={padding} to={`/users/${currentUser.username}/friends`}>
-            My Friends
+          <Link style={padding} to={`/users/${currentUser.username}/following`}>
+            Following
+          </Link>
+          <Link style={padding} to={`/users/${currentUser.username}/followers`}>
+            Followers
           </Link>
           <Link style={padding} to={`/users/${currentUser.username}/recipes`}>
             My recipes
@@ -38,6 +37,9 @@ const Navigation = ({
             to={`/users/${currentUser.username}/recipes/new`}
           >
             Create new recipe
+          </Link>
+          <Link style={padding} to={`/settings`}>
+            Settings
           </Link>
           <button onClick={handleLogout}>Sign out</button>
         </React.Fragment>

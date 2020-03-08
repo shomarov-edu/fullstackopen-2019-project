@@ -161,6 +161,8 @@ export type RecipeOrderByInput =
   | "difficulty_DESC"
   | "source_ASC"
   | "source_DESC"
+  | "photo_ASC"
+  | "photo_DESC"
   | "created_ASC"
   | "created_DESC"
   | "updated_ASC"
@@ -264,6 +266,20 @@ export interface RecipeWhereInput {
   source_not_starts_with?: Maybe<String>;
   source_ends_with?: Maybe<String>;
   source_not_ends_with?: Maybe<String>;
+  photo?: Maybe<String>;
+  photo_not?: Maybe<String>;
+  photo_in?: Maybe<String[] | String>;
+  photo_not_in?: Maybe<String[] | String>;
+  photo_lt?: Maybe<String>;
+  photo_lte?: Maybe<String>;
+  photo_gt?: Maybe<String>;
+  photo_gte?: Maybe<String>;
+  photo_contains?: Maybe<String>;
+  photo_not_contains?: Maybe<String>;
+  photo_starts_with?: Maybe<String>;
+  photo_not_starts_with?: Maybe<String>;
+  photo_ends_with?: Maybe<String>;
+  photo_not_ends_with?: Maybe<String>;
   created?: Maybe<DateTimeInput>;
   created_not?: Maybe<DateTimeInput>;
   created_in?: Maybe<DateTimeInput[] | DateTimeInput>;
@@ -377,7 +393,7 @@ export interface UserWhereInput {
   registered_gte?: Maybe<DateTimeInput>;
   recipes_some?: Maybe<RecipeWhereInput>;
   likedRecipes_some?: Maybe<RecipeWhereInput>;
-  followees_some?: Maybe<UserWhereInput>;
+  following_some?: Maybe<UserWhereInput>;
   followers_some?: Maybe<UserWhereInput>;
   AND?: Maybe<UserWhereInput[] | UserWhereInput>;
 }
@@ -551,6 +567,7 @@ export interface RecipeCreateInput {
   notes?: Maybe<RecipeCreatenotesInput>;
   tags?: Maybe<RecipeCreatetagsInput>;
   source?: Maybe<String>;
+  photo?: Maybe<String>;
   published?: Maybe<Boolean>;
   likedBy?: Maybe<UserCreateManyWithoutLikedRecipesInput>;
   comments?: Maybe<CommentCreateManyInput>;
@@ -570,8 +587,8 @@ export interface UserCreateWithoutRecipesInput {
   passwordHash: String;
   role?: Maybe<Role>;
   likedRecipes?: Maybe<RecipeCreateManyWithoutLikedByInput>;
-  followees?: Maybe<UserCreateManyWithoutFollowersInput>;
-  followers?: Maybe<UserCreateManyWithoutFolloweesInput>;
+  following?: Maybe<UserCreateManyWithoutFollowersInput>;
+  followers?: Maybe<UserCreateManyWithoutFollowingInput>;
 }
 
 export interface RecipeCreateManyWithoutLikedByInput {
@@ -594,6 +611,7 @@ export interface RecipeCreateWithoutLikedByInput {
   notes?: Maybe<RecipeCreatenotesInput>;
   tags?: Maybe<RecipeCreatetagsInput>;
   source?: Maybe<String>;
+  photo?: Maybe<String>;
   published?: Maybe<Boolean>;
   comments?: Maybe<CommentCreateManyInput>;
   ratings?: Maybe<GradeCreateManyInput>;
@@ -639,8 +657,8 @@ export interface UserCreateInput {
   role?: Maybe<Role>;
   recipes?: Maybe<RecipeCreateManyWithoutAuthorInput>;
   likedRecipes?: Maybe<RecipeCreateManyWithoutLikedByInput>;
-  followees?: Maybe<UserCreateManyWithoutFollowersInput>;
-  followers?: Maybe<UserCreateManyWithoutFolloweesInput>;
+  following?: Maybe<UserCreateManyWithoutFollowersInput>;
+  followers?: Maybe<UserCreateManyWithoutFollowingInput>;
 }
 
 export interface RecipeCreateManyWithoutAuthorInput {
@@ -662,6 +680,7 @@ export interface RecipeCreateWithoutAuthorInput {
   notes?: Maybe<RecipeCreatenotesInput>;
   tags?: Maybe<RecipeCreatetagsInput>;
   source?: Maybe<String>;
+  photo?: Maybe<String>;
   published?: Maybe<Boolean>;
   likedBy?: Maybe<UserCreateManyWithoutLikedRecipesInput>;
   comments?: Maybe<CommentCreateManyInput>;
@@ -683,8 +702,8 @@ export interface UserCreateWithoutLikedRecipesInput {
   passwordHash: String;
   role?: Maybe<Role>;
   recipes?: Maybe<RecipeCreateManyWithoutAuthorInput>;
-  followees?: Maybe<UserCreateManyWithoutFollowersInput>;
-  followers?: Maybe<UserCreateManyWithoutFolloweesInput>;
+  following?: Maybe<UserCreateManyWithoutFollowersInput>;
+  followers?: Maybe<UserCreateManyWithoutFollowingInput>;
 }
 
 export interface UserCreateManyWithoutFollowersInput {
@@ -703,17 +722,17 @@ export interface UserCreateWithoutFollowersInput {
   role?: Maybe<Role>;
   recipes?: Maybe<RecipeCreateManyWithoutAuthorInput>;
   likedRecipes?: Maybe<RecipeCreateManyWithoutLikedByInput>;
-  followees?: Maybe<UserCreateManyWithoutFollowersInput>;
+  following?: Maybe<UserCreateManyWithoutFollowersInput>;
 }
 
-export interface UserCreateManyWithoutFolloweesInput {
+export interface UserCreateManyWithoutFollowingInput {
   create?: Maybe<
-    UserCreateWithoutFolloweesInput[] | UserCreateWithoutFolloweesInput
+    UserCreateWithoutFollowingInput[] | UserCreateWithoutFollowingInput
   >;
   connect?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
 }
 
-export interface UserCreateWithoutFolloweesInput {
+export interface UserCreateWithoutFollowingInput {
   id?: Maybe<ID_Input>;
   name: String;
   email: String;
@@ -722,7 +741,7 @@ export interface UserCreateWithoutFolloweesInput {
   role?: Maybe<Role>;
   recipes?: Maybe<RecipeCreateManyWithoutAuthorInput>;
   likedRecipes?: Maybe<RecipeCreateManyWithoutLikedByInput>;
-  followers?: Maybe<UserCreateManyWithoutFolloweesInput>;
+  followers?: Maybe<UserCreateManyWithoutFollowingInput>;
 }
 
 export interface GradeCreateManyInput {
@@ -747,6 +766,7 @@ export interface RecipeUpdateInput {
   notes?: Maybe<RecipeUpdatenotesInput>;
   tags?: Maybe<RecipeUpdatetagsInput>;
   source?: Maybe<String>;
+  photo?: Maybe<String>;
   published?: Maybe<Boolean>;
   likedBy?: Maybe<UserUpdateManyWithoutLikedRecipesInput>;
   comments?: Maybe<CommentUpdateManyInput>;
@@ -767,8 +787,8 @@ export interface UserUpdateWithoutRecipesDataInput {
   passwordHash?: Maybe<String>;
   role?: Maybe<Role>;
   likedRecipes?: Maybe<RecipeUpdateManyWithoutLikedByInput>;
-  followees?: Maybe<UserUpdateManyWithoutFollowersInput>;
-  followers?: Maybe<UserUpdateManyWithoutFolloweesInput>;
+  following?: Maybe<UserUpdateManyWithoutFollowersInput>;
+  followers?: Maybe<UserUpdateManyWithoutFollowingInput>;
 }
 
 export interface RecipeUpdateManyWithoutLikedByInput {
@@ -811,6 +831,7 @@ export interface RecipeUpdateWithoutLikedByDataInput {
   notes?: Maybe<RecipeUpdatenotesInput>;
   tags?: Maybe<RecipeUpdatetagsInput>;
   source?: Maybe<String>;
+  photo?: Maybe<String>;
   published?: Maybe<Boolean>;
   comments?: Maybe<CommentUpdateManyInput>;
   ratings?: Maybe<GradeUpdateManyInput>;
@@ -879,8 +900,8 @@ export interface UserUpdateDataInput {
   role?: Maybe<Role>;
   recipes?: Maybe<RecipeUpdateManyWithoutAuthorInput>;
   likedRecipes?: Maybe<RecipeUpdateManyWithoutLikedByInput>;
-  followees?: Maybe<UserUpdateManyWithoutFollowersInput>;
-  followers?: Maybe<UserUpdateManyWithoutFolloweesInput>;
+  following?: Maybe<UserUpdateManyWithoutFollowersInput>;
+  followers?: Maybe<UserUpdateManyWithoutFollowingInput>;
 }
 
 export interface RecipeUpdateManyWithoutAuthorInput {
@@ -922,6 +943,7 @@ export interface RecipeUpdateWithoutAuthorDataInput {
   notes?: Maybe<RecipeUpdatenotesInput>;
   tags?: Maybe<RecipeUpdatetagsInput>;
   source?: Maybe<String>;
+  photo?: Maybe<String>;
   published?: Maybe<Boolean>;
   likedBy?: Maybe<UserUpdateManyWithoutLikedRecipesInput>;
   comments?: Maybe<CommentUpdateManyInput>;
@@ -962,8 +984,8 @@ export interface UserUpdateWithoutLikedRecipesDataInput {
   passwordHash?: Maybe<String>;
   role?: Maybe<Role>;
   recipes?: Maybe<RecipeUpdateManyWithoutAuthorInput>;
-  followees?: Maybe<UserUpdateManyWithoutFollowersInput>;
-  followers?: Maybe<UserUpdateManyWithoutFolloweesInput>;
+  following?: Maybe<UserUpdateManyWithoutFollowersInput>;
+  followers?: Maybe<UserUpdateManyWithoutFollowingInput>;
 }
 
 export interface UserUpdateManyWithoutFollowersInput {
@@ -1001,7 +1023,7 @@ export interface UserUpdateWithoutFollowersDataInput {
   role?: Maybe<Role>;
   recipes?: Maybe<RecipeUpdateManyWithoutAuthorInput>;
   likedRecipes?: Maybe<RecipeUpdateManyWithoutLikedByInput>;
-  followees?: Maybe<UserUpdateManyWithoutFollowersInput>;
+  following?: Maybe<UserUpdateManyWithoutFollowersInput>;
 }
 
 export interface UserUpsertWithWhereUniqueWithoutFollowersInput {
@@ -1111,21 +1133,21 @@ export interface UserUpdateManyDataInput {
   role?: Maybe<Role>;
 }
 
-export interface UserUpdateManyWithoutFolloweesInput {
+export interface UserUpdateManyWithoutFollowingInput {
   create?: Maybe<
-    UserCreateWithoutFolloweesInput[] | UserCreateWithoutFolloweesInput
+    UserCreateWithoutFollowingInput[] | UserCreateWithoutFollowingInput
   >;
   delete?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
   connect?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
   set?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
   disconnect?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
   update?: Maybe<
-    | UserUpdateWithWhereUniqueWithoutFolloweesInput[]
-    | UserUpdateWithWhereUniqueWithoutFolloweesInput
+    | UserUpdateWithWhereUniqueWithoutFollowingInput[]
+    | UserUpdateWithWhereUniqueWithoutFollowingInput
   >;
   upsert?: Maybe<
-    | UserUpsertWithWhereUniqueWithoutFolloweesInput[]
-    | UserUpsertWithWhereUniqueWithoutFolloweesInput
+    | UserUpsertWithWhereUniqueWithoutFollowingInput[]
+    | UserUpsertWithWhereUniqueWithoutFollowingInput
   >;
   deleteMany?: Maybe<UserScalarWhereInput[] | UserScalarWhereInput>;
   updateMany?: Maybe<
@@ -1133,12 +1155,12 @@ export interface UserUpdateManyWithoutFolloweesInput {
   >;
 }
 
-export interface UserUpdateWithWhereUniqueWithoutFolloweesInput {
+export interface UserUpdateWithWhereUniqueWithoutFollowingInput {
   where: UserWhereUniqueInput;
-  data: UserUpdateWithoutFolloweesDataInput;
+  data: UserUpdateWithoutFollowingDataInput;
 }
 
-export interface UserUpdateWithoutFolloweesDataInput {
+export interface UserUpdateWithoutFollowingDataInput {
   name?: Maybe<String>;
   email?: Maybe<String>;
   username?: Maybe<String>;
@@ -1146,13 +1168,13 @@ export interface UserUpdateWithoutFolloweesDataInput {
   role?: Maybe<Role>;
   recipes?: Maybe<RecipeUpdateManyWithoutAuthorInput>;
   likedRecipes?: Maybe<RecipeUpdateManyWithoutLikedByInput>;
-  followers?: Maybe<UserUpdateManyWithoutFolloweesInput>;
+  followers?: Maybe<UserUpdateManyWithoutFollowingInput>;
 }
 
-export interface UserUpsertWithWhereUniqueWithoutFolloweesInput {
+export interface UserUpsertWithWhereUniqueWithoutFollowingInput {
   where: UserWhereUniqueInput;
-  update: UserUpdateWithoutFolloweesDataInput;
-  create: UserCreateWithoutFolloweesInput;
+  update: UserUpdateWithoutFollowingDataInput;
+  create: UserCreateWithoutFollowingInput;
 }
 
 export interface UserUpsertWithWhereUniqueWithoutLikedRecipesInput {
@@ -1314,6 +1336,20 @@ export interface RecipeScalarWhereInput {
   source_not_starts_with?: Maybe<String>;
   source_ends_with?: Maybe<String>;
   source_not_ends_with?: Maybe<String>;
+  photo?: Maybe<String>;
+  photo_not?: Maybe<String>;
+  photo_in?: Maybe<String[] | String>;
+  photo_not_in?: Maybe<String[] | String>;
+  photo_lt?: Maybe<String>;
+  photo_lte?: Maybe<String>;
+  photo_gt?: Maybe<String>;
+  photo_gte?: Maybe<String>;
+  photo_contains?: Maybe<String>;
+  photo_not_contains?: Maybe<String>;
+  photo_starts_with?: Maybe<String>;
+  photo_not_starts_with?: Maybe<String>;
+  photo_ends_with?: Maybe<String>;
+  photo_not_ends_with?: Maybe<String>;
   created?: Maybe<DateTimeInput>;
   created_not?: Maybe<DateTimeInput>;
   created_in?: Maybe<DateTimeInput[] | DateTimeInput>;
@@ -1353,6 +1389,7 @@ export interface RecipeUpdateManyDataInput {
   notes?: Maybe<RecipeUpdatenotesInput>;
   tags?: Maybe<RecipeUpdatetagsInput>;
   source?: Maybe<String>;
+  photo?: Maybe<String>;
   published?: Maybe<Boolean>;
 }
 
@@ -1448,6 +1485,7 @@ export interface RecipeUpdateManyMutationInput {
   notes?: Maybe<RecipeUpdatenotesInput>;
   tags?: Maybe<RecipeUpdatetagsInput>;
   source?: Maybe<String>;
+  photo?: Maybe<String>;
   published?: Maybe<Boolean>;
 }
 
@@ -1459,8 +1497,8 @@ export interface UserUpdateInput {
   role?: Maybe<Role>;
   recipes?: Maybe<RecipeUpdateManyWithoutAuthorInput>;
   likedRecipes?: Maybe<RecipeUpdateManyWithoutLikedByInput>;
-  followees?: Maybe<UserUpdateManyWithoutFollowersInput>;
-  followers?: Maybe<UserUpdateManyWithoutFolloweesInput>;
+  following?: Maybe<UserUpdateManyWithoutFollowersInput>;
+  followers?: Maybe<UserUpdateManyWithoutFollowingInput>;
 }
 
 export interface UserUpdateManyMutationInput {
@@ -1505,6 +1543,7 @@ export interface Recipe {
   notes: String[];
   tags: String[];
   source?: String;
+  photo?: String;
   created: DateTimeOutput;
   updated: DateTimeOutput;
   published: Boolean;
@@ -1525,6 +1564,7 @@ export interface RecipePromise extends Promise<Recipe>, Fragmentable {
   notes: () => Promise<String[]>;
   tags: () => Promise<String[]>;
   source: () => Promise<String>;
+  photo: () => Promise<String>;
   created: () => Promise<DateTimeOutput>;
   updated: () => Promise<DateTimeOutput>;
   published: () => Promise<Boolean>;
@@ -1556,6 +1596,7 @@ export interface RecipeSubscription
   notes: () => Promise<AsyncIterator<String[]>>;
   tags: () => Promise<AsyncIterator<String[]>>;
   source: () => Promise<AsyncIterator<String>>;
+  photo: () => Promise<AsyncIterator<String>>;
   created: () => Promise<AsyncIterator<DateTimeOutput>>;
   updated: () => Promise<AsyncIterator<DateTimeOutput>>;
   published: () => Promise<AsyncIterator<Boolean>>;
@@ -1587,6 +1628,7 @@ export interface RecipeNullablePromise
   notes: () => Promise<String[]>;
   tags: () => Promise<String[]>;
   source: () => Promise<String>;
+  photo: () => Promise<String>;
   created: () => Promise<DateTimeOutput>;
   updated: () => Promise<DateTimeOutput>;
   published: () => Promise<Boolean>;
@@ -1639,7 +1681,7 @@ export interface UserPromise extends Promise<User>, Fragmentable {
     first?: Int;
     last?: Int;
   }) => T;
-  followees: <T = FragmentableArray<User>>(args?: {
+  following: <T = FragmentableArray<User>>(args?: {
     where?: UserWhereInput;
     orderBy?: UserOrderByInput;
     skip?: Int;
@@ -1687,7 +1729,7 @@ export interface UserSubscription
     first?: Int;
     last?: Int;
   }) => T;
-  followees: <T = Promise<AsyncIterator<UserSubscription>>>(args?: {
+  following: <T = Promise<AsyncIterator<UserSubscription>>>(args?: {
     where?: UserWhereInput;
     orderBy?: UserOrderByInput;
     skip?: Int;
@@ -1735,7 +1777,7 @@ export interface UserNullablePromise
     first?: Int;
     last?: Int;
   }) => T;
-  followees: <T = FragmentableArray<User>>(args?: {
+  following: <T = FragmentableArray<User>>(args?: {
     where?: UserWhereInput;
     orderBy?: UserOrderByInput;
     skip?: Int;
@@ -2001,6 +2043,7 @@ export interface RecipePreviousValues {
   notes: String[];
   tags: String[];
   source?: String;
+  photo?: String;
   created: DateTimeOutput;
   updated: DateTimeOutput;
   published: Boolean;
@@ -2020,6 +2063,7 @@ export interface RecipePreviousValuesPromise
   notes: () => Promise<String[]>;
   tags: () => Promise<String[]>;
   source: () => Promise<String>;
+  photo: () => Promise<String>;
   created: () => Promise<DateTimeOutput>;
   updated: () => Promise<DateTimeOutput>;
   published: () => Promise<Boolean>;
@@ -2039,6 +2083,7 @@ export interface RecipePreviousValuesSubscription
   notes: () => Promise<AsyncIterator<String[]>>;
   tags: () => Promise<AsyncIterator<String[]>>;
   source: () => Promise<AsyncIterator<String>>;
+  photo: () => Promise<AsyncIterator<String>>;
   created: () => Promise<AsyncIterator<DateTimeOutput>>;
   updated: () => Promise<AsyncIterator<DateTimeOutput>>;
   published: () => Promise<AsyncIterator<Boolean>>;

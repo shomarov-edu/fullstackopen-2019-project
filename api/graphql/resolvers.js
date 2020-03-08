@@ -24,14 +24,17 @@ const resolvers = {
 
     recipes: async (_, __, { models }) => await models.Recipe.getAll(),
 
+    recipeCount: async (_, __, { models }) =>
+      await models.Recipe.getPublishedRecipeCount(),
+
     publishedRecipes: async (_, __, { models }) =>
       await models.Recipe.getPublishedRecipes(),
 
-    recipe: async (_, { input }, { loaders }) =>
-      await loaders.recipe.recipeByIdLoader.load(input.id),
+    publishedRecipeCount: async (_, __, { models }) =>
+      await models.Recipe.getPublishedRecipeCount(),
 
-    recipeCount: async (_, __, { models }) =>
-      await models.Recipe.getPublishedRecipeCount()
+    recipe: async (_, { input }, { loaders }) =>
+      await loaders.recipe.recipeByIdLoader.load(input.id)
   },
 
   Mutation: {
@@ -41,6 +44,9 @@ const resolvers = {
 
     followUser: async (_, { input }, { models }) =>
       await models.User.followUser(input.idToFollow),
+
+    unfollowUser: async (_, { input }, { models }) =>
+      await models.User.unfollowUser(input.idToUnfollow),
 
     updateUser: async (_, { input }, { models }) =>
       await models.User.updateUser(input),
@@ -66,7 +72,7 @@ const resolvers = {
     commentRecipe: async (_, { input }, { models }) =>
       await models.Recipe.commentRecipe(input),
 
-    updateComment: async (_, { input }, { models }) =>
+    editComment: async (_, { input }, { models }) =>
       await models.Recipe.updateComment(input),
 
     deleteComment: async (_, { input }, { models }) =>
@@ -101,31 +107,39 @@ const resolvers = {
       return user.role;
     },
 
-    recipes: async (user, _, { loaders }) =>
-      await loaders.recipe.recipesByUserIdLoader.load(user.id),
+    recipes: async (user, _, { currentUser, loaders }) => {
+      // Authorize viewing all recipes including drafts only to owner and admin
+      if (
+        !currentUser ||
+        (user.id !== currentUser.id && currentUser.role !== 'ADMIN')
+      ) {
+        return [];
+      }
+      return await loaders.recipe.recipesByUserIdLoader.load(user.id);
+    },
 
     recipeCount: async user => user.recipes.length,
 
+    publishedRecipes: async (user, _, { loaders }) =>
+      await loaders.recipe.publishedRecipesByUserIdLoader.load(user.id),
+
+    publishedRecipeCount: (user, _, __) => {
+      console.log(user.recipes);
+      const pr = user.recipes.filter(r => r.published === true);
+      console.log(pr);
+    },
+
     // Should I put this in loaders or models?
-    // followees: async (user, { loaders }) =>
+    // following: async (user, { loaders }) =>
     //   loaders.user.followeesByUserIdLoader.load(user.id),
 
-    followeeCount: async user => user.followees.length,
+    followeeCount: async user => user.following.length,
 
     // Should I put this in loaders or models?
     // followers: async (user, { loaders }) =>
     //   loaders.user.followersByUserIdLoader.load(user.id),
 
     followerCount: async user => user.followers.length,
-
-    publishedRecipes: user => {
-      console.log(user);
-
-      return user.recipes.filter(r => r.published);
-    },
-
-    publishedRecipeCount: (user, _, __) =>
-      user.recipes.filter(r => r.published).length,
 
     likedRecipeCount: async user => user.likedRecipes.length
   },
@@ -139,6 +153,16 @@ const resolvers = {
 
     rating: async (recipe, args, { models }) =>
       recipe.ratings.reduce((a, b) => a + b, 0) / recipe.ratings.length || 0
+  },
+
+  Comment: {
+    author: async (comment, _, { loaders }) => {
+      console.log(comment);
+      console.log('resolving author for comment..');
+      const authors = await loaders.user.userByIdLoader.load(comment.author.id);
+      console.log(authors);
+      return authors;
+    }
   }
 };
 

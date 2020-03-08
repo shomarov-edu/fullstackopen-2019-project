@@ -20,14 +20,11 @@ const Recipe = ({ currentUser, recipeId }) => {
   const { loading, error, data } = useQuery(queries.RECIPE, {
     variables: { id: recipeId }
   });
-  console.log(data);
 
   if (loading) return <div>loading...</div>;
   if (error) return <div>error recipe: {error.message}</div>;
 
   const recipe = data.recipe;
-
-  console.log(data);
 
   if (!recipe) return null;
 

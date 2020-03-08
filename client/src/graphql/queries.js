@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client';
+import fragments from './fragments';
 
 const queries = {
   ME: gql`
@@ -11,23 +12,25 @@ const queries = {
         role
         registered
         recipes {
+          id
           title
         }
         likedRecipes {
+          id
           title
         }
-        followees {
-          username
+        following {
+          id
         }
         followers {
-          username
+          id
         }
       }
     }
   `,
 
-  users: gql`
-    query {
+  USERS: gql`
+    query AllUsers {
       users {
         id
         username
@@ -37,15 +40,19 @@ const queries = {
         role
         registered
         recipes {
+          id
           title
         }
-        likes {
+        likedRecipes {
+          id
           title
         }
         following {
+          id
           username
         }
         followers {
+          id
           username
         }
       }
@@ -53,8 +60,8 @@ const queries = {
   `,
 
   USER: gql`
-    query user($username: String!) {
-      user(input: { username: $username }) {
+    query User($idOrUsername: UserInput!) {
+      user(input: $idOrUsername) {
         id
         name
         username
@@ -73,78 +80,28 @@ const queries = {
     }
   `,
 
+  // RECIPE QUERIES:
+
   RECIPES: gql`
-    query {
+    query AllRecipes {
       recipes {
-        id
-        author {
-          username
-        }
-        category
-        title
-        description
-        cookingTime
-        difficulty
-        ingredients
-        method
-        notes
-        tags
-        source
-        created
-        updated
-        published
-        likedBy {
-          username
-        }
-        comments {
-          id
-          author {
-            username
-          }
-          content
-        }
-        rating
+        ...RecipeDetails
       }
     }
+    ${fragments.recipe}
   `,
 
   PUBLISHED_RECIPES: gql`
-    query {
+    query AllPublishedRecipes {
       publishedRecipes {
-        id
-        author {
-          username
-        }
-        category
-        title
-        description
-        cookingTime
-        difficulty
-        ingredients
-        method
-        notes
-        tags
-        source
-        created
-        updated
-        published
-        likedBy {
-          username
-        }
-        comments {
-          id
-          author {
-            username
-          }
-          content
-        }
-        rating
+        ...RecipeDetails
       }
     }
+    ${fragments.recipe}
   `,
 
   RECIPE: gql`
-    query recipe($id: ID!) {
+    query Recipe($id: ID!) {
       recipe(input: { id: $id }) {
         id
         author {
@@ -170,6 +127,8 @@ const queries = {
         comments {
           id
           author {
+            id
+            name
             username
           }
           content
@@ -180,8 +139,14 @@ const queries = {
   `,
 
   RECIPE_COUNT: gql`
-    query {
+    query RecipeCount {
       recipeCount
+    }
+  `,
+
+  PUBLISHED_RECIPE_COUNT: gql`
+    query PublishedRecipeCount {
+      publishedRecipeCount
     }
   `
 };

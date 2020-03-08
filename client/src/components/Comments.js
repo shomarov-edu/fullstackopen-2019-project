@@ -1,44 +1,46 @@
 import React from 'react';
+import { useMutation } from '@apollo/client';
 import useField from '../hooks/useField';
 import Comment from './Comment';
+import mutations from '../graphql/mutations';
 
-const Comments = ({ loggedInUser, recipe, allRecipes, setAllRecipes }) => {
+const Comments = ({ currentUser, recipe }) => {
   const commentField = useField('text');
+  const [commentRecipe, commentRecipeResult] = useMutation(
+    mutations.COMMENT_RECIPE
+  );
 
   const handleSubmit = async event => {
     event.preventDefault();
 
     const newComment = {
-      author: loggedInUser.id,
-      comment: commentField.input.value
+      id: recipe.id,
+      content: commentField.input.value
     };
 
-    const comments = recipe.comments.map(c => ({
-      _id: c._id,
-      author: c.author.id !== undefined ? c.author.id : c.author,
-      comment: c.comment
-    }));
-
-    const updatedRecipe = {
-      ...recipe,
-      comments: comments.concat(newComment)
-    };
+    commentRecipe({ variables: { newComment } });
   };
+
+  if (commentRecipeResult.error) {
+    console.log(commentRecipeResult);
+  }
 
   return (
     <React.Fragment>
-      <form onSubmit={handleSubmit}>
-        <input {...commentField.input} />
-        <button type="submit">send</button>
-      </form>
+      {currentUser ? (
+        <form onSubmit={handleSubmit}>
+          <input {...commentField.input} />
+          <button type="submit">send</button>
+        </form>
+      ) : null}
       <br />
-      {recipe.comments.map((comment, index) => {
+      {recipe.comments.map(comment => {
         return (
           <Comment
-            key={index}
-            loggedInUser={loggedInUser}
+            key={comment.id}
+            currentUser={currentUser}
             comment={comment}
-            recipe={recipe}
+            recipeId={recipe.id}
           />
         );
       })}

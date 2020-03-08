@@ -14,7 +14,7 @@ type User {
   registered: DateTime! @createdAt
   recipes: [Recipe!]! @relation(name: "WrittenRecipes")
   likedRecipes: [Recipe!]! @relation(name: "LikedRecipes", link: INLINE)
-  followees: [User!]! @relation(name: "FollowRelation", link: INLINE)
+  following: [User!]! @relation(name: "FollowRelation", link: INLINE)
   followers: [User!]! @relation(name: "FollowRelation")
 }
 
@@ -45,6 +45,7 @@ type Recipe {
   notes: [String!]!
   tags: [String!]!
   source: String
+  photo: String
   created: DateTime! @createdAt
   updated: DateTime! @updatedAt
   published: Boolean! @default(value: false)

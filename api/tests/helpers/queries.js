@@ -16,7 +16,7 @@ const queries = {
         likedRecipes {
           title
         }
-        followees {
+        following {
           username
         }
         followers {
@@ -42,7 +42,7 @@ const queries = {
         likedRecipes {
           title
         }
-        followees {
+        following {
           username
         }
         followers {
@@ -68,7 +68,7 @@ const queries = {
         likedRecipes {
           title
         }
-        followees {
+        following {
           username
         }
         followers {

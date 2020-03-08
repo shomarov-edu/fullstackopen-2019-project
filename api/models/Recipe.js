@@ -34,7 +34,7 @@ fragment FullRecipe on Recipe {
   comments {
     id
     author {
-      username
+      id
     }
     content
   }
@@ -61,6 +61,14 @@ const generateRecipeModel = currentUser => ({
 
   getById: async id => await prisma.recipe(id).$fragment(fullRecipeFragment),
 
+  // Get recipe count including private and draft recipes
+
+  getRecipeCount: async () =>
+    await prisma
+      .recipesConnection()
+      .aggregate()
+      .count(),
+
   // Fetch all published recipes
 
   getPublishedRecipes: async () =>
@@ -72,13 +80,13 @@ const generateRecipeModel = currentUser => ({
 
   // Count all PUBLISHED recipes in database
 
-  getPublishedRecipeCount: async () => {
-    const publishedRecipes = await prisma.recipes({
-      where: { published: true }
-    });
-
-    return publishedRecipes.length;
-  },
+  getPublishedRecipeCount: async () =>
+    await prisma
+      .recipesConnection({
+        where: { published: true }
+      })
+      .aggregate()
+      .count(),
 
   // MUTATIONS:
 
@@ -275,10 +283,10 @@ const generateRecipeModel = currentUser => ({
 
     const updatedRecipe = await prisma
       .updateRecipe({
-        where: { id: input.id },
+        where: { id: recipeId },
         data: {
           comments: {
-            delete: { id: input.id }
+            delete: { id: commentId }
           }
         }
       })

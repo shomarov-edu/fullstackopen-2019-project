@@ -8,14 +8,13 @@ const AllRecipes = () => {
   const search = useField('text');
   const result = useQuery(queries.PUBLISHED_RECIPES);
 
-  console.log(result);
-
   if (result.loading) return <div>loading...</div>;
-  if (result.error) return <div>error: {result.error.message}</div>;
+  if (result.error) {
+    console.log(result);
+    return <div>error: {result.error.message}</div>;
+  }
 
   const recipes = result.data.publishedRecipes;
-
-  console.log(recipes);
 
   const filteredRecipes = recipes.filter(recipe =>
     recipe.title.toLowerCase().includes(search.input.value.toLowerCase())

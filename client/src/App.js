@@ -13,13 +13,11 @@ import queries from './graphql/queries';
 
 const App = () => {
   const [currentUser, setCurrentUser] = useState(null);
-  const [user, setUser] = useState(null);
-  const [getCurrentUser, { loading, data }] = useLazyQuery(queries.ME);
+  const [getCurrentUser, { data, error }] = useLazyQuery(queries.ME);
 
   useEffect(() => {
     if (data) {
       setCurrentUser(data.me);
-      console.log(data.me);
     }
   }, [data]);
 
@@ -28,11 +26,9 @@ const App = () => {
     if (token) {
       getCurrentUser();
     }
+  }, [data]);
 
-    if (data && data.me) {
-      setCurrentUser(data.me);
-    }
-  }, [getCurrentUser]);
+  if (error) return <div>error: {error.message}</div>;
 
   return (
     <React.Fragment>
@@ -42,14 +38,12 @@ const App = () => {
         <Route
           exact
           path="/users/:username"
-          render={({ match }) => {
-            return (
-              <Profile
-                currentUser={currentUser}
-                username={match.params.username}
-              />
-            );
-          }}
+          render={({ match }) => (
+            <Profile
+              currentUser={currentUser}
+              username={match.params.username}
+            />
+          )}
         />
         <Route
           exact
@@ -67,14 +61,14 @@ const App = () => {
           <Route
             exact
             path={`/users/${currentUser.username}/recipes`}
-            render={() => <Recipes user={user} />}
+            render={() => <Recipes user={currentUser} />}
           />
         ) : null}
         {currentUser ? (
           <Route
             exact
             path={`/users/${currentUser.username}/recipes/new`}
-            render={() => <NewRecipeForm user={user} />}
+            render={() => <NewRecipeForm user={currentUser} />}
           />
         ) : null}
         <Route
