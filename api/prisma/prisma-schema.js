@@ -431,8 +431,8 @@ type Recipe {
   updated: DateTime!
   published: Boolean!
   likedBy(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User!]
-  comments: [Comment!]
   ratings: [Grade!]
+  comments: [Comment!]
 }
 
 type RecipeConnection {
@@ -461,8 +461,8 @@ input RecipeCreateInput {
   photo: String
   published: Boolean
   likedBy: UserCreateManyWithoutLikedRecipesInput
-  comments: CommentCreateManyInput
   ratings: GradeCreateManyInput
+  comments: CommentCreateManyInput
 }
 
 input RecipeCreateManyWithoutAuthorInput {
@@ -502,8 +502,8 @@ input RecipeCreateWithoutAuthorInput {
   photo: String
   published: Boolean
   likedBy: UserCreateManyWithoutLikedRecipesInput
-  comments: CommentCreateManyInput
   ratings: GradeCreateManyInput
+  comments: CommentCreateManyInput
 }
 
 input RecipeCreateWithoutLikedByInput {
@@ -521,8 +521,8 @@ input RecipeCreateWithoutLikedByInput {
   source: String
   photo: String
   published: Boolean
-  comments: CommentCreateManyInput
   ratings: GradeCreateManyInput
+  comments: CommentCreateManyInput
 }
 
 type RecipeEdge {
@@ -718,8 +718,8 @@ input RecipeUpdateInput {
   photo: String
   published: Boolean
   likedBy: UserUpdateManyWithoutLikedRecipesInput
-  comments: CommentUpdateManyInput
   ratings: GradeUpdateManyInput
+  comments: CommentUpdateManyInput
 }
 
 input RecipeUpdateManyDataInput {
@@ -807,8 +807,8 @@ input RecipeUpdateWithoutAuthorDataInput {
   photo: String
   published: Boolean
   likedBy: UserUpdateManyWithoutLikedRecipesInput
-  comments: CommentUpdateManyInput
   ratings: GradeUpdateManyInput
+  comments: CommentUpdateManyInput
 }
 
 input RecipeUpdateWithoutLikedByDataInput {
@@ -825,8 +825,8 @@ input RecipeUpdateWithoutLikedByDataInput {
   source: String
   photo: String
   published: Boolean
-  comments: CommentUpdateManyInput
   ratings: GradeUpdateManyInput
+  comments: CommentUpdateManyInput
 }
 
 input RecipeUpdateWithWhereUniqueWithoutAuthorInput {
@@ -958,12 +958,12 @@ input RecipeWhereInput {
   published: Boolean
   published_not: Boolean
   likedBy_some: UserWhereInput
-  comments_some: CommentWhereInput
-  comments_every: CommentRestrictedWhereInput
-  comments_none: CommentRestrictedWhereInput
   ratings_some: GradeWhereInput
   ratings_every: GradeRestrictedWhereInput
   ratings_none: GradeRestrictedWhereInput
+  comments_some: CommentWhereInput
+  comments_every: CommentRestrictedWhereInput
+  comments_none: CommentRestrictedWhereInput
   AND: [RecipeWhereInput!]
 }
 

@@ -122,21 +122,16 @@ const resolvers = {
     publishedRecipes: async (user, _, { loaders }) =>
       await loaders.recipe.publishedRecipesByUserIdLoader.load(user.id),
 
-    publishedRecipeCount: (user, _, __) => {
-      console.log(user.recipes);
-      const pr = user.recipes.filter(r => r.published === true);
-      console.log(pr);
-    },
+    publishedRecipeCount: (user, _, __) =>
+      user.recipes.filter(r => r.published === true),
 
-    // Should I put this in loaders or models?
-    // following: async (user, { loaders }) =>
-    //   loaders.user.followeesByUserIdLoader.load(user.id),
+    following: async (user, _, { models }) =>
+      await models.User.getFollowingByUserId(user.id),
 
-    followeeCount: async user => user.following.length,
+    followeeCount: user => user.following.length,
 
-    // Should I put this in loaders or models?
-    // followers: async (user, { loaders }) =>
-    //   loaders.user.followersByUserIdLoader.load(user.id),
+    followers: async (user, _, { models }) =>
+      await models.User.getFollowersByUserId(user.id),
 
     followerCount: async user => user.followers.length,
 
@@ -145,23 +140,20 @@ const resolvers = {
 
   Recipe: {
     author: async (recipe, _, { loaders }) => {
-      return await loaders.user.userByUsernameLoader.load(
-        recipe.author.username
-      );
+      return await loaders.user.userByIdLoader.load(recipe.author.id);
     },
+
+    likes: (recipe, _, __) => recipe.likedBy.length,
+
+    commentCount: (recipe, _, __) => recipe.comments.length,
 
     rating: async (recipe, args, { models }) =>
       recipe.ratings.reduce((a, b) => a + b, 0) / recipe.ratings.length || 0
   },
 
   Comment: {
-    author: async (comment, _, { loaders }) => {
-      console.log(comment);
-      console.log('resolving author for comment..');
-      const authors = await loaders.user.userByIdLoader.load(comment.author.id);
-      console.log(authors);
-      return authors;
-    }
+    author: async (comment, _, { loaders }) =>
+      await loaders.user.userByIdLoader.load(comment.author.id)
   }
 };
 

@@ -14,7 +14,9 @@ const Login = ({ getCurrentUser, history }) => {
       const token = data.login.token;
 
       localStorage.setItem('token', token);
+
       getCurrentUser();
+
       history.push('/');
     }
   }, [data]);

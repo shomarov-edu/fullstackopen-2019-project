@@ -1,5 +1,7 @@
 const { gql } = require('apollo-server');
 
+// Fragments for fetching data with Prisma
+
 const fragments = {
   currentUserDetails: gql`
     fragment CurrentUserDetails on User {
@@ -46,8 +48,6 @@ const fragments = {
       id
       author {
         id
-        name
-        username
       }
       category
       title
@@ -71,13 +71,11 @@ const fragments = {
           id
         }
         content
+        created
+        updated
       }
       ratings {
         id
-        rater {
-          id
-        }
-        grade
       }
     }
   `

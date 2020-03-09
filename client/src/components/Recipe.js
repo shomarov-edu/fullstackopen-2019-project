@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { gql, useQuery, useLazyQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import useField from '../hooks/useField';
 import queries from '../graphql/queries';
 import Comments from './Comments';
@@ -28,7 +28,7 @@ const Recipe = ({ currentUser, recipeId }) => {
 
   if (!recipe) return null;
 
-  const handleEdit = () => {
+  const toggleEdit = () => {
     setEdit(!edit);
     title.setValue(recipe.title);
     description.setValue(recipe.description);
@@ -37,13 +37,13 @@ const Recipe = ({ currentUser, recipeId }) => {
     setIngredients(recipe.ingredients);
     setMethod(recipe.method);
     setNotes(recipe.notes);
-    source.setValue(recipe.source);
+    source.setValue(recipe.source || '');
   };
 
   const handleSubmit = async event => {
     event.preventDefault();
 
-    const updatedRecipe = {
+    const updatedRecipeData = {
       title: title.input.value,
       description: description.input.value,
       time: time.input.value,
@@ -78,8 +78,8 @@ const Recipe = ({ currentUser, recipeId }) => {
               type="radio"
               id="easy"
               name="difficulty"
-              value="easy"
-              defaultChecked={recipe.difficulty === 'easy'}
+              value="EASY"
+              defaultChecked={recipe.difficulty === 'EASY'}
               onChange={event => setDifficulty(event.target.value)}
             />
             <label htmlFor="easy">Easy</label>
@@ -89,8 +89,8 @@ const Recipe = ({ currentUser, recipeId }) => {
               type="radio"
               id="intermediate"
               name="difficulty"
-              value="intermediate"
-              defaultChecked={recipe.difficulty === 'intermediate'}
+              value="INTERMEDIATE"
+              defaultChecked={recipe.difficulty === 'INTERMEDIATE'}
               onChange={event => setDifficulty(event.target.value)}
             />
             <label htmlFor="intermediate">Intermediate</label>
@@ -100,8 +100,8 @@ const Recipe = ({ currentUser, recipeId }) => {
               type="radio"
               id="hard"
               name="difficulty"
-              value="hard"
-              defaultChecked={recipe.difficulty === 'hard'}
+              value="HARD"
+              defaultChecked={recipe.difficulty === 'HARD'}
               onChange={event => setDifficulty(event.target.value)}
             />
             <label htmlFor="hard">Hard</label>
@@ -238,7 +238,7 @@ const Recipe = ({ currentUser, recipeId }) => {
       <p>Date added: {recipe.created}</p>
       {currentUser && currentUser.username === recipe.author.username ? (
         <React.Fragment>
-          <button onClick={() => handleEdit()}>edit recipe</button>
+          <button onClick={() => toggleEdit()}>edit recipe</button>
           <button onClick={() => handleDelete()}>delete recipe</button>
         </React.Fragment>
       ) : null}

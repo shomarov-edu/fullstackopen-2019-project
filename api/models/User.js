@@ -51,6 +51,30 @@ const generateUserModel = currentUser => ({
       .aggregate()
       .count(),
 
+  // Fetch all users the user is following
+  getFollowingByUserId: async userId =>
+    await prisma
+      .users({
+        where: {
+          followers_some: {
+            id: userId
+          }
+        }
+      })
+      .$fragment(fragments.userDetails),
+
+  // Fetch all users which are following the user
+  getFollowersByUserId: async userId =>
+    await prisma
+      .users({
+        where: {
+          following_some: {
+            id: userId
+          }
+        }
+      })
+      .$fragment(fragments.userDetails),
+
   // MUTATIONS:
 
   followUser: async idToFollow => {

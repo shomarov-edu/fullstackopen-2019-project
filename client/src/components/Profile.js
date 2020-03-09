@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLazyQuery, useMutation } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
 import queries from '../graphql/queries';
 import mutations from '../graphql/mutations';
 import Recipes from './Recipes';
@@ -7,27 +7,19 @@ import Following from './Following';
 import Followers from './Followers';
 
 const Profile = ({ currentUser, username }) => {
-  const [user, setUser] = useState(null);
-  const [recipesVisible, setRecipesVisible] = useState(false);
-  const [getUser, getUserResult] = useLazyQuery(queries.USER);
+  const { loading, error, data } = useQuery(queries.USER, {
+    variables: { idOrUsername: { username } }
+  });
   const [followUser, followUserResult] = useMutation(mutations.FOLLOW_USER);
   const [unfollowUser, unfollowUserResult] = useMutation(
     mutations.UNFOLLOW_USER
   );
+  const [recipesVisible, setRecipesVisible] = useState(false);
 
-  useEffect(() => {
-    if (!currentUser || currentUser.username !== username) {
-      getUser({ variables: { idOrUsername: { username } } });
-    } else {
-      setUser(currentUser);
-    }
-  }, []);
+  if (loading) return <div>loading...</div>;
+  if (error) return <div>error: {error.message}</div>;
 
-  useEffect(() => {
-    if (getUserResult.data) {
-      setUser(getUserResult.data.user);
-    }
-  }, [getUserResult.data]);
+  const user = data.user;
 
   const toggleVisibility = () => setRecipesVisible(!recipesVisible);
   const recipeVisibility = { display: recipesVisible ? '' : 'none' };
@@ -48,7 +40,7 @@ const Profile = ({ currentUser, username }) => {
     });
   };
 
-  if (!user) return <div>loading...</div>;
+  // if (!user) return <div>loading...</div>;
 
   const sendFriendRequestButton = () => {
     if (currentUser && currentUser.username !== user.username) {

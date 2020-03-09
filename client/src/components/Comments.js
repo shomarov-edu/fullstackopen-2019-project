@@ -19,6 +19,8 @@ const Comments = ({ currentUser, recipe }) => {
     };
 
     commentRecipe({ variables: { newComment } });
+
+    commentField.reset();
   };
 
   if (commentRecipeResult.error) {

@@ -18,6 +18,18 @@ const generateRecipeModel = currentUser => ({
     return recipes;
   },
 
+  // Fetch all recipes of specified user
+  getByUserId: async userId =>
+    await prisma
+      .recipes({
+        where: {
+          author: {
+            id: userId
+          }
+        }
+      })
+      .$fragment(fragments.fullRecipeDetails),
+
   // Retrieval of full recipe delails by recipe id => moved to dataloaders
   getById: async id =>
     await prisma.recipe(id).$fragment(fragments.fullRecipeDetails),
@@ -45,6 +57,12 @@ const generateRecipeModel = currentUser => ({
       })
       .aggregate()
       .count(),
+
+  getCommentsByRecipeId: async id => {
+    const comments = await prisma.recipe({ id }).comments();
+    console.log(comments);
+    return comments;
+  },
 
   // MUTATIONS:
 
@@ -137,9 +155,11 @@ const generateRecipeModel = currentUser => ({
   commentRecipe: async input => {
     if (!currentUser) return null;
 
+    const { id, content } = input;
+
     const updatedRecipe = await prisma
       .updateRecipe({
-        where: { id: input.id },
+        where: { id },
         data: {
           comments: {
             create: [
@@ -147,7 +167,7 @@ const generateRecipeModel = currentUser => ({
                 author: {
                   connect: { id: currentUser.id }
                 },
-                content: input.content
+                content
               }
             ]
           }

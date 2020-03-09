@@ -13,22 +13,24 @@ import queries from './graphql/queries';
 
 const App = () => {
   const [currentUser, setCurrentUser] = useState(null);
-  const [getCurrentUser, { data, error }] = useLazyQuery(queries.ME);
+  const [getCurrentUser, currentUserResult] = useLazyQuery(queries.ME);
 
   useEffect(() => {
-    if (data) {
-      setCurrentUser(data.me);
+    if (currentUserResult.data) {
+      setCurrentUser(currentUserResult.data.me);
     }
-  }, [data]);
+  }, [currentUserResult.data]);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
+    console.log(token);
     if (token) {
       getCurrentUser();
     }
-  }, [data]);
+  }, []);
 
-  if (error) return <div>error: {error.message}</div>;
+  if (currentUserResult.error)
+    return <div>error: {currentUserResult.error.message}</div>;
 
   return (
     <React.Fragment>

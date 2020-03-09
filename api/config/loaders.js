@@ -2,61 +2,68 @@ const DataLoader = require('dataloader');
 const { prisma } = require('../prisma');
 const fragments = require('../graphql/fragments');
 const keyBy = require('lodash.keyby');
+const groupBy = require('lodash.groupby');
 
-// Fetch user by id
-const userByIdLoader = new DataLoader(async userIds => {
-  const loadedUsers = await prisma
-    .users({
-      where: {
-        id_in: userIds
-      }
-    })
-    .$fragment(fragments.userDetails);
+// Create PER REQUEST dataloader functions,
+// so that we have a new loader every single request
+const createUserLoader = () => ({
+  // Fetch user by id
+  userByIdLoader: new DataLoader(async userIds => {
+    const loadedUsers = await prisma
+      .users({
+        where: {
+          id_in: userIds
+        }
+      })
+      .$fragment(fragments.userDetails);
 
-  const usersById = keyBy(loadedUsers, 'id');
+    // Create a key:value objects from results
+    const usersById = keyBy(loadedUsers, 'id');
 
-  const users = userIds.map(
-    userId => usersById[userId] || new Error(`No result for ${userId}`)
-  );
+    // Map initial array of userIds to results fetched from database
+    const users = userIds.map(
+      userId => usersById[userId] || new Error(`No result for ${userId}`)
+    );
 
-  // Looked for users cached with userByUsernameLoader function
-  for (let user of users) {
-    userByUsernameLoader.prime(user.username, user);
-  }
+    // Fill cache of userByUsernameLoader with results
+    // for (let user of users) {
+    //   userByUsernameLoader.prime(user.username, user);
+    // }
 
-  return users;
+    return users;
+  }),
+
+  // Fetch user by username (not in use)
+  userByUsernameLoader: new DataLoader(async usernames => {
+    const loadedUsers = await prisma
+      .users({
+        where: {
+          username_in: usernames
+        }
+      })
+      .$fragment(fragments.userDetails);
+
+    // Create a key:value objects from results
+    const usersByUsername = keyBy(loadedUsers, 'username');
+
+    // Map initial array of userIds to results fetched from database
+    const users = usernames.map(
+      username =>
+        usersByUsername[username] || new Error(`No result for ${username}`)
+    );
+
+    // Fill cache of userByIdLoader with results
+    // for (let user of users) {
+    //   userByIdLoader.prime(user.id, user);
+    // }
+
+    return users;
+  })
 });
-
-const userByUsernameLoader = new DataLoader(async usernames => {
-  const loadedUsers = await prisma
-    .users({
-      where: {
-        username_in: usernames
-      }
-    })
-    .$fragment(fragments.userDetails);
-
-  const usersByUsername = keyBy(loadedUsers, 'username');
-
-  const users = usernames.map(
-    username =>
-      usersByUsername[username] || new Error(`No result for ${username}`)
-  );
-
-  // Looked for users cached with userByIdLoader function
-  for (let user of users) {
-    userByIdLoader.prime(user.id, user);
-  }
-
-  return users;
-});
-
-const createUserLoader = () => ({ userByIdLoader, userByUsernameLoader });
 
 const createRecipeLoader = () => ({
-  // Fetch recipe by id
+  // Fetch individual recipe by recipe id
   recipeByIdLoader: new DataLoader(async recipeIds => {
-    console.log('HERE');
     const recipes = await prisma
       .recipes({
         where: {
@@ -65,58 +72,67 @@ const createRecipeLoader = () => ({
       })
       .$fragment(fragments.fullRecipeDetails);
 
+    // Create a key:value objects from results
     const recipesById = keyBy(recipes, 'id');
 
+    // Map initial array of userIds to results fetched from database
     return recipeIds.map(
       recipeId =>
         recipesById[recipeId] || new Error(`No result for ${recipeId}`)
     );
   }),
 
-  // Fetch array of recipes by user id
+  // Fetch promise array of recipes by user id
   recipesByUserIdLoader: new DataLoader(async userIds => {
-    const promiseArray = userIds.map(
-      async userId =>
-        (await prisma
-          .recipes({
-            where: {
+    // Fetch all recipes where author id match with userIds
+    const loadedRecipes = await prisma
+      .recipes({
+        where: {
+          AND: [
+            {
               author: {
-                id: userId
-              }
+                id_in: userIds
+              },
+              published: true
             }
-          })
-          .$fragment(fragments.fullRecipeDetails)) ||
-        new Error(`No result for ${userId}`)
-    );
+          ]
+        }
+      })
+      .$fragment(fragments.fullRecipeDetails);
 
-    const recipes = await Promise.all(promiseArray);
+    // Group recipes by author id
+    const groupedRecipes = groupBy(loadedRecipes, 'author.id');
 
+    // Return either an array of published recipes match with userId, or an empty array if no recipes found
+    const recipes = userIds.map(userId => groupedRecipes[userId] || []);
     return recipes;
   }),
 
   // Fetch array of published recipes by user id
   publishedRecipesByUserIdLoader: new DataLoader(async userIds => {
-    const promiseArray = userIds.map(
-      async userId =>
-        (await prisma
-          .recipes({
-            where: {
-              AND: [
-                {
-                  author: {
-                    id: userId
-                  },
-                  published: true
-                }
-              ]
+    // Fetch all published recipes where author id match with userIds
+    const loadedRecipes = await prisma
+      .recipes({
+        where: {
+          AND: [
+            {
+              author: {
+                id_in: userIds
+              },
+              published: true
             }
-          })
-          .$fragment(fragments.fullRecipeDetails)) ||
-        new Error(`No result for ${userId}`)
+          ]
+        }
+      })
+      .$fragment(fragments.fullRecipeDetails);
+
+    // Group recipes by author id
+    const groupedRecipes = groupBy(loadedRecipes, 'author.id');
+
+    // Return either an array of published recipes match with userId, or an empty array if no recipes found
+    const publishedRecipes = userIds.map(
+      userId => groupedRecipes[userId] || []
     );
-
-    const publishedRecipes = await Promise.all(promiseArray);
-
     return publishedRecipes;
   })
 });

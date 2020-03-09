@@ -50,8 +50,8 @@ type Recipe {
   updated: DateTime! @updatedAt
   published: Boolean! @default(value: false)
   likedBy: [User!]! @relation(name: "LikedRecipes")
-  comments: [Comment!]!
   ratings: [Grade!]!
+  comments: [Comment!]!
 }
 
 type Comment @embedded {

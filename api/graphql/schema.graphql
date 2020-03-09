@@ -129,15 +129,19 @@ type Recipe {
   updated: String!
   published: Boolean!
   likedBy: [User!]
-  comments: [Comment!]!
+  likes: Int!
   ratings: [Grade!]!
   rating: Float!
+  comments: [Comment!]!
+  commentCount: Int!
 }
 
 type Comment {
   id: ID!
   author: User!
   content: String!
+  created: String!
+  updated: String!
 }
 
 type Grade {

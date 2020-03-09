@@ -1,4 +1,6 @@
 import { gql } from '@apollo/client';
+import currentUserDetails from '../fragments/currentUserDetails';
+import fullRecipeDetails from '../fragments/fullRecipeDetails';
 
 // AUTHENTICATION:
 
@@ -22,105 +24,66 @@ const mutations = {
   FOLLOW_USER: gql`
     mutation FollowUser($userToFollow: FollowUserInput!) {
       followUser(input: $userToFollow) {
-        id
+        ...CurrentUserDetails
       }
     }
+    ${currentUserDetails}
   `,
 
   UNFOLLOW_USER: gql`
     mutation UnfollowUser($userToUnfollow: UnfollowUserInput!) {
       unfollowUser(input: $userToUnfollow) {
-        id
+        ...CurrentUserDetails
       }
     }
+    ${currentUserDetails}
   `,
 
   // RECIPE MUTATIONS:
 
+  CREATE_RECIPE: gql`
+    mutation CreateRecipt($newRecipeData: CreateRecipeInput!) {
+      createRecipe(input: $newRecipeData) {
+        ...RecipeDetails
+      }
+    }
+    ${fullRecipeDetails}
+  `,
+
   LIKE_RECIPE: gql`
     mutation LikeRecipe($recipeToLike: LikeRecipeInput!) {
-      likeRecipe(input: $recipeToLike)
+      likeRecipe(input: $recipeToLike) {
+        ...CurrentUserDetails
+      }
     }
+    ${currentUserDetails}
   `,
 
   COMMENT_RECIPE: gql`
     mutation CommentRecipe($newComment: CommentRecipeInput!) {
       commentRecipe(input: $newComment) {
-        id
+        ...RecipeDetails
       }
     }
+    ${fullRecipeDetails}
   `,
 
   EDIT_COMMENT: gql`
     mutation EditComment($editedCommentData: EditCommentInput!) {
       editComment(input: $editedCommentData) {
-        id
-        author {
-          name
-          username
-        }
-        category
-        title
-        description
-        cookingTime
-        difficulty
-        ingredients
-        method
-        notes
-        tags
-        source
-        created
-        updated
-        published
-        likedBy {
-          username
-        }
-        comments {
-          id
-          author {
-            username
-          }
-          content
-        }
-        rating
+        ...RecipeDetails
       }
     }
+    ${fullRecipeDetails}
   `,
 
   DELETE_COMMENT: gql`
     mutation DeleteComment($commentToDelete: DeleteCommentInput!) {
       deleteComment(input: $commentToDelete) {
-        id
-        author {
-          name
-          username
-        }
-        category
-        title
-        description
-        cookingTime
-        difficulty
-        ingredients
-        method
-        notes
-        tags
-        source
-        created
-        updated
-        published
-        likedBy {
-          username
-        }
-        comments {
-          id
-          author {
-            username
-          }
-          content
-        }
-        rating
+        ...RecipeDetails
       }
     }
+    ${fullRecipeDetails}
   `
 };
 

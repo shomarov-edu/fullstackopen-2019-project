@@ -27,6 +27,8 @@ const Comment = ({ currentUser, comment, recipeId }) => {
     editComment({
       variables: { editedCommentData }
     });
+
+    setEditing(false);
   };
 
   const handleDelete = async () => {

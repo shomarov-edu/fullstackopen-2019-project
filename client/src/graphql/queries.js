@@ -1,77 +1,25 @@
 import { gql } from '@apollo/client';
-import fragments from './fragments';
+import currentUserDetails from '../fragments/currentUserDetails';
+import userDetails from '../fragments/userDetails';
+import fullRecipeDetails from '../fragments/fullRecipeDetails';
 
 const queries = {
   ME: gql`
     query Me {
       me {
-        id
-        username
-        email
-        name
-        role
-        registered
-        recipes {
-          id
-          title
-        }
-        likedRecipes {
-          id
-          title
-        }
-        following {
-          id
-        }
-        followers {
-          id
-        }
+        ...CurrentUserDetails
       }
     }
-  `,
-
-  USERS: gql`
-    query AllUsers {
-      users {
-        id
-        username
-        email
-        firstname
-        lastname
-        role
-        registered
-        recipes {
-          id
-          title
-        }
-        likedRecipes {
-          id
-          title
-        }
-        following {
-          id
-          username
-        }
-        followers {
-          id
-          username
-        }
-      }
-    }
+    ${currentUserDetails}
   `,
 
   USER: gql`
     query User($idOrUsername: UserInput!) {
       user(input: $idOrUsername) {
-        id
-        name
-        username
-        registered
-        recipes {
-          id
-          title
-        }
+        ...UserDetails
       }
     }
+    ${userDetails}
   `,
 
   USER_COUNT: gql`
@@ -88,7 +36,7 @@ const queries = {
         ...RecipeDetails
       }
     }
-    ${fragments.recipe}
+    ${fullRecipeDetails}
   `,
 
   PUBLISHED_RECIPES: gql`
@@ -97,45 +45,16 @@ const queries = {
         ...RecipeDetails
       }
     }
-    ${fragments.recipe}
+    ${fullRecipeDetails}
   `,
 
   RECIPE: gql`
     query Recipe($id: ID!) {
       recipe(input: { id: $id }) {
-        id
-        author {
-          name
-          username
-        }
-        category
-        title
-        description
-        cookingTime
-        difficulty
-        ingredients
-        method
-        notes
-        tags
-        source
-        created
-        updated
-        published
-        likedBy {
-          username
-        }
-        comments {
-          id
-          author {
-            id
-            name
-            username
-          }
-          content
-        }
-        rating
+        ...RecipeDetails
       }
     }
+    ${fullRecipeDetails}
   `,
 
   RECIPE_COUNT: gql`
