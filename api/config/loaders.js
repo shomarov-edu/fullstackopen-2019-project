@@ -3,8 +3,7 @@ const { prisma } = require('../prisma');
 const fragments = require('../graphql/fragments');
 const keyBy = require('lodash.keyby');
 
-const createUserLoader = () => ({ userByIdLoader, userByUsernameLoader });
-
+// Fetch user by id
 const userByIdLoader = new DataLoader(async userIds => {
   const loadedUsers = await prisma
     .users({
@@ -20,11 +19,10 @@ const userByIdLoader = new DataLoader(async userIds => {
     userId => usersById[userId] || new Error(`No result for ${userId}`)
   );
 
+  // Looked for users cached with userByUsernameLoader function
   for (let user of users) {
     userByUsernameLoader.prime(user.username, user);
   }
-
-  console.log('users loaded with userByIdLoader: ', userIds.length);
 
   return users;
 });
@@ -45,16 +43,18 @@ const userByUsernameLoader = new DataLoader(async usernames => {
       usersByUsername[username] || new Error(`No result for ${username}`)
   );
 
+  // Looked for users cached with userByIdLoader function
   for (let user of users) {
     userByIdLoader.prime(user.id, user);
   }
 
-  console.log('users loaded with userByIdLoader: ', usernames.length);
-
   return users;
 });
 
+const createUserLoader = () => ({ userByIdLoader, userByUsernameLoader });
+
 const createRecipeLoader = () => ({
+  // Fetch recipe by id
   recipeByIdLoader: new DataLoader(async recipeIds => {
     console.log('HERE');
     const recipes = await prisma
@@ -67,14 +67,13 @@ const createRecipeLoader = () => ({
 
     const recipesById = keyBy(recipes, 'id');
 
-    console.log('recipes loaded with recipeByIdLoader: ', recipeIds.length);
-
     return recipeIds.map(
       recipeId =>
         recipesById[recipeId] || new Error(`No result for ${recipeId}`)
     );
   }),
 
+  // Fetch array of recipes by user id
   recipesByUserIdLoader: new DataLoader(async userIds => {
     const promiseArray = userIds.map(
       async userId =>
@@ -95,6 +94,7 @@ const createRecipeLoader = () => ({
     return recipes;
   }),
 
+  // Fetch array of published recipes by user id
   publishedRecipesByUserIdLoader: new DataLoader(async userIds => {
     const promiseArray = userIds.map(
       async userId =>

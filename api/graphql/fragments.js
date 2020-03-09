@@ -2,7 +2,7 @@ const { gql } = require('apollo-server');
 
 const fragments = {
   currentUserDetails: gql`
-    fragment DetailsForCurrentUser on User {
+    fragment CurrentUserDetails on User {
       id
       name
       username
@@ -77,6 +77,7 @@ const fragments = {
         rater {
           id
         }
+        grade
       }
     }
   `

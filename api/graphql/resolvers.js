@@ -11,9 +11,8 @@ const resolvers = {
     // Fetch all users. Do I need this?
     users: async (_, { input }, { models }) => await models.User.getAll(input),
 
+    // Fetch user with either id or username
     user: async (_, { input }, { loaders }) => {
-      console.log(input);
-
       if (input.id && validator.isMongoId(input.id))
         return await loaders.user.userByIdLoader.load(input.id);
 
