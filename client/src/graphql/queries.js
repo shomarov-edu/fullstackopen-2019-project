@@ -3,71 +3,67 @@ import currentUserDetails from '../fragments/currentUserDetails';
 import userDetails from '../fragments/userDetails';
 import fullRecipeDetails from '../fragments/fullRecipeDetails';
 
-const queries = {
-  ME: gql`
-    query Me {
-      me {
-        ...CurrentUserDetails
-      }
+export const ME = gql`
+  query Me {
+    me {
+      ...CurrentUserDetails
     }
-    ${currentUserDetails}
-  `,
+  }
+  ${currentUserDetails}
+`;
 
-  USER: gql`
-    query User($idOrUsername: UserInput!) {
-      user(input: $idOrUsername) {
-        ...UserDetails
-      }
+export const USER = gql`
+  query User($idOrUsername: UserInput!) {
+    user(input: $idOrUsername) {
+      ...UserDetails
     }
-    ${userDetails}
-  `,
+  }
+  ${userDetails}
+`;
 
-  USER_COUNT: gql`
-    query {
-      userCount
+export const USER_COUNT = gql`
+  query {
+    userCount
+  }
+`;
+
+// RECIPE QUERIES:
+
+export const RECIPES = gql`
+  query AllRecipes {
+    recipes {
+      ...RecipeDetails
     }
-  `,
+  }
+  ${fullRecipeDetails}
+`;
 
-  // RECIPE QUERIES:
-
-  RECIPES: gql`
-    query AllRecipes {
-      recipes {
-        ...RecipeDetails
-      }
+export const PUBLISHED_RECIPES = gql`
+  query AllPublishedRecipes {
+    publishedRecipes {
+      ...RecipeDetails
     }
-    ${fullRecipeDetails}
-  `,
+  }
+  ${fullRecipeDetails}
+`;
 
-  PUBLISHED_RECIPES: gql`
-    query AllPublishedRecipes {
-      publishedRecipes {
-        ...RecipeDetails
-      }
+export const RECIPE = gql`
+  query Recipe($id: ID!) {
+    recipe(input: { id: $id }) {
+      ...RecipeDetails
     }
-    ${fullRecipeDetails}
-  `,
+  }
+  ${fullRecipeDetails}
+`;
 
-  RECIPE: gql`
-    query Recipe($id: ID!) {
-      recipe(input: { id: $id }) {
-        ...RecipeDetails
-      }
-    }
-    ${fullRecipeDetails}
-  `,
+export const RECIPE_COUNT = gql`
+  query RecipeCount {
+    recipeCount
+  }
+`;
 
-  RECIPE_COUNT: gql`
-    query RecipeCount {
-      recipeCount
-    }
-  `,
-
-  PUBLISHED_RECIPE_COUNT: gql`
-    query PublishedRecipeCount {
-      publishedRecipeCount
-    }
-  `
-};
-
-export default queries;
+export const PUBLISHED_RECIPE_COUNT = gql`
+  query PublishedRecipeCount {
+    publishedRecipeCount
+  }
+`;

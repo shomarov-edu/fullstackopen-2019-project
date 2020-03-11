@@ -1,36 +1,41 @@
 import React, { useState, useEffect } from 'react';
-import { gql, useQuery, useLazyQuery } from '@apollo/client';
+import { useLazyQuery } from '@apollo/client';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Navigation from './components/Navigation';
 import Login from './components/Login';
 import SignUp from './components/SignUp';
 import NewRecipeForm from './components/NewRecipeForm';
-import Recipe from './components/Recipe';
+import Recipe from './components/recipe/Recipe';
 import AllRecipes from './components/AllRecipes';
-import Recipes from './components/Recipes';
+import Recipes from './components/recipe/Recipes';
 import Profile from './components/Profile';
-import queries from './graphql/queries';
+import Following from './components/Following';
+import Followers from './components/Followers';
+import Settings from './components/userSettings/Settings';
+import { ME } from './graphql/queries';
+import LikedRecipes from './components/LikedRecipe';
 
 const App = () => {
   const [currentUser, setCurrentUser] = useState(null);
-  const [getCurrentUser, currentUserResult] = useLazyQuery(queries.ME);
-
-  useEffect(() => {
-    if (currentUserResult.data) {
-      setCurrentUser(currentUserResult.data.me);
-    }
-  }, [currentUserResult.data]);
+  const [getCurrentUser, getCurrentUserResult] = useLazyQuery(ME, {
+    fetchPolicy: 'network-only'
+  });
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    console.log(token);
     if (token) {
       getCurrentUser();
     }
-  }, []);
+  }, []); // eslint-disable-line
 
-  if (currentUserResult.error)
-    return <div>error: {currentUserResult.error.message}</div>;
+  useEffect(() => {
+    if (getCurrentUserResult.data) {
+      setCurrentUser(getCurrentUserResult.data.me);
+    }
+  }, [getCurrentUserResult.data]);
+
+  if (getCurrentUserResult.error)
+    return <div>error this: {getCurrentUserResult.error.message}</div>;
 
   return (
     <React.Fragment>
@@ -47,6 +52,20 @@ const App = () => {
             />
           )}
         />
+        {currentUser ? (
+          <React.Fragment>
+            <Route
+              exact
+              path={`/users/${currentUser.username}/following`}
+              render={() => <Following user={currentUser} />}
+            />
+            <Route
+              exact
+              path={`/users/${currentUser.username}/followers`}
+              render={() => <Followers user={currentUser} />}
+            />
+          </React.Fragment>
+        ) : null}
         <Route
           exact
           path="/recipes/:recipeId"
@@ -60,18 +79,32 @@ const App = () => {
           }}
         />
         {currentUser ? (
-          <Route
-            exact
-            path={`/users/${currentUser.username}/recipes`}
-            render={() => <Recipes user={currentUser} />}
-          />
+          <React.Fragment>
+            <Route
+              exact
+              path={`/users/${currentUser.username}/recipes`}
+              render={() => <Recipes user={currentUser} />}
+            />
+            <Route
+              exact
+              path={`/users/${currentUser.username}/likes`}
+              render={() => <LikedRecipes currentUser={currentUser} />}
+            />
+          </React.Fragment>
         ) : null}
         {currentUser ? (
-          <Route
-            exact
-            path={`/users/${currentUser.username}/recipes/new`}
-            render={() => <NewRecipeForm user={currentUser} />}
-          />
+          <React.Fragment>
+            <Route
+              exact
+              path={`/users/${currentUser.username}/recipes/new`}
+              render={() => <NewRecipeForm user={currentUser} />}
+            />
+            <Route
+              exact
+              path={`/settings`}
+              render={() => <Settings currentUser={currentUser} />}
+            />
+          </React.Fragment>
         ) : null}
         <Route
           exact

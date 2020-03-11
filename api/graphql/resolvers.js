@@ -47,8 +47,11 @@ const resolvers = {
     unfollowUser: async (_, { input }, { models }) =>
       await models.User.unfollowUser(input.idToUnfollow),
 
-    updateUser: async (_, { input }, { models }) =>
-      await models.User.updateUser(input),
+    updateName: async (_, { input }, { models }) =>
+      await models.User.updateName(input),
+
+    updateEmail: async (_, { input }, { models }) =>
+      await models.User.updateEmail(input),
 
     updateUsername: async (_, { input }, { models }) =>
       await models.User.updateUsername(input),
@@ -93,12 +96,15 @@ const resolvers = {
   User: {
     // E-Mail field viewable only to owner and admin
     email: (user, _, { currentUser }) => {
+      user;
       if (
         !currentUser ||
-        user.id !== currentUser.id ||
-        currentUser.role !== 'ADMIN'
-      )
+        (user.id !== currentUser.id && currentUser.role !== 'ADMIN')
+      ) {
         return null;
+      } else {
+        return user.email;
+      }
     },
 
     role: (user, _, { currentUser }) => {
@@ -125,6 +131,9 @@ const resolvers = {
     publishedRecipeCount: (user, _, __) =>
       user.recipes.filter(r => r.published === true),
 
+    likedRecipes: async (user, _, { models }) =>
+      await models.User.getLikedRecipesByUserId(user.id),
+
     following: async (user, _, { models }) =>
       await models.User.getFollowingByUserId(user.id),
 
@@ -143,7 +152,7 @@ const resolvers = {
       return await loaders.user.userByIdLoader.load(recipe.author.id);
     },
 
-    likes: (recipe, _, __) => recipe.likedBy.length,
+    likes: (recipe, _, __) => (recipe.likedBy ? recipe.likedBy.length : 0),
 
     commentCount: (recipe, _, __) => recipe.comments.length,
 

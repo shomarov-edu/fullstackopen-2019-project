@@ -1,19 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
-import queries from '../graphql/queries';
-import mutations from '../graphql/mutations';
-import Recipes from './Recipes';
-import Following from './Following';
-import Followers from './Followers';
+import { USER } from '../graphql/queries';
+import { FOLLOW_USER, UNFOLLOW_USER } from '../graphql/mutations';
+import Recipes from './recipe/Recipes';
 
 const Profile = ({ currentUser, username }) => {
-  const { loading, error, data } = useQuery(queries.USER, {
+  const { loading, error, data } = useQuery(USER, {
     variables: { idOrUsername: { username } }
   });
-  const [followUser, followUserResult] = useMutation(mutations.FOLLOW_USER);
-  const [unfollowUser, unfollowUserResult] = useMutation(
-    mutations.UNFOLLOW_USER
-  );
+  const [followUser] = useMutation(FOLLOW_USER);
+  const [unfollowUser] = useMutation(UNFOLLOW_USER);
   const [recipesVisible, setRecipesVisible] = useState(false);
 
   if (loading) return <div>loading...</div>;
@@ -62,10 +58,6 @@ const Profile = ({ currentUser, username }) => {
     <React.Fragment>
       <p>{user.name}</p>
       {sendFriendRequestButton()}
-      Following:
-      <Following />
-      Followers:
-      <Followers />
       {recipesVisible ? (
         <button onClick={toggleVisibility}>hide recipes</button>
       ) : (

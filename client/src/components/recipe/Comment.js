@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
-import useField from '../hooks/useField';
-import mutations from '../graphql/mutations';
+import useField from '../../hooks/useField';
+import { EDIT_COMMENT, DELETE_COMMENT } from '../../graphql/mutations';
 
 const Comment = ({ currentUser, comment, recipeId }) => {
   const commentField = useField('text');
   const [editing, setEditing] = useState(false);
-  const [editComment] = useMutation(mutations.EDIT_COMMENT);
-  const [deleteComment] = useMutation(mutations.DELETE_COMMENT);
+  const [editComment] = useMutation(EDIT_COMMENT);
+  const [deleteComment] = useMutation(DELETE_COMMENT);
 
   const showWhenEditing = { display: editing ? '' : 'none' };
   const hideWhenEditing = { display: editing ? 'none' : '' };
@@ -44,7 +45,12 @@ const Comment = ({ currentUser, comment, recipeId }) => {
 
   return (
     <React.Fragment>
-      <p>author: {comment.author.name}</p>
+      <p>
+        author:{' '}
+        <Link to={`/users/${comment.author.username}`}>
+          {comment.author.name}
+        </Link>
+      </p>
       {editing ? (
         <>
           <p>

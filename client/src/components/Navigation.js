@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { useApolloClient } from '@apollo/client';
 
-const Navigation = ({ currentUser, setCurrentUser, setToken, history }) => {
+const Navigation = ({ currentUser, setCurrentUser, history }) => {
   const client = useApolloClient();
   const padding = { padding: 5 };
 
@@ -31,6 +31,9 @@ const Navigation = ({ currentUser, setCurrentUser, setToken, history }) => {
           </Link>
           <Link style={padding} to={`/users/${currentUser.username}/recipes`}>
             My recipes
+          </Link>
+          <Link style={padding} to={`/users/${currentUser.username}/likes`}>
+            Liked recipes
           </Link>
           <Link
             style={padding}

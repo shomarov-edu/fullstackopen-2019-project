@@ -2,15 +2,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const Followers = ({ user }) => {
-  console.log(user);
-  if (!user) return null;
+  if (!user) return <div>loading...</div>;
 
-  const followers = user.followers.map(followee => (
-    <li key={followers.id}>
-      <Link to={`/user/${followers.username}`}>
-        <strong>{followers.name}</strong>
-        {followers.username}
-      </Link>
+  const followers = user.followers.map(follower => (
+    <li key={follower.id}>
+      <Link to={`/users/${follower.username}`}>{follower.name}</Link>
     </li>
   ));
 

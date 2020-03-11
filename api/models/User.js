@@ -6,7 +6,7 @@ const {
 } = require('apollo-server');
 const comparePasswords = require('../helpers/comparePasswords');
 const encryptPassword = require('../helpers/encryptPassword');
-const fragments = require('../graphql/fragments');
+const { userDetails, recipeDetails } = require('../graphql/fragments');
 
 // TODO: Input validations
 
@@ -16,15 +16,13 @@ const generateUserModel = currentUser => ({
   me: async () => {
     if (!currentUser) return null;
 
-    return await prisma
-      .user({ id: currentUser.id })
-      .$fragment(fragments.currentUserDetails);
+    return await prisma.user({ id: currentUser.id }).$fragment(userDetails);
   },
 
   // Only admins can view personal information of all users
 
   getAll: async input => {
-    const users = await prisma.users().$fragment(fragments.userDetails);
+    const users = await prisma.users().$fragment(userDetails);
 
     if (!input || !input.name) return users;
 
@@ -35,13 +33,12 @@ const generateUserModel = currentUser => ({
 
   // Retrieval of user by user id => moved to dataloaders
 
-  getById: async id =>
-    await prisma.user({ id }).$fragment(fragments.userDetails),
+  getById: async id => await prisma.user({ id }).$fragment(userDetails),
 
   // Retrieval of user by username => moved to dataloaders
 
   getByUsername: async username =>
-    await prisma.user({ username }).$fragment(fragments.userDetails),
+    await prisma.user({ username }).$fragment(userDetails),
 
   // Count all registered users
 
@@ -61,7 +58,7 @@ const generateUserModel = currentUser => ({
           }
         }
       })
-      .$fragment(fragments.userDetails),
+      .$fragment(userDetails),
 
   // Fetch all users which are following the user
   getFollowersByUserId: async userId =>
@@ -73,12 +70,18 @@ const generateUserModel = currentUser => ({
           }
         }
       })
-      .$fragment(fragments.userDetails),
+      .$fragment(userDetails),
+
+  getLikedRecipesByUserId: async id =>
+    await prisma
+      .user({ id })
+      .likedRecipes()
+      .$fragment(recipeDetails),
 
   // MUTATIONS:
 
   followUser: async idToFollow => {
-    console.log(idToFollow);
+    idToFollow;
     if (!currentUser) return null;
 
     const userExists = prisma.$exists.user({
@@ -116,18 +119,26 @@ const generateUserModel = currentUser => ({
     });
   },
 
-  updateUser: async input => {
+  updateName: async input => {
     if (!currentUser) return null;
 
-    const { password, patch } = input;
-
-    const user = await prisma.user({ id: currentUser.id });
-
-    if (!(user && (await comparePasswords(password, user.passwordHash))))
-      throw new AuthenticationError('invalid username or password');
+    const { newName } = input;
 
     return await prisma.updateUser({
-      data: patch,
+      data: { name: newName },
+      where: {
+        id: currentUser.id
+      }
+    });
+  },
+
+  updateEmail: async input => {
+    if (!currentUser) return null;
+
+    const { newEmail } = input;
+
+    return await prisma.updateUser({
+      data: { email: newEmail },
       where: {
         id: currentUser.id
       }
@@ -137,12 +148,7 @@ const generateUserModel = currentUser => ({
   updateUsername: async input => {
     if (!currentUser) return null;
 
-    const { password, newUsername } = input;
-
-    const user = await prisma.user({ id: currentUser.id });
-
-    if (!(user && (await comparePasswords(password, user.passwordHash))))
-      throw new AuthenticationError('invalid username or password');
+    const { newUsername } = input;
 
     return await prisma.updateUser({
       data: {
@@ -164,14 +170,20 @@ const generateUserModel = currentUser => ({
     if (!(user && (await comparePasswords(password, user.passwordHash))))
       throw new AuthenticationError('invalid username or password');
 
-    return await prisma.updateUser({
-      data: {
-        passwordHash: encryptPassword(newPassword)
-      },
-      where: {
-        id: currentUser.id
-      }
-    });
+    try {
+      await prisma.updateUser({
+        data: {
+          passwordHash: await encryptPassword(newPassword)
+        },
+        where: {
+          id: currentUser.id
+        }
+      });
+
+      return true;
+    } catch (e) {
+      return false;
+    }
   },
 
   deleteUser: async password => {

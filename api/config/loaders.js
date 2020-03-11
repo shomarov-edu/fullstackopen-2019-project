@@ -1,6 +1,6 @@
 const DataLoader = require('dataloader');
 const { prisma } = require('../prisma');
-const fragments = require('../graphql/fragments');
+const { userDetails, recipeDetails } = require('../graphql/fragments');
 const keyBy = require('lodash.keyby');
 const groupBy = require('lodash.groupby');
 
@@ -15,7 +15,7 @@ const createUserLoader = () => ({
           id_in: userIds
         }
       })
-      .$fragment(fragments.userDetails);
+      .$fragment(userDetails);
 
     // Create a key:value objects from results
     const usersById = keyBy(loadedUsers, 'id');
@@ -41,7 +41,7 @@ const createUserLoader = () => ({
           username_in: usernames
         }
       })
-      .$fragment(fragments.userDetails);
+      .$fragment(userDetails);
 
     // Create a key:value objects from results
     const usersByUsername = keyBy(loadedUsers, 'username');
@@ -70,7 +70,7 @@ const createRecipeLoader = () => ({
           id_in: recipeIds
         }
       })
-      .$fragment(fragments.fullRecipeDetails);
+      .$fragment(recipeDetails);
 
     // Create a key:value objects from results
     const recipesById = keyBy(recipes, 'id');
@@ -98,7 +98,7 @@ const createRecipeLoader = () => ({
           ]
         }
       })
-      .$fragment(fragments.fullRecipeDetails);
+      .$fragment(recipeDetails);
 
     // Group recipes by author id
     const groupedRecipes = groupBy(loadedRecipes, 'author.id');
@@ -124,7 +124,7 @@ const createRecipeLoader = () => ({
           ]
         }
       })
-      .$fragment(fragments.fullRecipeDetails);
+      .$fragment(recipeDetails);
 
     // Group recipes by author id
     const groupedRecipes = groupBy(loadedRecipes, 'author.id');

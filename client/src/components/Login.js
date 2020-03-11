@@ -2,12 +2,12 @@ import React, { useEffect } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import useField from '../hooks/useField';
-import mutations from '../graphql/mutations';
+import { LOGIN } from '../graphql/mutations';
 
 const Login = ({ getCurrentUser, history }) => {
   const usernameOrEmail = useField('text');
   const password = useField('password');
-  const [login, { error, data }] = useMutation(mutations.LOGIN);
+  const [login, { error, data }] = useMutation(LOGIN);
 
   useEffect(() => {
     if (data) {
@@ -19,7 +19,7 @@ const Login = ({ getCurrentUser, history }) => {
 
       history.push('/');
     }
-  }, [data]);
+  }, [data]); // eslint-disable-line
 
   const handleLogin = async event => {
     event.preventDefault();

@@ -4,16 +4,14 @@ const {
   ForbiddenError,
   UserInputError
 } = require('apollo-server');
-const fragments = require('../graphql/fragments');
+const { userDetails, recipeDetails } = require('../graphql/fragments');
 // TODO: Validations and error handling
 
 const generateRecipeModel = currentUser => ({
   // QUERIES:
 
   getAll: async () => {
-    const recipes = await prisma
-      .recipes()
-      .$fragment(fragments.fullRecipeDetails);
+    const recipes = await prisma.recipes().$fragment(recipeDetails);
 
     return recipes;
   },
@@ -28,11 +26,10 @@ const generateRecipeModel = currentUser => ({
           }
         }
       })
-      .$fragment(fragments.fullRecipeDetails),
+      .$fragment(recipeDetails),
 
   // Retrieval of full recipe delails by recipe id => moved to dataloaders
-  getById: async id =>
-    await prisma.recipe(id).$fragment(fragments.fullRecipeDetails),
+  getById: async id => await prisma.recipe(id).$fragment(recipeDetails),
 
   // Get recipe count including private and draft recipes
   getRecipeCount: async () =>
@@ -47,7 +44,7 @@ const generateRecipeModel = currentUser => ({
       .recipes({
         where: { published: true }
       })
-      .$fragment(fragments.fullRecipeDetails),
+      .$fragment(recipeDetails),
 
   // Count all PUBLISHED recipes in database
   getPublishedRecipeCount: async () =>
@@ -60,7 +57,7 @@ const generateRecipeModel = currentUser => ({
 
   getCommentsByRecipeId: async id => {
     const comments = await prisma.recipe({ id }).comments();
-    console.log(comments);
+    comments;
     return comments;
   },
 
@@ -84,7 +81,7 @@ const generateRecipeModel = currentUser => ({
         notes: { set: input.notes || null },
         tags: { set: input.tags || null }
       })
-      .$fragment(fragments.fullRecipeDetails);
+      .$fragment(recipeDetails);
   },
 
   updateRecipe: async input => {
@@ -114,7 +111,7 @@ const generateRecipeModel = currentUser => ({
         where: { id },
         data: recipeData
       })
-      .$fragment(fragments.fullRecipeDetails);
+      .$fragment(recipeDetails);
 
     return updatedRecipe;
   },
@@ -147,7 +144,7 @@ const generateRecipeModel = currentUser => ({
           published: !recipe.published
         }
       })
-      .$fragment(fragments.fullRecipeDetails);
+      .$fragment(recipeDetails);
 
     return updatedRecipe;
   },
@@ -155,11 +152,11 @@ const generateRecipeModel = currentUser => ({
   commentRecipe: async input => {
     if (!currentUser) return null;
 
-    const { id, content } = input;
+    const { recipeId, content } = input;
 
     const updatedRecipe = await prisma
       .updateRecipe({
-        where: { id },
+        where: { recipeId },
         data: {
           comments: {
             create: [
@@ -173,7 +170,7 @@ const generateRecipeModel = currentUser => ({
           }
         }
       })
-      .$fragment(fragments.fullRecipeDetails);
+      .$fragment(recipeDetails);
 
     return updatedRecipe;
   },
@@ -222,9 +219,9 @@ const generateRecipeModel = currentUser => ({
           }
         }
       })
-      .$fragment(fragments.fullRecipeDetails);
+      .$fragment(recipeDetails);
 
-    console.log(updatedRecipe.comments);
+    updatedRecipe.comments;
 
     return updatedRecipe;
   },
@@ -268,19 +265,47 @@ const generateRecipeModel = currentUser => ({
           }
         }
       })
-      .$fragment(fragments.fullRecipeDetails);
+      .$fragment(recipeDetails);
 
     return updatedRecipe;
   },
 
   likeRecipe: async input => {
     if (!currentUser) return null;
-    // TODO
+
+    const { recipeId } = input;
+
+    const updatedUser = await prisma
+      .updateUser({
+        where: { id: currentUser.id },
+        data: {
+          likedRecipes: {
+            connect: { id: recipeId }
+          }
+        }
+      })
+      .$fragment(userDetails);
+
+    return updatedUser;
   },
 
   unlikeRecipe: async input => {
     if (!currentUser) return null;
-    // TODO
+
+    const { recipeId } = input;
+
+    const updatedUser = await prisma
+      .updateUser({
+        where: { id: currentUser.id },
+        data: {
+          likedRecipes: {
+            disconnect: { id: recipeId }
+          }
+        }
+      })
+      .$fragment(userDetails);
+
+    return updatedUser;
   },
 
   rateRecipe: async input => {

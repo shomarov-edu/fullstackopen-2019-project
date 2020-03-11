@@ -2,20 +2,20 @@ import React, { useEffect } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import useField from '../hooks/useField';
-import mutations from '../graphql/mutations';
+import { SIGNUP } from '../graphql/mutations';
 
 const SignUp = ({ history }) => {
   const name = useField('text');
   const username = useField('text');
   const email = useField('email');
   const password = useField('password');
-  const [signup, { error, data }] = useMutation(mutations.SIGNUP);
+  const [signup, { error, data }] = useMutation(SIGNUP);
 
   useEffect(() => {
     if (data && data.signup) {
       history.push('/recipes');
     }
-  }, [data]);
+  }, [data]); // eslint-disable-line
 
   const handleSubmit = async event => {
     event.preventDefault();

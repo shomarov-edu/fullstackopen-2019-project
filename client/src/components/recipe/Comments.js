@@ -1,14 +1,12 @@
 import React from 'react';
 import { useMutation } from '@apollo/client';
-import useField from '../hooks/useField';
+import useField from '../../hooks/useField';
 import Comment from './Comment';
-import mutations from '../graphql/mutations';
+import { COMMENT_RECIPE } from '../../graphql/mutations';
 
 const Comments = ({ currentUser, recipe }) => {
   const commentField = useField('text');
-  const [commentRecipe, commentRecipeResult] = useMutation(
-    mutations.COMMENT_RECIPE
-  );
+  const [commentRecipe] = useMutation(COMMENT_RECIPE);
 
   const handleSubmit = async event => {
     event.preventDefault();
@@ -22,10 +20,6 @@ const Comments = ({ currentUser, recipe }) => {
 
     commentField.reset();
   };
-
-  if (commentRecipeResult.error) {
-    console.log(commentRecipeResult);
-  }
 
   return (
     <React.Fragment>

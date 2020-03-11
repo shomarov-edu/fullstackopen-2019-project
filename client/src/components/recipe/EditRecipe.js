@@ -1,57 +1,51 @@
 import React, { useState } from 'react';
-import { useMutation } from '@apollo/client';
-import useField from '../hooks/useField';
-import { CREATE_RECIPE } from '../graphql/mutations';
+import { Link } from 'react-router-dom';
+import { useQuery, useMutation } from '@apollo/client';
+import useField from '../../hooks/useField';
+import { RECIPE } from '../../graphql/queries';
+import Comments from './Comments';
+import { capitalize } from 'lodash';
 
-const NewRecipeForm = ({ user }) => {
-  const [category, setCategory] = useState('');
-  const title = useField('text');
-  const description = useField('text');
-  const cookingTime = useField('number');
-  const [difficulty, setDifficulty] = useState('');
-  const [ingredients, setIngredients] = useState(['']);
-  const [method, setMethod] = useState(['']);
-  const [notes, setNotes] = useState(['']);
-  const [tags, setTags] = useState(['']);
-  const source = useField('text');
-
-  const [createRecipe] = useMutation(CREATE_RECIPE);
-
+const EditRecipe = ({
+  setEdit,
+  edit,
+  title,
+  description,
+  time,
+  difficulty,
+  setDifficulty,
+  ingredients,
+  setIngredients,
+  method,
+  setMethod,
+  notes,
+  setNotes,
+  source
+}) => {
   const handleSubmit = async event => {
     event.preventDefault();
 
-    const newRecipeData = {
-      category,
+    const updatedRecipeData = {
       title: title.input.value,
       description: description.input.value,
-      cookingTime: parseInt(cookingTime.input.value),
+      time: time.input.value,
       difficulty,
       ingredients,
       method,
       notes,
-      tags,
       source: source.input.value
     };
 
-    createRecipe({ variables: { newRecipeData } });
+    setEdit(!edit);
   };
 
   return (
     <div>
       <form onSubmit={handleSubmit}>
-        Category:
-        <select
-          name="categories"
-          onChange={event => setCategory(event.target.value)}
-        >
-          <option value="">Please choose category</option>
-          <option value="BREAKFAST">Breakfast</option>
-          <option value="SALAD">Salad</option>
-          <option value="SOUP">Soup</option>
-          <option value="MAIN">Main</option>
-          <option value="DESSERT">Dessert</option>
-        </select>
-        <br />
+        <p>
+          <button onClick={() => setEdit(!edit)}>cancel</button>
+          <button type="submit">save</button>
+        </p>
         Title:
         <input {...title.input} />
         <br />
@@ -59,7 +53,7 @@ const NewRecipeForm = ({ user }) => {
         <input {...description.input} />
         <br />
         Cooking time (minutes):
-        <input {...cookingTime.input} />
+        <input {...time.input} />
         <br />
         <p>Difficulty:</p>
         <div>
@@ -68,6 +62,7 @@ const NewRecipeForm = ({ user }) => {
             id="easy"
             name="difficulty"
             value="EASY"
+            defaultChecked={difficulty === 'EASY'}
             onChange={event => setDifficulty(event.target.value)}
           />
           <label htmlFor="easy">Easy</label>
@@ -78,6 +73,7 @@ const NewRecipeForm = ({ user }) => {
             id="intermediate"
             name="difficulty"
             value="INTERMEDIATE"
+            defaultChecked={difficulty === 'INTERMEDIATE'}
             onChange={event => setDifficulty(event.target.value)}
           />
           <label htmlFor="intermediate">Intermediate</label>
@@ -88,6 +84,7 @@ const NewRecipeForm = ({ user }) => {
             id="hard"
             name="difficulty"
             value="HARD"
+            defaultChecked={difficulty === 'HARD'}
             onChange={event => setDifficulty(event.target.value)}
           />
           <label htmlFor="hard">Hard</label>
@@ -106,13 +103,12 @@ const NewRecipeForm = ({ user }) => {
               />
               <button
                 type="button"
-                onClick={() =>
-                  setIngredients(
-                    ingredients.filter((ingredient, i) => i !== index)
-                  )
-                }
+                onClick={e => {
+                  ingredients.splice(index, 1);
+                  setIngredients([...ingredients]);
+                }}
               >
-                remove
+                delete
               </button>
               <br />
             </div>
@@ -138,11 +134,12 @@ const NewRecipeForm = ({ user }) => {
               />
               <button
                 type="button"
-                onClick={() =>
-                  setMethod(method.filter((step, i) => i !== index))
-                }
+                onClick={e => {
+                  method.splice(index, 1);
+                  setMethod([...method]);
+                }}
               >
-                remove
+                delete
               </button>
               <br />
             </div>
@@ -165,9 +162,12 @@ const NewRecipeForm = ({ user }) => {
               />
               <button
                 type="button"
-                onClick={() => setNotes(notes.filter((note, i) => i !== index))}
+                onClick={e => {
+                  notes.splice(index, 1);
+                  setNotes([...notes]);
+                }}
               >
-                remove
+                delete
               </button>
               <br />
             </div>
@@ -176,39 +176,12 @@ const NewRecipeForm = ({ user }) => {
         <button type="button" onClick={() => setNotes(notes.concat(''))}>
           Add
         </button>
-        <p>Additional notes:</p>
-        {tags.map((value, index) => {
-          return (
-            <div key={index}>
-              Tag {index + 1}:
-              <input
-                value={value}
-                onChange={e => {
-                  tags[index] = e.target.value;
-                  setTags([...tags]);
-                }}
-              />
-              <button
-                type="button"
-                onClick={() => setTags(tags.filter((tag, i) => i !== index))}
-              >
-                remove
-              </button>
-              <br />
-            </div>
-          );
-        })}
-        <button type="button" onClick={() => setTags(tags.concat(''))}>
-          Add
-        </button>
         <br />
         Source (if any):
         <input {...source.input} />
-        <br />
-        <button type="submit">Save</button>
       </form>
     </div>
   );
 };
 
-export default NewRecipeForm;
+export default EditRecipe;

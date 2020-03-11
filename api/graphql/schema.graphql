@@ -50,10 +50,11 @@ extend type Mutation {
   login(input: LogInInput!): Token
   followUser(input: FollowUserInput!): User!
   unfollowUser(input: UnfollowUserInput!): User!
-  updateUser(input: UpdateUserInput!): User!
+  updateName(input: UpdateNameInput!): User!
+  updateEmail(input: UpdateEmailInput!): User!
   updateUsername(input: UpdateUsernameInput!): User!
   updatePassword(input: UpdatePasswordInput!): Boolean!
-  deleteAccount(input: deleteAccountInput!): Boolean!
+  deleteAccount(input: DeleteAccountInput!): Boolean!
 }
 
 input SignUpInput {
@@ -76,14 +77,15 @@ input UnfollowUserInput {
   idToUnfollow: ID!
 }
 
-input UpdateUserInput {
-  password: String!
-  name: String
-  email: String
+input UpdateNameInput {
+  newName: String
+}
+
+input UpdateEmailInput {
+  newEmail: String!
 }
 
 input UpdateUsernameInput {
-  password: String!
   newUsername: String!
 }
 
@@ -92,7 +94,7 @@ input UpdatePasswordInput {
   newPassword: String!
 }
 
-input deleteAccountInput {
+input DeleteAccountInput {
   password: String!
 }
 
@@ -169,8 +171,8 @@ extend type Mutation {
   commentRecipe(input: CommentRecipeInput!): Recipe!
   editComment(input: EditCommentInput!): Recipe!
   deleteComment(input: DeleteCommentInput!): Recipe!
-  likeRecipe(input: LikeRecipeInput!): Recipe!
-  unlikeRecipe(input: UnlikeRecipeInput!): Recipe!
+  likeRecipe(input: LikeRecipeInput!): User!
+  unlikeRecipe(input: UnlikeRecipeInput!): User!
   rateRecipe(input: RateRecipeInput!): Recipe!
   deleteRecipe(input: DeleteRecipeInput!): Boolean!
 }
@@ -202,11 +204,11 @@ input UpdateRecipeInput {
 }
 
 input PublishRecipeInput {
-  id: ID!
+  recipeId: ID!
 }
 
 input CommentRecipeInput {
-  id: ID!
+  recipeId: ID!
   content: String!
 }
 
@@ -222,11 +224,11 @@ input DeleteCommentInput {
 }
 
 input LikeRecipeInput {
-  id: ID!
+  recipeId: ID!
 }
 
 input UnlikeRecipeInput {
-  id: ID!
+  recipeId: ID!
 }
 
 input RateRecipeInput {
@@ -234,7 +236,7 @@ input RateRecipeInput {
 }
 
 input DeleteRecipeInput {
-  id: ID!
+  recipeId: ID!
 }
 
 # Root Query and Mutation types to extend from

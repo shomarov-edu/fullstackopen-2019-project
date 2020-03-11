@@ -1,16 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { gql, useQuery, useLazyQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import useField from '../hooks/useField';
-import queries from '../graphql/queries';
+import { PUBLISHED_RECIPES } from '../graphql/queries';
 
 const AllRecipes = () => {
   const search = useField('text');
-  const result = useQuery(queries.PUBLISHED_RECIPES);
+  const result = useQuery(PUBLISHED_RECIPES);
 
   if (result.loading) return <div>loading...</div>;
   if (result.error) {
-    console.log(result);
     return <div>error: {result.error.message}</div>;
   }
 
