@@ -6,12 +6,16 @@ const typeDefs = fs.readFileSync(`${appRoot}/graphql/schema.graphql`, 'utf8');
 const resolvers = require('../graphql/resolvers');
 const context = require('./context');
 
+const formatError = error => {
+  console.log(error);
+  return error;
+};
+
 const schema = makeExecutableSchema({
   typeDefs,
-  resolvers
+  resolvers,
+  formatError
 });
-
-// TODO: formatError function
 
 const apollo = new ApolloServer({
   schema,
