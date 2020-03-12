@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useMutation } from '@apollo/client';
 import useField from '../../hooks/useField';
 import { UPDATE_NAME } from '../../graphql/mutations';
@@ -6,7 +6,7 @@ import { UPDATE_NAME } from '../../graphql/mutations';
 const Name = ({ name }) => {
   const nameField = useField('text');
   const [editName, setEditName] = useState(false);
-  const [updateName, updateNameResult] = useMutation(UPDATE_NAME);
+  const [updateName] = useMutation(UPDATE_NAME);
 
   const toggleEditName = () => {
     nameField.setValue(name);

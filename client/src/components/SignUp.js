@@ -41,21 +41,26 @@ const SignUp = ({ history }) => {
     <div>
       <h2>Sign up</h2>
       <form onSubmit={handleSubmit}>
-        Name:
-        <input {...name.input} name="firstname" autoFocus />
-        <br />
-        Username:
-        <input {...username.input} name="firstname" />
-        <br />
-        Email Address:
-        <input {...email.input} />
-        <br />
-        Password:
-        <input {...password.input} />
-        <br />
-        <button type="submit">Sign Up</button>
-        <br />
-        <Link to="/signin">Already have an account? Sign in</Link>
+        <p>
+          Name:
+          <input {...name.input} name="firstname" autoFocus />
+        </p>
+        <p>
+          Username:
+          <input {...username.input} name="firstname" />
+        </p>
+        <p>
+          Email Address:
+          <input {...email.input} />
+        </p>
+        <p>
+          Password:
+          <input {...password.input} />
+        </p>
+        <p>
+          <button type="submit">Sign Up</button>
+        </p>
+        <Link to="/login">Already have an account? Sign in</Link>
       </form>
     </div>
   );

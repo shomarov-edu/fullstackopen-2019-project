@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useQuery, useMutation } from '@apollo/client';
-import useField from '../../hooks/useField';
-import { RECIPE } from '../../graphql/queries';
-import Comments from './Comments';
-import { capitalize } from 'lodash';
+import React from 'react';
+import { useMutation } from '@apollo/client';
+import { UPDATE_RECIPE } from '../../graphql/mutations';
+import Recipe from './Recipe';
 
 const EditRecipe = ({
+  recipe,
   setEdit,
   edit,
+  category,
+  setCategory,
   title,
   description,
-  time,
+  cookingTime,
   difficulty,
   setDifficulty,
   ingredients,
@@ -19,24 +19,40 @@ const EditRecipe = ({
   method,
   setMethod,
   notes,
-  setNotes,
-  source
+  setNotes
 }) => {
+  const [updateRecipe, updateRecipeResult] = useMutation(UPDATE_RECIPE, {
+    onCompleted: () => setEdit(false),
+    onError: ({ graphQLErrors, networkError }) => {
+      if (graphQLErrors) {
+        graphQLErrors.map(({ message, locations, path }) =>
+          console.log(
+            `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
+          )
+        );
+      }
+      if (networkError) console.log(`[Network error]: ${networkError}`);
+    }
+  });
+
+  console.log(updateRecipeResult);
+
   const handleSubmit = async event => {
     event.preventDefault();
 
-    const updatedRecipeData = {
+    const updateRecipeInput = {
+      id: recipe.id,
+      category,
       title: title.input.value,
       description: description.input.value,
-      time: time.input.value,
+      cookingTime: cookingTime.input.value,
       difficulty,
       ingredients,
       method,
-      notes,
-      source: source.input.value
+      notes
     };
 
-    setEdit(!edit);
+    updateRecipe({ variables: { updateRecipeInput } });
   };
 
   return (
@@ -46,15 +62,33 @@ const EditRecipe = ({
           <button onClick={() => setEdit(!edit)}>cancel</button>
           <button type="submit">save</button>
         </p>
-        Title:
-        <input {...title.input} />
-        <br />
-        Description:
-        <input {...description.input} />
-        <br />
-        Cooking time (minutes):
-        <input {...time.input} />
-        <br />
+        <p>
+          Category:
+          <select
+            name="categories"
+            onChange={event => setCategory(event.target.value)}
+            value={category}
+          >
+            <option value="">Please choose category</option>
+            <option value="BREAKFAST">Breakfast</option>
+            <option value="SALAD">Salad</option>
+            <option value="SOUP">Soup</option>
+            <option value="MAIN">Main</option>
+            <option value="DESSERT">Dessert</option>
+          </select>
+        </p>
+        <p>
+          Title:
+          <input {...title.input} />
+        </p>
+        <p>
+          Description:
+          <input {...description.input} />
+        </p>
+        <p>
+          Cooking time (minutes):
+          <input {...cookingTime.input} />
+        </p>
         <p>Difficulty:</p>
         <div>
           <input
@@ -92,7 +126,7 @@ const EditRecipe = ({
         <p>Ingredients:</p>
         {ingredients.map((value, index) => {
           return (
-            <div key={index}>
+            <p key={index}>
               Ingredient {index + 1}:
               <input
                 value={value}
@@ -104,14 +138,15 @@ const EditRecipe = ({
               <button
                 type="button"
                 onClick={e => {
-                  ingredients.splice(index, 1);
-                  setIngredients([...ingredients]);
+                  setIngredients(
+                    ingredients.filter((ingredient, i) => i !== index)
+                  );
                 }}
               >
                 delete
               </button>
               <br />
-            </div>
+            </p>
           );
         })}
         <button
@@ -120,10 +155,10 @@ const EditRecipe = ({
         >
           Add
         </button>
-        <p>method:</p>
+        <p>Method:</p>
         {method.map((value, index) => {
           return (
-            <div key={index}>
+            <p key={index}>
               Step {index + 1}:
               <input
                 value={value}
@@ -135,14 +170,13 @@ const EditRecipe = ({
               <button
                 type="button"
                 onClick={e => {
-                  method.splice(index, 1);
-                  setMethod([...method]);
+                  setMethod(method.filter((m, i) => i !== index));
                 }}
               >
                 delete
               </button>
               <br />
-            </div>
+            </p>
           );
         })}
         <button type="button" onClick={() => setMethod(method.concat(''))}>
@@ -151,7 +185,7 @@ const EditRecipe = ({
         <p>Additional notes:</p>
         {notes.map((value, index) => {
           return (
-            <div key={index}>
+            <p key={index}>
               Note {index + 1}:
               <input
                 value={value}
@@ -163,22 +197,18 @@ const EditRecipe = ({
               <button
                 type="button"
                 onClick={e => {
-                  notes.splice(index, 1);
-                  setNotes([...notes]);
+                  setNotes(notes.filter((n, i) => i !== index));
                 }}
               >
                 delete
               </button>
               <br />
-            </div>
+            </p>
           );
         })}
         <button type="button" onClick={() => setNotes(notes.concat(''))}>
           Add
         </button>
-        <br />
-        Source (if any):
-        <input {...source.input} />
       </form>
     </div>
   );

@@ -88,14 +88,9 @@ const createRecipeLoader = () => ({
     const loadedRecipes = await prisma
       .recipes({
         where: {
-          AND: [
-            {
-              author: {
-                id_in: userIds
-              },
-              published: true
-            }
-          ]
+          author: {
+            id_in: userIds
+          }
         }
       })
       .$fragment(recipeDetails);

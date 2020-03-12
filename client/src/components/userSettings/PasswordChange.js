@@ -2,15 +2,28 @@ import React, { useState } from 'react';
 import { useMutation } from '@apollo/client';
 import useField from '../../hooks/useField';
 import { UPDATE_PASSWORD } from '../../graphql/mutations';
+import Notification from '../Notification';
 
-const PasswordChange = () => {
+const PasswordChange = ({ notify }) => {
   const passwordField = useField('password');
   const newPasswordField = useField('password');
+  const [message, setMessage] = useState(null);
   const [editPassword, setEditPassword] = useState(false);
-  const [updatePassword, updatePasswordResult] = useMutation(UPDATE_PASSWORD);
+  const [updatePassword] = useMutation(UPDATE_PASSWORD, {
+    onCompleted: () => {
+      toggleEditPassword();
+    },
+    onError: ({ graphQLErrors }) => {
+      passwordField.reset();
+      newPasswordField.reset();
+      notify(graphQLErrors[0].message);
+    }
+  });
 
   const toggleEditPassword = () => {
     setEditPassword(!editPassword);
+    passwordField.reset();
+    newPasswordField.reset();
   };
 
   const handleUpdatePassword = () => {
@@ -40,6 +53,7 @@ const PasswordChange = () => {
           </p>
         </React.Fragment>
       )}
+      <Notification message={message} />
     </React.Fragment>
   );
 };

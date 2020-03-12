@@ -14,11 +14,20 @@ import Followers from './components/Followers';
 import Settings from './components/userSettings/Settings';
 import { ME } from './graphql/queries';
 import LikedRecipes from './components/LikedRecipe';
+import Drafts from './components/recipe/Drafts';
+import Notification from './components/Notification';
 
 const App = () => {
   const [currentUser, setCurrentUser] = useState(null);
-  const [getCurrentUser, getCurrentUserResult] = useLazyQuery(ME, {
-    fetchPolicy: 'network-only'
+  const [message, setMessage] = useState(null);
+  const [getCurrentUser] = useLazyQuery(ME, {
+    fetchPolicy: 'network-only',
+    onCompleted: data => {
+      setCurrentUser(data.me);
+    },
+    onError: error => {
+      console.log(error);
+    }
   });
 
   useEffect(() => {
@@ -28,19 +37,18 @@ const App = () => {
     }
   }, []); // eslint-disable-line
 
-  useEffect(() => {
-    if (getCurrentUserResult.data) {
-      setCurrentUser(getCurrentUserResult.data.me);
-    }
-  }, [getCurrentUserResult.data]);
-
-  if (getCurrentUserResult.error)
-    return <div>error this: {getCurrentUserResult.error.message}</div>;
+  const notify = errorMessage => {
+    setMessage(errorMessage);
+    setTimeout(() => {
+      setMessage(null);
+    }, 5000);
+  };
 
   return (
     <React.Fragment>
       <Router>
         <Navigation currentUser={currentUser} setCurrentUser={setCurrentUser} />
+        <Notification message={message} />
         <Route exact path="/recipes" render={() => <AllRecipes />} />
         <Route
           exact
@@ -87,6 +95,11 @@ const App = () => {
             />
             <Route
               exact
+              path={`/users/${currentUser.username}/drafts`}
+              render={() => <Drafts currentUser={currentUser} />}
+            />
+            <Route
+              exact
               path={`/users/${currentUser.username}/likes`}
               render={() => <LikedRecipes currentUser={currentUser} />}
             />
@@ -97,12 +110,18 @@ const App = () => {
             <Route
               exact
               path={`/users/${currentUser.username}/recipes/new`}
-              render={() => <NewRecipeForm user={currentUser} />}
+              render={() => <NewRecipeForm notify={notify} />}
             />
             <Route
               exact
               path={`/settings`}
-              render={() => <Settings currentUser={currentUser} />}
+              render={() => (
+                <Settings
+                  currentUser={currentUser}
+                  setCurrentUser={setCurrentUser}
+                  notify={notify}
+                />
+              )}
             />
           </React.Fragment>
         ) : null}

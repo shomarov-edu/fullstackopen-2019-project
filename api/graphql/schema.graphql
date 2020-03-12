@@ -17,6 +17,8 @@ type User {
   recipeCount: Int!
   publishedRecipes: [Recipe!]!
   publishedRecipeCount: Int!
+  unpublishedRecipes: [Recipe!]!
+  unpublishedRecipeCount: Int!
   likedRecipes: [Recipe!]
   likedRecipeCount: Int!
   following: [User!]
@@ -126,7 +128,6 @@ type Recipe {
   method: [String!]!
   notes: [String!]
   tags: [String!]
-  source: String
   created: String!
   updated: String!
   published: Boolean!
@@ -187,20 +188,19 @@ input CreateRecipeInput {
   method: [String!]!
   notes: [String!]
   tags: [String!]
-  source: String
 }
 
 input UpdateRecipeInput {
+  id: ID!
   category: Category
   title: String
   description: String
-  cookTime: Int
+  cookingTime: Int
   difficulty: Difficulty
   ingredients: [String!]
   method: [String!]
   notes: [String!]
   tags: [String!]
-  source: String
 }
 
 input PublishRecipeInput {

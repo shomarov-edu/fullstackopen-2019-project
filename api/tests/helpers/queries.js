@@ -100,7 +100,6 @@ const queries = {
         method
         notes
         tags
-        source
         created
         updated
         published
@@ -133,7 +132,6 @@ const queries = {
         method
         notes
         tags
-        source
         created
         updated
         published

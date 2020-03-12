@@ -66,8 +66,7 @@ describe('user is able to signup, login, create and save a new recipe', () => {
         'Pour the mixture into the tin. Bake for 30 mins or until a skewer comes out clean. Cool in the tin for 10 mins, then remove and transfer the cake to a wire rack to cool fully.',
         'For the icing, sieve the icing sugar into a bowl. Mix in just enough lemon juice to make an icing thick enough to pour over the loaf (if you make the icing too thin, it will just run off the cake).'
       ],
-      notes: ['nice one!'],
-      source: 'https://www.bbcgoodfood.com/user/4614791/recipe/vegan-lemon-cake'
+      notes: ['nice one!']
     };
 
     const result = await mutate({

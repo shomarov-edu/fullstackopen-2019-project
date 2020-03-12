@@ -21,7 +21,6 @@ const recipes = [
       'For the icing, sieve the icing sugar into a bowl. Mix in just enough lemon juice to make an icing thick enough to pour over the loaf (if you make the icing too thin, it will just run off the cake).'
     ],
     notes: ['nice one!'],
-    source: 'https://www.bbcgoodfood.com/user/4614791/recipe/vegan-lemon-cake',
     published: true
   },
   {
@@ -53,7 +52,6 @@ const recipes = [
       'Serve with toasted pitta bread, 200g tub tomato salsa and a green salad.'
     ],
     notes: ['want this'],
-    source: 'https://www.bbcgoodfood.com/recipes/falafel-burgers-0',
     published: true
   },
   {
@@ -86,7 +84,6 @@ const recipes = [
       'Swap out the corn, dill and capers for roasted red peppers and olives for a different twist.',
       'Try it grilled with some plant-based cheese for a plant-based take on the tuna melt (this will change your life).'
     ],
-    source: 'https://gamechangersmovie.com/recipes/chickpea-tuna-salad/',
     published: true
   },
   {
@@ -122,7 +119,6 @@ const recipes = [
       'Swap out the corn, dill and capers for roasted red peppers and olives for a different twist.',
       'Try it grilled with some plant-based cheese for a plant-based take on the tuna melt (this will change your life).'
     ],
-    source: 'https://gamechangersmovie.com/recipes/millet-mercimek-koftesi/',
     published: true
   },
   {
@@ -166,8 +162,6 @@ const recipes = [
       '*Nutrition information is a rough estimate calculated without toppings.',
       '*These pancakes are adapted from the Banana Walnut Flapjacks at one of my favorite Portland cafes - Harlow. The recipe was generously shared with me here.'
     ],
-    source:
-      'https://minimalistbaker.com/life-changing-banana-walnut-pancakes-gluten-free/',
     published: true
   },
   {
@@ -200,7 +194,6 @@ const recipes = [
       "*If you're oil-free, you could try subbing something like more nut or seed butter, or potentially applesauce.",
       '*Nutrition information is a rough estimate calculated without optional ingredients.'
     ],
-    source: 'https://minimalistbaker.com/4-ingredient-vegan-easy-brownies/',
     published: true
   }
 ];

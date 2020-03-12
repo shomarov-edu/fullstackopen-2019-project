@@ -5,7 +5,7 @@ import Username from './Username';
 import PasswordChange from './PasswordChange';
 import DeleteAccount from './DeleteAccount';
 
-const Settings = ({ currentUser }) => {
+const Settings = ({ currentUser, setCurrentUser, notify }) => {
   if (!currentUser) return null;
 
   return (
@@ -13,8 +13,12 @@ const Settings = ({ currentUser }) => {
       <Name name={currentUser.name} />
       <Email email={currentUser.email} />
       <Username username={currentUser.username} />
-      <PasswordChange />
-      <DeleteAccount />
+      <PasswordChange notify={notify} />
+      <DeleteAccount
+        currentUser={currentUser}
+        setCurrentUser={setCurrentUser}
+        notify={notify}
+      />
     </React.Fragment>
   );
 };

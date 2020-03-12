@@ -44,10 +44,9 @@ type Recipe {
   method: [String!]!
   notes: [String!]!
   tags: [String!]!
-  source: String
   created: DateTime! @createdAt
   updated: DateTime! @updatedAt
-  published: Boolean! @default(value: true)
+  published: Boolean! @default(value: false)
   likedBy: [User!]! @relation(name: "LikedRecipes")
   ratings: [Grade!]!
   comments: [Comment!]!

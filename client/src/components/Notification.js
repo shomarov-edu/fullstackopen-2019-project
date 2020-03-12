@@ -1,18 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 const Notification = ({ message }) => {
-  const [errorMessage, setErrorMessage] = useState(null);
+  if (!message) return null;
 
-  useEffect(() => {
-    setErrorMessage(message);
-    setTimeout(() => {
-      setErrorMessage(null);
-    }, 500);
-  }, [errorMessage]);
-
-  if (!errorMessage) return null;
-
-  return <div style={{ color: 'red' }}>{errorMessage}</div>;
+  return <p style={{ color: 'red' }}>{message}</p>;
 };
 
 export default Notification;

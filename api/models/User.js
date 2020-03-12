@@ -1,9 +1,5 @@
 const { prisma } = require('../prisma');
-const {
-  AuthenticationError,
-  ForbiddenError,
-  UserInputError
-} = require('apollo-server');
+const { AuthenticationError, UserInputError } = require('apollo-server');
 const comparePasswords = require('../helpers/comparePasswords');
 const encryptPassword = require('../helpers/encryptPassword');
 const { userDetails, recipeDetails } = require('../graphql/fragments');
@@ -18,8 +14,6 @@ const generateUserModel = currentUser => ({
 
     return await prisma.user({ id: currentUser.id }).$fragment(userDetails);
   },
-
-  // Only admins can view personal information of all users
 
   getAll: async input => {
     const users = await prisma.users().$fragment(userDetails);
@@ -186,13 +180,19 @@ const generateUserModel = currentUser => ({
     }
   },
 
-  deleteUser: async password => {
+  deleteAccount: async input => {
     if (!currentUser) return null;
+
+    const { password } = input;
 
     const user = await prisma.user({ id: currentUser.id });
 
     if (!(user && (await comparePasswords(password, user.passwordHash))))
       throw new AuthenticationError('invalid username or password');
+
+    await prisma.deleteManyRecipes({
+      author: { id: currentUser.id }
+    });
 
     await prisma.deleteUser({ id: currentUser.id });
 

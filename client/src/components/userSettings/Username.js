@@ -6,7 +6,7 @@ import { UPDATE_USERNAME } from '../../graphql/mutations';
 const Username = ({ username }) => {
   const usernameField = useField('username');
   const [editUsername, setEditUsername] = useState(false);
-  const [updateUsername, updateUsernameResult] = useMutation(UPDATE_USERNAME);
+  const [updateUsername] = useMutation(UPDATE_USERNAME);
 
   const toggleEditUsername = () => {
     usernameField.setValue(username);

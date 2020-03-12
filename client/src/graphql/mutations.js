@@ -80,8 +80,17 @@ export const DELETE_ACCOUNT = gql`
 // RECIPE MUTATIONS:
 
 export const CREATE_RECIPE = gql`
-  mutation CreateRecipt($newRecipeData: CreateRecipeInput!) {
+  mutation CreateRecipe($newRecipeData: CreateRecipeInput!) {
     createRecipe(input: $newRecipeData) {
+      ...RecipeDetails
+    }
+  }
+  ${fullRecipeDetails}
+`;
+
+export const UPDATE_RECIPE = gql`
+  mutation UpdateRecipe($updateRecipeInput: UpdateRecipeInput!) {
+    updateRecipe(input: $updateRecipeInput) {
       ...RecipeDetails
     }
   }
@@ -131,4 +140,10 @@ export const DELETE_COMMENT = gql`
     }
   }
   ${fullRecipeDetails}
+`;
+
+export const DELETE_RECIPE = gql`
+  mutation DeleteRecipe($deleteRecipeInput: DeleteRecipeInput!) {
+    deleteRecipe(input: $deleteRecipeInput)
+  }
 `;

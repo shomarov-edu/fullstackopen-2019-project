@@ -56,7 +56,8 @@ const Profile = ({ currentUser, username }) => {
 
   return (
     <React.Fragment>
-      <p>{user.name}</p>
+      <p>Name: {user.name}</p>
+      <p>Username: {user.username}</p>
       {sendFriendRequestButton()}
       {recipesVisible ? (
         <button onClick={toggleVisibility}>hide recipes</button>

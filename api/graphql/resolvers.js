@@ -60,7 +60,7 @@ const resolvers = {
       await models.User.updatePassword(input),
 
     deleteAccount: async (_, { input }, { models }) =>
-      await models.User.updatePassword(input.password),
+      await models.User.deleteAccount(input),
 
     createRecipe: async (_, { input }, { models }) =>
       await models.Recipe.createRecipe(input),
@@ -130,6 +130,12 @@ const resolvers = {
 
     publishedRecipeCount: (user, _, __) =>
       user.recipes.filter(r => r.published === true),
+
+    unpublishedRecipes: (user, _, __) =>
+      user.recipes.filter(recipe => recipe.published === false),
+
+    unpublishedRecipeCount: (user, _, __) =>
+      user.recipes.filter(recipe => recipe.published === false).length,
 
     likedRecipes: async (user, _, { models }) =>
       await models.User.getLikedRecipesByUserId(user.id),

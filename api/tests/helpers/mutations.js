@@ -39,7 +39,6 @@ const mutations = {
       $ingredients: [String!]!
       $method: [String!]!
       $notes: [String!]
-      $source: String
     ) {
       createRecipe(
         input: {
@@ -51,7 +50,6 @@ const mutations = {
           ingredients: $ingredients
           method: $method
           notes: $notes
-          source: $source
         }
       ) {
         id
@@ -66,7 +64,6 @@ const mutations = {
         ingredients
         method
         notes
-        source
         published
       }
     }

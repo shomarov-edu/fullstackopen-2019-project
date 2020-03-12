@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useMutation } from '@apollo/client';
 import useField from '../hooks/useField';
 import { CREATE_RECIPE } from '../graphql/mutations';
+import { graphql } from 'graphql';
 
-const NewRecipeForm = ({ user }) => {
+const NewRecipeForm = ({ notify }) => {
   const [category, setCategory] = useState('');
   const title = useField('text');
   const description = useField('text');
@@ -13,9 +14,27 @@ const NewRecipeForm = ({ user }) => {
   const [method, setMethod] = useState(['']);
   const [notes, setNotes] = useState(['']);
   const [tags, setTags] = useState(['']);
-  const source = useField('text');
 
-  const [createRecipe] = useMutation(CREATE_RECIPE);
+  const [createRecipe, createRecipeResult] = useMutation(CREATE_RECIPE, {
+    onCompleted: () => {
+      setCategory('');
+      title.reset();
+      description.reset();
+      cookingTime.reset();
+      setDifficulty('');
+      setIngredients(['']);
+      setMethod(['']);
+      setNotes(['']);
+      setTags(['']);
+    },
+    onError: ({ graphQLErrors, networkError }) => {
+      if (graphQLErrors && graphQLErrors[0].message)
+        notify(graphQLErrors[0].message);
+      if (networkError) console.log(`[Network error]: ${networkError}`);
+    }
+  });
+
+  console.log(createRecipeResult);
 
   const handleSubmit = async event => {
     event.preventDefault();
@@ -29,8 +48,7 @@ const NewRecipeForm = ({ user }) => {
       ingredients,
       method,
       notes,
-      tags,
-      source: source.input.value
+      tags
     };
 
     createRecipe({ variables: { newRecipeData } });
@@ -43,6 +61,7 @@ const NewRecipeForm = ({ user }) => {
         <select
           name="categories"
           onChange={event => setCategory(event.target.value)}
+          required
         >
           <option value="">Please choose category</option>
           <option value="BREAKFAST">Breakfast</option>
@@ -59,7 +78,7 @@ const NewRecipeForm = ({ user }) => {
         <input {...description.input} />
         <br />
         Cooking time (minutes):
-        <input {...cookingTime.input} />
+        <input {...cookingTime.input} required />
         <br />
         <p>Difficulty:</p>
         <div>
@@ -68,6 +87,7 @@ const NewRecipeForm = ({ user }) => {
             id="easy"
             name="difficulty"
             value="EASY"
+            required
             onChange={event => setDifficulty(event.target.value)}
           />
           <label htmlFor="easy">Easy</label>
@@ -201,11 +221,9 @@ const NewRecipeForm = ({ user }) => {
         <button type="button" onClick={() => setTags(tags.concat(''))}>
           Add
         </button>
-        <br />
-        Source (if any):
-        <input {...source.input} />
-        <br />
-        <button type="submit">Save</button>
+        <p>
+          <button type="submit">Save</button>
+        </p>
       </form>
     </div>
   );

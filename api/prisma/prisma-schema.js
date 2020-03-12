@@ -426,7 +426,6 @@ type Recipe {
   notes: [String!]!
   tags: [String!]!
   source: String
-  photo: String
   created: DateTime!
   updated: DateTime!
   published: Boolean!
@@ -458,7 +457,6 @@ input RecipeCreateInput {
   notes: RecipeCreatenotesInput
   tags: RecipeCreatetagsInput
   source: String
-  photo: String
   published: Boolean
   likedBy: UserCreateManyWithoutLikedRecipesInput
   ratings: GradeCreateManyInput
@@ -499,7 +497,6 @@ input RecipeCreateWithoutAuthorInput {
   notes: RecipeCreatenotesInput
   tags: RecipeCreatetagsInput
   source: String
-  photo: String
   published: Boolean
   likedBy: UserCreateManyWithoutLikedRecipesInput
   ratings: GradeCreateManyInput
@@ -519,7 +516,6 @@ input RecipeCreateWithoutLikedByInput {
   notes: RecipeCreatenotesInput
   tags: RecipeCreatetagsInput
   source: String
-  photo: String
   published: Boolean
   ratings: GradeCreateManyInput
   comments: CommentCreateManyInput
@@ -545,8 +541,6 @@ enum RecipeOrderByInput {
   difficulty_DESC
   source_ASC
   source_DESC
-  photo_ASC
-  photo_DESC
   created_ASC
   created_DESC
   updated_ASC
@@ -567,7 +561,6 @@ type RecipePreviousValues {
   notes: [String!]!
   tags: [String!]!
   source: String
-  photo: String
   created: DateTime!
   updated: DateTime!
   published: Boolean!
@@ -646,20 +639,6 @@ input RecipeScalarWhereInput {
   source_not_starts_with: String
   source_ends_with: String
   source_not_ends_with: String
-  photo: String
-  photo_not: String
-  photo_in: [String!]
-  photo_not_in: [String!]
-  photo_lt: String
-  photo_lte: String
-  photo_gt: String
-  photo_gte: String
-  photo_contains: String
-  photo_not_contains: String
-  photo_starts_with: String
-  photo_not_starts_with: String
-  photo_ends_with: String
-  photo_not_ends_with: String
   created: DateTime
   created_not: DateTime
   created_in: [DateTime!]
@@ -715,7 +694,6 @@ input RecipeUpdateInput {
   notes: RecipeUpdatenotesInput
   tags: RecipeUpdatetagsInput
   source: String
-  photo: String
   published: Boolean
   likedBy: UserUpdateManyWithoutLikedRecipesInput
   ratings: GradeUpdateManyInput
@@ -733,7 +711,6 @@ input RecipeUpdateManyDataInput {
   notes: RecipeUpdatenotesInput
   tags: RecipeUpdatetagsInput
   source: String
-  photo: String
   published: Boolean
 }
 
@@ -748,7 +725,6 @@ input RecipeUpdateManyMutationInput {
   notes: RecipeUpdatenotesInput
   tags: RecipeUpdatetagsInput
   source: String
-  photo: String
   published: Boolean
 }
 
@@ -804,7 +780,6 @@ input RecipeUpdateWithoutAuthorDataInput {
   notes: RecipeUpdatenotesInput
   tags: RecipeUpdatetagsInput
   source: String
-  photo: String
   published: Boolean
   likedBy: UserUpdateManyWithoutLikedRecipesInput
   ratings: GradeUpdateManyInput
@@ -823,7 +798,6 @@ input RecipeUpdateWithoutLikedByDataInput {
   notes: RecipeUpdatenotesInput
   tags: RecipeUpdatetagsInput
   source: String
-  photo: String
   published: Boolean
   ratings: GradeUpdateManyInput
   comments: CommentUpdateManyInput
@@ -925,20 +899,6 @@ input RecipeWhereInput {
   source_not_starts_with: String
   source_ends_with: String
   source_not_ends_with: String
-  photo: String
-  photo_not: String
-  photo_in: [String!]
-  photo_not_in: [String!]
-  photo_lt: String
-  photo_lte: String
-  photo_gt: String
-  photo_gte: String
-  photo_contains: String
-  photo_not_contains: String
-  photo_starts_with: String
-  photo_not_starts_with: String
-  photo_ends_with: String
-  photo_not_ends_with: String
   created: DateTime
   created_not: DateTime
   created_in: [DateTime!]

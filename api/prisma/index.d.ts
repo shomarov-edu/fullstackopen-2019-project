@@ -161,8 +161,6 @@ export type RecipeOrderByInput =
   | "difficulty_DESC"
   | "source_ASC"
   | "source_DESC"
-  | "photo_ASC"
-  | "photo_DESC"
   | "created_ASC"
   | "created_DESC"
   | "updated_ASC"
@@ -266,20 +264,6 @@ export interface RecipeWhereInput {
   source_not_starts_with?: Maybe<String>;
   source_ends_with?: Maybe<String>;
   source_not_ends_with?: Maybe<String>;
-  photo?: Maybe<String>;
-  photo_not?: Maybe<String>;
-  photo_in?: Maybe<String[] | String>;
-  photo_not_in?: Maybe<String[] | String>;
-  photo_lt?: Maybe<String>;
-  photo_lte?: Maybe<String>;
-  photo_gt?: Maybe<String>;
-  photo_gte?: Maybe<String>;
-  photo_contains?: Maybe<String>;
-  photo_not_contains?: Maybe<String>;
-  photo_starts_with?: Maybe<String>;
-  photo_not_starts_with?: Maybe<String>;
-  photo_ends_with?: Maybe<String>;
-  photo_not_ends_with?: Maybe<String>;
   created?: Maybe<DateTimeInput>;
   created_not?: Maybe<DateTimeInput>;
   created_in?: Maybe<DateTimeInput[] | DateTimeInput>;
@@ -567,7 +551,6 @@ export interface RecipeCreateInput {
   notes?: Maybe<RecipeCreatenotesInput>;
   tags?: Maybe<RecipeCreatetagsInput>;
   source?: Maybe<String>;
-  photo?: Maybe<String>;
   published?: Maybe<Boolean>;
   likedBy?: Maybe<UserCreateManyWithoutLikedRecipesInput>;
   ratings?: Maybe<GradeCreateManyInput>;
@@ -611,7 +594,6 @@ export interface RecipeCreateWithoutLikedByInput {
   notes?: Maybe<RecipeCreatenotesInput>;
   tags?: Maybe<RecipeCreatetagsInput>;
   source?: Maybe<String>;
-  photo?: Maybe<String>;
   published?: Maybe<Boolean>;
   ratings?: Maybe<GradeCreateManyInput>;
   comments?: Maybe<CommentCreateManyInput>;
@@ -680,7 +662,6 @@ export interface RecipeCreateWithoutAuthorInput {
   notes?: Maybe<RecipeCreatenotesInput>;
   tags?: Maybe<RecipeCreatetagsInput>;
   source?: Maybe<String>;
-  photo?: Maybe<String>;
   published?: Maybe<Boolean>;
   likedBy?: Maybe<UserCreateManyWithoutLikedRecipesInput>;
   ratings?: Maybe<GradeCreateManyInput>;
@@ -766,7 +747,6 @@ export interface RecipeUpdateInput {
   notes?: Maybe<RecipeUpdatenotesInput>;
   tags?: Maybe<RecipeUpdatetagsInput>;
   source?: Maybe<String>;
-  photo?: Maybe<String>;
   published?: Maybe<Boolean>;
   likedBy?: Maybe<UserUpdateManyWithoutLikedRecipesInput>;
   ratings?: Maybe<GradeUpdateManyInput>;
@@ -831,7 +811,6 @@ export interface RecipeUpdateWithoutLikedByDataInput {
   notes?: Maybe<RecipeUpdatenotesInput>;
   tags?: Maybe<RecipeUpdatetagsInput>;
   source?: Maybe<String>;
-  photo?: Maybe<String>;
   published?: Maybe<Boolean>;
   ratings?: Maybe<GradeUpdateManyInput>;
   comments?: Maybe<CommentUpdateManyInput>;
@@ -942,7 +921,6 @@ export interface RecipeUpdateWithoutAuthorDataInput {
   notes?: Maybe<RecipeUpdatenotesInput>;
   tags?: Maybe<RecipeUpdatetagsInput>;
   source?: Maybe<String>;
-  photo?: Maybe<String>;
   published?: Maybe<Boolean>;
   likedBy?: Maybe<UserUpdateManyWithoutLikedRecipesInput>;
   ratings?: Maybe<GradeUpdateManyInput>;
@@ -1358,20 +1336,6 @@ export interface RecipeScalarWhereInput {
   source_not_starts_with?: Maybe<String>;
   source_ends_with?: Maybe<String>;
   source_not_ends_with?: Maybe<String>;
-  photo?: Maybe<String>;
-  photo_not?: Maybe<String>;
-  photo_in?: Maybe<String[] | String>;
-  photo_not_in?: Maybe<String[] | String>;
-  photo_lt?: Maybe<String>;
-  photo_lte?: Maybe<String>;
-  photo_gt?: Maybe<String>;
-  photo_gte?: Maybe<String>;
-  photo_contains?: Maybe<String>;
-  photo_not_contains?: Maybe<String>;
-  photo_starts_with?: Maybe<String>;
-  photo_not_starts_with?: Maybe<String>;
-  photo_ends_with?: Maybe<String>;
-  photo_not_ends_with?: Maybe<String>;
   created?: Maybe<DateTimeInput>;
   created_not?: Maybe<DateTimeInput>;
   created_in?: Maybe<DateTimeInput[] | DateTimeInput>;
@@ -1411,7 +1375,6 @@ export interface RecipeUpdateManyDataInput {
   notes?: Maybe<RecipeUpdatenotesInput>;
   tags?: Maybe<RecipeUpdatetagsInput>;
   source?: Maybe<String>;
-  photo?: Maybe<String>;
   published?: Maybe<Boolean>;
 }
 
@@ -1485,7 +1448,6 @@ export interface RecipeUpdateManyMutationInput {
   notes?: Maybe<RecipeUpdatenotesInput>;
   tags?: Maybe<RecipeUpdatetagsInput>;
   source?: Maybe<String>;
-  photo?: Maybe<String>;
   published?: Maybe<Boolean>;
 }
 
@@ -1543,7 +1505,6 @@ export interface Recipe {
   notes: String[];
   tags: String[];
   source?: String;
-  photo?: String;
   created: DateTimeOutput;
   updated: DateTimeOutput;
   published: Boolean;
@@ -1564,7 +1525,6 @@ export interface RecipePromise extends Promise<Recipe>, Fragmentable {
   notes: () => Promise<String[]>;
   tags: () => Promise<String[]>;
   source: () => Promise<String>;
-  photo: () => Promise<String>;
   created: () => Promise<DateTimeOutput>;
   updated: () => Promise<DateTimeOutput>;
   published: () => Promise<Boolean>;
@@ -1596,7 +1556,6 @@ export interface RecipeSubscription
   notes: () => Promise<AsyncIterator<String[]>>;
   tags: () => Promise<AsyncIterator<String[]>>;
   source: () => Promise<AsyncIterator<String>>;
-  photo: () => Promise<AsyncIterator<String>>;
   created: () => Promise<AsyncIterator<DateTimeOutput>>;
   updated: () => Promise<AsyncIterator<DateTimeOutput>>;
   published: () => Promise<AsyncIterator<Boolean>>;
@@ -1628,7 +1587,6 @@ export interface RecipeNullablePromise
   notes: () => Promise<String[]>;
   tags: () => Promise<String[]>;
   source: () => Promise<String>;
-  photo: () => Promise<String>;
   created: () => Promise<DateTimeOutput>;
   updated: () => Promise<DateTimeOutput>;
   published: () => Promise<Boolean>;
@@ -2043,7 +2001,6 @@ export interface RecipePreviousValues {
   notes: String[];
   tags: String[];
   source?: String;
-  photo?: String;
   created: DateTimeOutput;
   updated: DateTimeOutput;
   published: Boolean;
@@ -2063,7 +2020,6 @@ export interface RecipePreviousValuesPromise
   notes: () => Promise<String[]>;
   tags: () => Promise<String[]>;
   source: () => Promise<String>;
-  photo: () => Promise<String>;
   created: () => Promise<DateTimeOutput>;
   updated: () => Promise<DateTimeOutput>;
   published: () => Promise<Boolean>;
@@ -2083,7 +2039,6 @@ export interface RecipePreviousValuesSubscription
   notes: () => Promise<AsyncIterator<String[]>>;
   tags: () => Promise<AsyncIterator<String[]>>;
   source: () => Promise<AsyncIterator<String>>;
-  photo: () => Promise<AsyncIterator<String>>;
   created: () => Promise<AsyncIterator<DateTimeOutput>>;
   updated: () => Promise<AsyncIterator<DateTimeOutput>>;
   published: () => Promise<AsyncIterator<Boolean>>;

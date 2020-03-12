@@ -17,9 +17,9 @@ const fullRecipeDetails = gql`
     method
     notes
     tags
-    source
     created
     updated
+    published
     likedBy {
       id
     }

@@ -32,6 +32,9 @@ const Navigation = ({ currentUser, setCurrentUser, history }) => {
           <Link style={padding} to={`/users/${currentUser.username}/recipes`}>
             My recipes
           </Link>
+          <Link style={padding} to={`/users/${currentUser.username}/drafts`}>
+            Drafts
+          </Link>
           <Link style={padding} to={`/users/${currentUser.username}/likes`}>
             Liked recipes
           </Link>

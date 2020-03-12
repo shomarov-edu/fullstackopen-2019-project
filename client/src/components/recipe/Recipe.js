@@ -1,53 +1,64 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { useQuery, useMutation } from '@apollo/client';
 import useField from '../../hooks/useField';
 import { RECIPE } from '../../graphql/queries';
-import { LIKE_RECIPE, UNLIKE_RECIPE } from '../../graphql/mutations';
+import {
+  LIKE_RECIPE,
+  UNLIKE_RECIPE,
+  PUBLISH_RECIPE,
+  UNPUBLISH_RECIPE,
+  DELETE_RECIPE
+} from '../../graphql/mutations';
 import Comments from './Comments';
 import EditRecipe from './EditRecipe';
 import { capitalize } from 'lodash';
 
-const Recipe = ({ currentUser, recipeId }) => {
+const Recipe = ({ currentUser, recipeId, history }) => {
   const [edit, setEdit] = useState(false);
   const [showComments, setShowComments] = useState(false);
+  const [category, setCategory] = useState('');
   const title = useField('text');
   const description = useField('text');
-  const time = useField('number');
+  const cookingTime = useField('number');
   const [difficulty, setDifficulty] = useState('');
   const [ingredients, setIngredients] = useState([]);
   const [method, setMethod] = useState([]);
   const [notes, setNotes] = useState([]);
-  const source = useField('text');
 
   const { loading, error, data } = useQuery(RECIPE, {
     variables: { id: recipeId }
   });
 
-  const [likeRecipe, likeRecipeResult] = useMutation(LIKE_RECIPE);
-  const [unlikeRecipe, unlikeRecipeResult] = useMutation(UNLIKE_RECIPE);
+  const [likeRecipe] = useMutation(LIKE_RECIPE);
+  const [unlikeRecipe] = useMutation(UNLIKE_RECIPE);
+  const [deleteRecipe] = useMutation(DELETE_RECIPE, {
+    onCompleted: () => {
+      history.push(`/users/${currentUser.username}/recipes`);
+    }
+  });
 
   if (loading) return <div>loading...</div>;
   if (error) return <div>error recipe: {error.message}</div>;
 
-  console.log(data);
-
   const recipe = data.recipe;
-  console.log(recipe.likedBy);
 
   if (!recipe) return null;
 
   const toggleEdit = () => {
     setEdit(!edit);
+    setCategory(recipe.category);
     title.setValue(recipe.title);
     description.setValue(recipe.description);
-    time.setValue(recipe.time);
+    cookingTime.setValue(recipe.cookingTime);
     setDifficulty(recipe.difficulty);
     setIngredients(recipe.ingredients);
     setMethod(recipe.method);
     setNotes(recipe.notes);
-    source.setValue(recipe.source || '');
   };
+
+  const handlePublishRecipe = () => {};
+  const handleUnpublishRecipe = () => {};
 
   const handleLike = async () => {
     const likeRecipeInput = { recipeId: recipe.id };
@@ -59,23 +70,26 @@ const Recipe = ({ currentUser, recipeId }) => {
     unlikeRecipe({ variables: { unlikeRecipeInput } });
   };
 
-  const handleDelete = async () => {};
+  const handleDelete = async () => {
+    const deleteRecipeInput = { recipeId: recipe.id };
+    deleteRecipe({ variables: { deleteRecipeInput } });
+  };
 
   const handleRate = event => {
     event.preventDefault();
-    console.log(event.target.value);
   };
-
-  console.log(likeRecipeResult);
 
   if (edit) {
     return (
       <EditRecipe
+        recipe={recipe}
         setEdit={setEdit}
         edit={edit}
+        category={category}
+        setCategory={setCategory}
         title={title}
         description={description}
-        time={time}
+        cookingTime={cookingTime}
         difficulty={difficulty}
         setDifficulty={setDifficulty}
         setIngredients={setIngredients}
@@ -84,7 +98,6 @@ const Recipe = ({ currentUser, recipeId }) => {
         setMethod={setMethod}
         notes={notes}
         setNotes={setNotes}
-        source={source}
       />
     );
   }
@@ -94,6 +107,15 @@ const Recipe = ({ currentUser, recipeId }) => {
       {currentUser && currentUser.username === recipe.author.username ? (
         <React.Fragment>
           <p>
+            {!recipe.published ? (
+              <button onClick={() => handlePublishRecipe()}>
+                publish recipe
+              </button>
+            ) : (
+              <button onClick={() => handleUnpublishRecipe}>
+                unpublish recipe
+              </button>
+            )}
             <button onClick={() => toggleEdit()}>edit recipe</button>
             <button onClick={() => handleDelete()}>delete recipe</button>
           </p>
@@ -112,33 +134,32 @@ const Recipe = ({ currentUser, recipeId }) => {
       <p>Difficulty: {capitalize(recipe.difficulty)}</p>
       Ingredients:
       <ul>
-        {recipe.ingredients.map(i => (
-          <li key={i}>{i}</li>
+        {recipe.ingredients.map((i, index) => (
+          <li key={index}>{i}</li>
         ))}
       </ul>
       method:
       <ol>
-        {recipe.method.map(i => (
-          <li key={i}>{i}</li>
+        {recipe.method.map((i, index) => (
+          <li key={index}>{i}</li>
         ))}
       </ol>
       Additional notes:
       <ul>
-        {recipe.notes.map(n => (
-          <li key={n}>{n}</li>
+        {recipe.notes.map((n, index) => (
+          <li key={index}>{n}</li>
         ))}
       </ul>
       {recipe.tags.length > 0 ? (
         <React.Fragment>
           Tags:
           <ul>
-            {recipe.tags.map(t => (
-              <li key={t}>{t}</li>
+            {recipe.tags.map((t, index) => (
+              <li key={index}>{t}</li>
             ))}
           </ul>
         </React.Fragment>
       ) : null}
-      <p>Source: {recipe.source}</p>
       <p>Date added: {recipe.created}</p>
       <p>Last updated: {recipe.updated}</p>
       <p>
@@ -189,4 +210,4 @@ const Recipe = ({ currentUser, recipeId }) => {
   );
 };
 
-export default Recipe;
+export default withRouter(Recipe);

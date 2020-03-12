@@ -6,7 +6,7 @@ import { UPDATE_EMAIL } from '../../graphql/mutations';
 const Email = ({ email }) => {
   const emailField = useField('email');
   const [editEmail, setEditEmail] = useState(false);
-  const [updateEmail, updateEmailResult] = useMutation(UPDATE_EMAIL);
+  const [updateEmail] = useMutation(UPDATE_EMAIL);
 
   const toggleEditEmail = () => {
     emailField.setValue(email);
