@@ -97,6 +97,24 @@ export const UPDATE_RECIPE = gql`
   ${fullRecipeDetails}
 `;
 
+export const PUBLISH_RECIPE = gql`
+  mutation PublishRecipe($publishRecipeInput: PublishRecipeInput!) {
+    publishRecipe(input: $publishRecipeInput) {
+      ...RecipeDetails
+    }
+  }
+  ${fullRecipeDetails}
+`;
+
+export const UNPUBLISH_RECIPE = gql`
+  mutation UnpublishRecipe($unpublishRecipeInput: UnpublishRecipeInput!) {
+    unpublishRecipe(input: $unpublishRecipeInput) {
+      ...RecipeDetails
+    }
+  }
+  ${fullRecipeDetails}
+`;
+
 export const LIKE_RECIPE = gql`
   mutation LikeRecipe($likeRecipeInput: LikeRecipeInput!) {
     likeRecipe(input: $likeRecipeInput) {
@@ -136,6 +154,15 @@ export const EDIT_COMMENT = gql`
 export const DELETE_COMMENT = gql`
   mutation DeleteComment($commentToDelete: DeleteCommentInput!) {
     deleteComment(input: $commentToDelete) {
+      ...RecipeDetails
+    }
+  }
+  ${fullRecipeDetails}
+`;
+
+export const RATE_RECIPE = gql`
+  mutation RateRecipe($rateRecipeInput: RateRecipeInput!) {
+    rateRecipe(input: $rateRecipeInput) {
       ...RecipeDetails
     }
   }

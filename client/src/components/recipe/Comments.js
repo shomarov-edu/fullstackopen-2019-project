@@ -6,13 +6,13 @@ import { COMMENT_RECIPE } from '../../graphql/mutations';
 
 const Comments = ({ currentUser, recipe }) => {
   const commentField = useField('text');
-  const [commentRecipe] = useMutation(COMMENT_RECIPE);
+  const [commentRecipe, commentRecipeResult] = useMutation(COMMENT_RECIPE);
 
   const handleSubmit = async event => {
     event.preventDefault();
 
     const newComment = {
-      id: recipe.id,
+      recipeId: recipe.id,
       content: commentField.input.value
     };
 

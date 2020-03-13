@@ -80,11 +80,8 @@ const generateRecipeModel = currentUser => ({
   // MUTATIONS:
 
   createRecipe: async input => {
-    console.log('HEY');
-    console.log(input);
     if (!currentUser) return null;
 
-    console.log(input);
     if (input.title === '') {
       throw new UserInputError('Title must not be empty', {
         invalidArgs: input.title
@@ -110,7 +107,6 @@ const generateRecipeModel = currentUser => ({
   },
 
   updateRecipe: async input => {
-    console.log(input);
     if (!currentUser) return null;
 
     const { id, ...recipeData } = input;
@@ -154,10 +150,12 @@ const generateRecipeModel = currentUser => ({
     return updatedRecipe;
   },
 
-  togglePublishRecipe: async input => {
+  publishRecipe: async input => {
     if (!currentUser) return null;
 
-    const recipe = await prisma.recipe({ id: input.id }).$fragment(`
+    const { recipeId } = input;
+
+    const recipe = await prisma.recipe({ id: recipeId }).$fragment(`
     fragment AuthorAndPublished on Recipe {
       author {
         id
@@ -177,9 +175,44 @@ const generateRecipeModel = currentUser => ({
 
     const updatedRecipe = await prisma
       .updateRecipe({
-        where: { id: input.id },
+        where: { id: recipeId },
         data: {
-          published: !recipe.published
+          published: true
+        }
+      })
+      .$fragment(recipeDetails);
+
+    return updatedRecipe;
+  },
+
+  unpublishRecipe: async input => {
+    if (!currentUser) return null;
+
+    const { recipeId } = input;
+
+    const recipe = await prisma.recipe({ id: recipeId }).$fragment(`
+    fragment AuthorAndPublished on Recipe {
+      author {
+        id
+      }
+      published
+    }
+    `);
+
+    // Check recipe existence
+
+    if (!recipe) throw new UserInputError('recipe does not exist');
+
+    // Validate recipe author
+
+    if (recipe.author.id !== currentUser.id)
+      throw new ForbiddenError('forbidden');
+
+    const updatedRecipe = await prisma
+      .updateRecipe({
+        where: { id: recipeId },
+        data: {
+          published: false
         }
       })
       .$fragment(recipeDetails);
@@ -194,7 +227,7 @@ const generateRecipeModel = currentUser => ({
 
     const updatedRecipe = await prisma
       .updateRecipe({
-        where: { recipeId },
+        where: { id: recipeId },
         data: {
           comments: {
             create: [
@@ -348,7 +381,63 @@ const generateRecipeModel = currentUser => ({
 
   rateRecipe: async input => {
     if (!currentUser) return null;
-    // TODO
+
+    const { recipeId, grade } = input;
+
+    // Check recipe existence
+
+    const recipe = await prisma.recipe({ id: recipeId }).$fragment(`
+    fragment Ratings on Recipe {
+      id
+      ratings {
+        user
+        grade
+      }
+    }
+    `);
+
+    if (!recipe) throw new UserInputError('recipe does not exist');
+
+    // Update rating if current user already rated
+
+    if (recipe.ratings.some(rating => rating.user === currentUser.id)) {
+      return await prisma
+        .updateRecipe({
+          where: { id: recipeId },
+          data: {
+            ratings: {
+              updateMany: [
+                {
+                  where: {
+                    user: currentUser.id
+                  },
+                  data: {
+                    user: currentUser.id,
+                    grade
+                  }
+                }
+              ]
+            }
+          }
+        })
+        .$fragment(recipeDetails);
+    }
+
+    return await prisma
+      .updateRecipe({
+        where: { id: recipeId },
+        data: {
+          ratings: {
+            create: [
+              {
+                user: currentUser.id,
+                grade
+              }
+            ]
+          }
+        }
+      })
+      .$fragment(recipeDetails);
   },
 
   deleteRecipe: async input => {

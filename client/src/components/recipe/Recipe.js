@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { useQuery, useMutation } from '@apollo/client';
 import useField from '../../hooks/useField';
-import { RECIPE } from '../../graphql/queries';
+import { ME, RECIPE } from '../../graphql/queries';
 import {
   LIKE_RECIPE,
   UNLIKE_RECIPE,
   PUBLISH_RECIPE,
   UNPUBLISH_RECIPE,
+  RATE_RECIPE,
   DELETE_RECIPE
 } from '../../graphql/mutations';
 import Comments from './Comments';
@@ -30,8 +31,62 @@ const Recipe = ({ currentUser, recipeId, history }) => {
     variables: { id: recipeId }
   });
 
+  const [publishRecipe] = useMutation(PUBLISH_RECIPE, {
+    update: async (cache, { data: { publishRecipe } }) => {
+      const data = cache.readQuery({ query: ME });
+      const newMe = {
+        ...data.me,
+        publishedRecipes: data.me.publishedRecipes.concat(publishRecipe)
+      };
+      await cache.writeQuery({
+        query: ME,
+        data: { me: newMe }
+      });
+    }
+  });
+
+  const [unpublishRecipe] = useMutation(UNPUBLISH_RECIPE, {
+    update: async (cache, { data: { unpublishRecipe } }) => {
+      const data = cache.readQuery({ query: ME });
+      const newMe = {
+        ...data.me,
+        publishedRecipes: data.me.publishedRecipes.filter(
+          recipe => recipe.id !== unpublishRecipe.id
+        )
+      };
+      await cache.writeQuery({
+        query: ME,
+        data: { me: newMe }
+      });
+    }
+  });
+
   const [likeRecipe] = useMutation(LIKE_RECIPE);
-  const [unlikeRecipe] = useMutation(UNLIKE_RECIPE);
+
+  const [unlikeRecipe] = useMutation(UNLIKE_RECIPE, {
+    update: async (cache, { data: { unlikeRecipe } }) => {
+      const data = cache.readQuery({
+        query: RECIPE,
+        variables: {
+          id: recipe.id
+        }
+      });
+      const newRecipe = {
+        ...data.recipe,
+        likedBy: recipe.likedBy.filter(user => user.id !== currentUser.id),
+        likes: recipe.likes - 1
+      };
+      await cache.writeQuery({
+        query: RECIPE,
+        data: { recipe: newRecipe }
+      });
+    }
+  });
+
+  const [rateRecipe, rateRecipeResult] = useMutation(RATE_RECIPE, {
+    refetchQuery: [{ query: RECIPE, variables: { recipeId } }]
+  });
+
   const [deleteRecipe] = useMutation(DELETE_RECIPE, {
     onCompleted: () => {
       history.push(`/users/${currentUser.username}/recipes`);
@@ -57,8 +112,15 @@ const Recipe = ({ currentUser, recipeId, history }) => {
     setNotes(recipe.notes);
   };
 
-  const handlePublishRecipe = () => {};
-  const handleUnpublishRecipe = () => {};
+  const handlePublishRecipe = () => {
+    const publishRecipeInput = { recipeId: recipe.id };
+    publishRecipe({ variables: { publishRecipeInput } });
+  };
+
+  const handleUnpublishRecipe = () => {
+    const unpublishRecipeInput = { recipeId: recipe.id };
+    unpublishRecipe({ variables: { unpublishRecipeInput } });
+  };
 
   const handleLike = async () => {
     const likeRecipeInput = { recipeId: recipe.id };
@@ -75,8 +137,12 @@ const Recipe = ({ currentUser, recipeId, history }) => {
     deleteRecipe({ variables: { deleteRecipeInput } });
   };
 
-  const handleRate = event => {
-    event.preventDefault();
+  const handleRateRecipe = event => {
+    const rateRecipeInput = {
+      recipeId: recipe.id,
+      grade: parseInt(event.target.value)
+    };
+    rateRecipe({ variables: { rateRecipeInput } });
   };
 
   if (edit) {
@@ -112,7 +178,7 @@ const Recipe = ({ currentUser, recipeId, history }) => {
                 publish recipe
               </button>
             ) : (
-              <button onClick={() => handleUnpublishRecipe}>
+              <button onClick={() => handleUnpublishRecipe()}>
                 unpublish recipe
               </button>
             )}
@@ -179,19 +245,19 @@ const Recipe = ({ currentUser, recipeId, history }) => {
         currentUser.id !== recipe.author.id ? (
           <p>
             Rate recipe:
-            <button value="1" onClick={event => handleRate(event)}>
+            <button value="1" onClick={event => handleRateRecipe(event)}>
               1
             </button>
-            <button value="2" onClick={event => handleRate(event)}>
+            <button value="2" onClick={event => handleRateRecipe(event)}>
               2
             </button>
-            <button value="3" onClick={event => handleRate(event)}>
+            <button value="3" onClick={event => handleRateRecipe(event)}>
               3
             </button>
-            <button value="4" onClick={event => handleRate(event)}>
+            <button value="4" onClick={event => handleRateRecipe(event)}>
               4
             </button>
-            <button value="5" onClick={event => handleRate(event)}>
+            <button value="5" onClick={event => handleRateRecipe(event)}>
               5
             </button>
           </p>

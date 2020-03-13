@@ -29,7 +29,7 @@ const Email = ({ email }) => {
       ) : (
         <React.Fragment>
           <p>
-            E-mail: <input {...emailField.input} />
+            E-Mail: <input {...emailField.input} />
           </p>
           <p>
             <button onClick={() => handleUpdateEmail()}>save</button>

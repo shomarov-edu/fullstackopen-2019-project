@@ -1,7 +1,6 @@
 import React from 'react';
 import { useMutation } from '@apollo/client';
 import { UPDATE_RECIPE } from '../../graphql/mutations';
-import Recipe from './Recipe';
 
 const EditRecipe = ({
   recipe,
@@ -21,7 +20,7 @@ const EditRecipe = ({
   notes,
   setNotes
 }) => {
-  const [updateRecipe, updateRecipeResult] = useMutation(UPDATE_RECIPE, {
+  const [updateRecipe] = useMutation(UPDATE_RECIPE, {
     onCompleted: () => setEdit(false),
     onError: ({ graphQLErrors, networkError }) => {
       if (graphQLErrors) {
@@ -34,8 +33,6 @@ const EditRecipe = ({
       if (networkError) console.log(`[Network error]: ${networkError}`);
     }
   });
-
-  console.log(updateRecipeResult);
 
   const handleSubmit = async event => {
     event.preventDefault();

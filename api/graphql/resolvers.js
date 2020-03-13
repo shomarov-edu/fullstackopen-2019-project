@@ -69,7 +69,10 @@ const resolvers = {
       await models.Recipe.updateRecipe(input),
 
     publishRecipe: async (_, { input }, { models }) =>
-      await models.Recipe.togglePublishRecipe(input),
+      await models.Recipe.publishRecipe(input),
+
+    unpublishRecipe: async (_, { input }, { models }) =>
+      await models.Recipe.unpublishRecipe(input),
 
     commentRecipe: async (_, { input }, { models }) =>
       await models.Recipe.commentRecipe(input),
@@ -162,8 +165,9 @@ const resolvers = {
 
     commentCount: (recipe, _, __) => recipe.comments.length,
 
-    rating: async (recipe, args, { models }) =>
-      recipe.ratings.reduce((a, b) => a + b, 0) / recipe.ratings.length || 0
+    rating: async (recipe, _, __) =>
+      recipe.ratings.reduce((a, b) => a + b.grade, 0) / recipe.ratings.length ||
+      0
   },
 
   Comment: {

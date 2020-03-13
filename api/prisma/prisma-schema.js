@@ -235,14 +235,12 @@ enum Difficulty {
 }
 
 type Grade {
-  id: ID!
-  rater: User!
+  user: ID!
   grade: Int!
 }
 
 input GradeCreateInput {
-  id: ID
-  rater: UserCreateOneInput!
+  user: ID!
   grade: Int!
 }
 
@@ -251,20 +249,20 @@ input GradeCreateManyInput {
 }
 
 input GradeRestrictedWhereInput {
-  id: ID
-  id_not: ID
-  id_in: [ID!]
-  id_not_in: [ID!]
-  id_lt: ID
-  id_lte: ID
-  id_gt: ID
-  id_gte: ID
-  id_contains: ID
-  id_not_contains: ID
-  id_starts_with: ID
-  id_not_starts_with: ID
-  id_ends_with: ID
-  id_not_ends_with: ID
+  user: ID
+  user_not: ID
+  user_in: [ID!]
+  user_not_in: [ID!]
+  user_lt: ID
+  user_lte: ID
+  user_gt: ID
+  user_gte: ID
+  user_contains: ID
+  user_not_contains: ID
+  user_starts_with: ID
+  user_not_starts_with: ID
+  user_ends_with: ID
+  user_not_ends_with: ID
   grade: Int
   grade_not: Int
   grade_in: [Int!]
@@ -277,20 +275,20 @@ input GradeRestrictedWhereInput {
 }
 
 input GradeScalarWhereInput {
-  id: ID
-  id_not: ID
-  id_in: [ID!]
-  id_not_in: [ID!]
-  id_lt: ID
-  id_lte: ID
-  id_gt: ID
-  id_gte: ID
-  id_contains: ID
-  id_not_contains: ID
-  id_starts_with: ID
-  id_not_starts_with: ID
-  id_ends_with: ID
-  id_not_ends_with: ID
+  user: ID
+  user_not: ID
+  user_in: [ID!]
+  user_not_in: [ID!]
+  user_lt: ID
+  user_lte: ID
+  user_gt: ID
+  user_gte: ID
+  user_contains: ID
+  user_not_contains: ID
+  user_starts_with: ID
+  user_not_starts_with: ID
+  user_ends_with: ID
+  user_not_ends_with: ID
   grade: Int
   grade_not: Int
   grade_in: [Int!]
@@ -304,20 +302,13 @@ input GradeScalarWhereInput {
   NOT: [GradeScalarWhereInput!]
 }
 
-input GradeUpdateDataInput {
-  rater: UserUpdateOneRequiredInput
-  grade: Int
-}
-
 input GradeUpdateManyDataInput {
+  user: ID
   grade: Int
 }
 
 input GradeUpdateManyInput {
   create: [GradeCreateInput!]
-  update: [GradeUpdateWithWhereUniqueNestedInput!]
-  upsert: [GradeUpsertWithWhereUniqueNestedInput!]
-  delete: [GradeWhereUniqueInput!]
   deleteMany: [GradeScalarWhereInput!]
   updateMany: [GradeUpdateManyWithWhereNestedInput!]
 }
@@ -327,33 +318,21 @@ input GradeUpdateManyWithWhereNestedInput {
   data: GradeUpdateManyDataInput!
 }
 
-input GradeUpdateWithWhereUniqueNestedInput {
-  where: GradeWhereUniqueInput!
-  data: GradeUpdateDataInput!
-}
-
-input GradeUpsertWithWhereUniqueNestedInput {
-  where: GradeWhereUniqueInput!
-  update: GradeUpdateDataInput!
-  create: GradeCreateInput!
-}
-
 input GradeWhereInput {
-  id: ID
-  id_not: ID
-  id_in: [ID!]
-  id_not_in: [ID!]
-  id_lt: ID
-  id_lte: ID
-  id_gt: ID
-  id_gte: ID
-  id_contains: ID
-  id_not_contains: ID
-  id_starts_with: ID
-  id_not_starts_with: ID
-  id_ends_with: ID
-  id_not_ends_with: ID
-  rater: UserWhereInput
+  user: ID
+  user_not: ID
+  user_in: [ID!]
+  user_not_in: [ID!]
+  user_lt: ID
+  user_lte: ID
+  user_gt: ID
+  user_gte: ID
+  user_contains: ID
+  user_not_contains: ID
+  user_starts_with: ID
+  user_not_starts_with: ID
+  user_ends_with: ID
+  user_not_ends_with: ID
   grade: Int
   grade_not: Int
   grade_in: [Int!]
@@ -363,10 +342,6 @@ input GradeWhereInput {
   grade_gt: Int
   grade_gte: Int
   AND: [GradeWhereInput!]
-}
-
-input GradeWhereUniqueInput {
-  id: ID
 }
 
 scalar Long
@@ -425,7 +400,6 @@ type Recipe {
   method: [String!]!
   notes: [String!]!
   tags: [String!]!
-  source: String
   created: DateTime!
   updated: DateTime!
   published: Boolean!
@@ -456,7 +430,6 @@ input RecipeCreateInput {
   method: RecipeCreatemethodInput
   notes: RecipeCreatenotesInput
   tags: RecipeCreatetagsInput
-  source: String
   published: Boolean
   likedBy: UserCreateManyWithoutLikedRecipesInput
   ratings: GradeCreateManyInput
@@ -496,7 +469,6 @@ input RecipeCreateWithoutAuthorInput {
   method: RecipeCreatemethodInput
   notes: RecipeCreatenotesInput
   tags: RecipeCreatetagsInput
-  source: String
   published: Boolean
   likedBy: UserCreateManyWithoutLikedRecipesInput
   ratings: GradeCreateManyInput
@@ -515,7 +487,6 @@ input RecipeCreateWithoutLikedByInput {
   method: RecipeCreatemethodInput
   notes: RecipeCreatenotesInput
   tags: RecipeCreatetagsInput
-  source: String
   published: Boolean
   ratings: GradeCreateManyInput
   comments: CommentCreateManyInput
@@ -539,8 +510,6 @@ enum RecipeOrderByInput {
   cookingTime_DESC
   difficulty_ASC
   difficulty_DESC
-  source_ASC
-  source_DESC
   created_ASC
   created_DESC
   updated_ASC
@@ -560,7 +529,6 @@ type RecipePreviousValues {
   method: [String!]!
   notes: [String!]!
   tags: [String!]!
-  source: String
   created: DateTime!
   updated: DateTime!
   published: Boolean!
@@ -625,20 +593,6 @@ input RecipeScalarWhereInput {
   difficulty_not: Difficulty
   difficulty_in: [Difficulty!]
   difficulty_not_in: [Difficulty!]
-  source: String
-  source_not: String
-  source_in: [String!]
-  source_not_in: [String!]
-  source_lt: String
-  source_lte: String
-  source_gt: String
-  source_gte: String
-  source_contains: String
-  source_not_contains: String
-  source_starts_with: String
-  source_not_starts_with: String
-  source_ends_with: String
-  source_not_ends_with: String
   created: DateTime
   created_not: DateTime
   created_in: [DateTime!]
@@ -693,7 +647,6 @@ input RecipeUpdateInput {
   method: RecipeUpdatemethodInput
   notes: RecipeUpdatenotesInput
   tags: RecipeUpdatetagsInput
-  source: String
   published: Boolean
   likedBy: UserUpdateManyWithoutLikedRecipesInput
   ratings: GradeUpdateManyInput
@@ -710,7 +663,6 @@ input RecipeUpdateManyDataInput {
   method: RecipeUpdatemethodInput
   notes: RecipeUpdatenotesInput
   tags: RecipeUpdatetagsInput
-  source: String
   published: Boolean
 }
 
@@ -724,7 +676,6 @@ input RecipeUpdateManyMutationInput {
   method: RecipeUpdatemethodInput
   notes: RecipeUpdatenotesInput
   tags: RecipeUpdatetagsInput
-  source: String
   published: Boolean
 }
 
@@ -779,7 +730,6 @@ input RecipeUpdateWithoutAuthorDataInput {
   method: RecipeUpdatemethodInput
   notes: RecipeUpdatenotesInput
   tags: RecipeUpdatetagsInput
-  source: String
   published: Boolean
   likedBy: UserUpdateManyWithoutLikedRecipesInput
   ratings: GradeUpdateManyInput
@@ -797,7 +747,6 @@ input RecipeUpdateWithoutLikedByDataInput {
   method: RecipeUpdatemethodInput
   notes: RecipeUpdatenotesInput
   tags: RecipeUpdatetagsInput
-  source: String
   published: Boolean
   ratings: GradeUpdateManyInput
   comments: CommentUpdateManyInput
@@ -885,20 +834,6 @@ input RecipeWhereInput {
   difficulty_not: Difficulty
   difficulty_in: [Difficulty!]
   difficulty_not_in: [Difficulty!]
-  source: String
-  source_not: String
-  source_in: [String!]
-  source_not_in: [String!]
-  source_lt: String
-  source_lte: String
-  source_gt: String
-  source_gte: String
-  source_contains: String
-  source_not_contains: String
-  source_starts_with: String
-  source_not_starts_with: String
-  source_ends_with: String
-  source_not_ends_with: String
   created: DateTime
   created_not: DateTime
   created_in: [DateTime!]

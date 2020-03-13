@@ -61,7 +61,6 @@ type Comment @embedded {
 }
 
 type Grade @embedded {
-  id: ID! @id
-  rater: User! @relation(link: INLINE)
+  user: ID!
   grade: Int!
 }

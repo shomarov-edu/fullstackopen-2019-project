@@ -61,3 +61,13 @@ services:
     depends_on:
       - api
     restart: unless-stopped
+  nginx:
+    container_name: nginx
+    restart: always
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./nginx
+    ports:
+      - 8080:80
+    depends_on:
+      - client

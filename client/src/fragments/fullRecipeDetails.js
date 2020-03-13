@@ -25,10 +25,8 @@ const fullRecipeDetails = gql`
     }
     likes
     ratings {
-      id
-      rater {
-        id
-      }
+      user
+      grade
     }
     rating
     comments {

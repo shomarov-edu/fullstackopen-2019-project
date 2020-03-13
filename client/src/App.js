@@ -12,21 +12,17 @@ import Profile from './components/Profile';
 import Following from './components/Following';
 import Followers from './components/Followers';
 import Settings from './components/userSettings/Settings';
-import { ME } from './graphql/queries';
 import LikedRecipes from './components/LikedRecipe';
 import Drafts from './components/recipe/Drafts';
 import Notification from './components/Notification';
+import { ME } from './graphql/queries';
 
 const App = () => {
-  const [currentUser, setCurrentUser] = useState(null);
+  // const [currentUser, setCurrentUser] = useState(null);
   const [message, setMessage] = useState(null);
-  const [getCurrentUser] = useLazyQuery(ME, {
-    fetchPolicy: 'network-only',
-    onCompleted: data => {
-      setCurrentUser(data.me);
-    },
+  const [getCurrentUser, { loading, error, data }] = useLazyQuery(ME, {
     onError: error => {
-      console.log(error);
+      notify(error.message);
     }
   });
 
@@ -44,10 +40,38 @@ const App = () => {
     }, 5000);
   };
 
+  if (loading) return <div>loading...</div>;
+  if (error) notify(error.message);
+
+  if (!data)
+    return (
+      <React.Fragment>
+        <Router>
+          <Navigation />
+          <Route exact path="/recipes" render={() => <AllRecipes />} />
+          <Route
+            exact
+            path="/login"
+            render={() => (
+              <Login
+                getCurrentUser={getCurrentUser}
+                // setCurrentUser={setCurrentUser}
+              />
+            )}
+          />
+          <Route path="/signup" render={() => <SignUp />} />
+        </Router>
+      </React.Fragment>
+    );
+
+  const { me: currentUser } = data;
+
   return (
     <React.Fragment>
       <Router>
-        <Navigation currentUser={currentUser} setCurrentUser={setCurrentUser} />
+        <Navigation
+          currentUser={currentUser} /* setCurrentUser={setCurrentUser} */
+        />
         <Notification message={message} />
         <Route exact path="/recipes" render={() => <AllRecipes />} />
         <Route
@@ -110,7 +134,12 @@ const App = () => {
             <Route
               exact
               path={`/users/${currentUser.username}/recipes/new`}
-              render={() => <NewRecipeForm notify={notify} />}
+              render={() => (
+                <NewRecipeForm
+                  getCurrentUser={getCurrentUser}
+                  notify={notify}
+                />
+              )}
             />
             <Route
               exact
@@ -118,7 +147,7 @@ const App = () => {
               render={() => (
                 <Settings
                   currentUser={currentUser}
-                  setCurrentUser={setCurrentUser}
+                  // setCurrentUser={setCurrentUser}
                   notify={notify}
                 />
               )}
@@ -131,7 +160,7 @@ const App = () => {
           render={() => (
             <Login
               getCurrentUser={getCurrentUser}
-              setCurrentUser={setCurrentUser}
+              // setCurrentUser={setCurrentUser}
             />
           )}
         />

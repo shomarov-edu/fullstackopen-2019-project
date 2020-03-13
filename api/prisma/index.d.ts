@@ -159,8 +159,6 @@ export type RecipeOrderByInput =
   | "cookingTime_DESC"
   | "difficulty_ASC"
   | "difficulty_DESC"
-  | "source_ASC"
-  | "source_DESC"
   | "created_ASC"
   | "created_DESC"
   | "updated_ASC"
@@ -250,20 +248,6 @@ export interface RecipeWhereInput {
   difficulty_not?: Maybe<Difficulty>;
   difficulty_in?: Maybe<Difficulty[] | Difficulty>;
   difficulty_not_in?: Maybe<Difficulty[] | Difficulty>;
-  source?: Maybe<String>;
-  source_not?: Maybe<String>;
-  source_in?: Maybe<String[] | String>;
-  source_not_in?: Maybe<String[] | String>;
-  source_lt?: Maybe<String>;
-  source_lte?: Maybe<String>;
-  source_gt?: Maybe<String>;
-  source_gte?: Maybe<String>;
-  source_contains?: Maybe<String>;
-  source_not_contains?: Maybe<String>;
-  source_starts_with?: Maybe<String>;
-  source_not_starts_with?: Maybe<String>;
-  source_ends_with?: Maybe<String>;
-  source_not_ends_with?: Maybe<String>;
   created?: Maybe<DateTimeInput>;
   created_not?: Maybe<DateTimeInput>;
   created_in?: Maybe<DateTimeInput[] | DateTimeInput>;
@@ -383,21 +367,20 @@ export interface UserWhereInput {
 }
 
 export interface GradeWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  rater?: Maybe<UserWhereInput>;
+  user?: Maybe<ID_Input>;
+  user_not?: Maybe<ID_Input>;
+  user_in?: Maybe<ID_Input[] | ID_Input>;
+  user_not_in?: Maybe<ID_Input[] | ID_Input>;
+  user_lt?: Maybe<ID_Input>;
+  user_lte?: Maybe<ID_Input>;
+  user_gt?: Maybe<ID_Input>;
+  user_gte?: Maybe<ID_Input>;
+  user_contains?: Maybe<ID_Input>;
+  user_not_contains?: Maybe<ID_Input>;
+  user_starts_with?: Maybe<ID_Input>;
+  user_not_starts_with?: Maybe<ID_Input>;
+  user_ends_with?: Maybe<ID_Input>;
+  user_not_ends_with?: Maybe<ID_Input>;
   grade?: Maybe<Int>;
   grade_not?: Maybe<Int>;
   grade_in?: Maybe<Int[] | Int>;
@@ -410,20 +393,20 @@ export interface GradeWhereInput {
 }
 
 export interface GradeRestrictedWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
+  user?: Maybe<ID_Input>;
+  user_not?: Maybe<ID_Input>;
+  user_in?: Maybe<ID_Input[] | ID_Input>;
+  user_not_in?: Maybe<ID_Input[] | ID_Input>;
+  user_lt?: Maybe<ID_Input>;
+  user_lte?: Maybe<ID_Input>;
+  user_gt?: Maybe<ID_Input>;
+  user_gte?: Maybe<ID_Input>;
+  user_contains?: Maybe<ID_Input>;
+  user_not_contains?: Maybe<ID_Input>;
+  user_starts_with?: Maybe<ID_Input>;
+  user_not_starts_with?: Maybe<ID_Input>;
+  user_ends_with?: Maybe<ID_Input>;
+  user_not_ends_with?: Maybe<ID_Input>;
   grade?: Maybe<Int>;
   grade_not?: Maybe<Int>;
   grade_in?: Maybe<Int[] | Int>;
@@ -550,7 +533,6 @@ export interface RecipeCreateInput {
   method?: Maybe<RecipeCreatemethodInput>;
   notes?: Maybe<RecipeCreatenotesInput>;
   tags?: Maybe<RecipeCreatetagsInput>;
-  source?: Maybe<String>;
   published?: Maybe<Boolean>;
   likedBy?: Maybe<UserCreateManyWithoutLikedRecipesInput>;
   ratings?: Maybe<GradeCreateManyInput>;
@@ -593,7 +575,6 @@ export interface RecipeCreateWithoutLikedByInput {
   method?: Maybe<RecipeCreatemethodInput>;
   notes?: Maybe<RecipeCreatenotesInput>;
   tags?: Maybe<RecipeCreatetagsInput>;
-  source?: Maybe<String>;
   published?: Maybe<Boolean>;
   ratings?: Maybe<GradeCreateManyInput>;
   comments?: Maybe<CommentCreateManyInput>;
@@ -620,9 +601,18 @@ export interface GradeCreateManyInput {
 }
 
 export interface GradeCreateInput {
-  id?: Maybe<ID_Input>;
-  rater: UserCreateOneInput;
+  user: ID_Input;
   grade: Int;
+}
+
+export interface CommentCreateManyInput {
+  create?: Maybe<CommentCreateInput[] | CommentCreateInput>;
+}
+
+export interface CommentCreateInput {
+  id?: Maybe<ID_Input>;
+  author: UserCreateOneInput;
+  content: String;
 }
 
 export interface UserCreateOneInput {
@@ -661,7 +651,6 @@ export interface RecipeCreateWithoutAuthorInput {
   method?: Maybe<RecipeCreatemethodInput>;
   notes?: Maybe<RecipeCreatenotesInput>;
   tags?: Maybe<RecipeCreatetagsInput>;
-  source?: Maybe<String>;
   published?: Maybe<Boolean>;
   likedBy?: Maybe<UserCreateManyWithoutLikedRecipesInput>;
   ratings?: Maybe<GradeCreateManyInput>;
@@ -725,16 +714,6 @@ export interface UserCreateWithoutFollowingInput {
   followers?: Maybe<UserCreateManyWithoutFollowingInput>;
 }
 
-export interface CommentCreateManyInput {
-  create?: Maybe<CommentCreateInput[] | CommentCreateInput>;
-}
-
-export interface CommentCreateInput {
-  id?: Maybe<ID_Input>;
-  author: UserCreateOneInput;
-  content: String;
-}
-
 export interface RecipeUpdateInput {
   author?: Maybe<UserUpdateOneRequiredWithoutRecipesInput>;
   category?: Maybe<Category>;
@@ -746,7 +725,6 @@ export interface RecipeUpdateInput {
   method?: Maybe<RecipeUpdatemethodInput>;
   notes?: Maybe<RecipeUpdatenotesInput>;
   tags?: Maybe<RecipeUpdatetagsInput>;
-  source?: Maybe<String>;
   published?: Maybe<Boolean>;
   likedBy?: Maybe<UserUpdateManyWithoutLikedRecipesInput>;
   ratings?: Maybe<GradeUpdateManyInput>;
@@ -810,7 +788,6 @@ export interface RecipeUpdateWithoutLikedByDataInput {
   method?: Maybe<RecipeUpdatemethodInput>;
   notes?: Maybe<RecipeUpdatenotesInput>;
   tags?: Maybe<RecipeUpdatetagsInput>;
-  source?: Maybe<String>;
   published?: Maybe<Boolean>;
   ratings?: Maybe<GradeUpdateManyInput>;
   comments?: Maybe<CommentUpdateManyInput>;
@@ -834,33 +811,80 @@ export interface RecipeUpdatetagsInput {
 
 export interface GradeUpdateManyInput {
   create?: Maybe<GradeCreateInput[] | GradeCreateInput>;
-  update?: Maybe<
-    | GradeUpdateWithWhereUniqueNestedInput[]
-    | GradeUpdateWithWhereUniqueNestedInput
-  >;
-  upsert?: Maybe<
-    | GradeUpsertWithWhereUniqueNestedInput[]
-    | GradeUpsertWithWhereUniqueNestedInput
-  >;
-  delete?: Maybe<GradeWhereUniqueInput[] | GradeWhereUniqueInput>;
   deleteMany?: Maybe<GradeScalarWhereInput[] | GradeScalarWhereInput>;
   updateMany?: Maybe<
     GradeUpdateManyWithWhereNestedInput[] | GradeUpdateManyWithWhereNestedInput
   >;
 }
 
-export interface GradeUpdateWithWhereUniqueNestedInput {
-  where: GradeWhereUniqueInput;
-  data: GradeUpdateDataInput;
+export interface GradeScalarWhereInput {
+  user?: Maybe<ID_Input>;
+  user_not?: Maybe<ID_Input>;
+  user_in?: Maybe<ID_Input[] | ID_Input>;
+  user_not_in?: Maybe<ID_Input[] | ID_Input>;
+  user_lt?: Maybe<ID_Input>;
+  user_lte?: Maybe<ID_Input>;
+  user_gt?: Maybe<ID_Input>;
+  user_gte?: Maybe<ID_Input>;
+  user_contains?: Maybe<ID_Input>;
+  user_not_contains?: Maybe<ID_Input>;
+  user_starts_with?: Maybe<ID_Input>;
+  user_not_starts_with?: Maybe<ID_Input>;
+  user_ends_with?: Maybe<ID_Input>;
+  user_not_ends_with?: Maybe<ID_Input>;
+  grade?: Maybe<Int>;
+  grade_not?: Maybe<Int>;
+  grade_in?: Maybe<Int[] | Int>;
+  grade_not_in?: Maybe<Int[] | Int>;
+  grade_lt?: Maybe<Int>;
+  grade_lte?: Maybe<Int>;
+  grade_gt?: Maybe<Int>;
+  grade_gte?: Maybe<Int>;
+  AND?: Maybe<GradeScalarWhereInput[] | GradeScalarWhereInput>;
+  OR?: Maybe<GradeScalarWhereInput[] | GradeScalarWhereInput>;
+  NOT?: Maybe<GradeScalarWhereInput[] | GradeScalarWhereInput>;
 }
 
-export type GradeWhereUniqueInput = AtLeastOne<{
+export interface GradeUpdateManyWithWhereNestedInput {
+  where: GradeScalarWhereInput;
+  data: GradeUpdateManyDataInput;
+}
+
+export interface GradeUpdateManyDataInput {
+  user?: Maybe<ID_Input>;
+  grade?: Maybe<Int>;
+}
+
+export interface CommentUpdateManyInput {
+  create?: Maybe<CommentCreateInput[] | CommentCreateInput>;
+  update?: Maybe<
+    | CommentUpdateWithWhereUniqueNestedInput[]
+    | CommentUpdateWithWhereUniqueNestedInput
+  >;
+  upsert?: Maybe<
+    | CommentUpsertWithWhereUniqueNestedInput[]
+    | CommentUpsertWithWhereUniqueNestedInput
+  >;
+  delete?: Maybe<CommentWhereUniqueInput[] | CommentWhereUniqueInput>;
+  deleteMany?: Maybe<CommentScalarWhereInput[] | CommentScalarWhereInput>;
+  updateMany?: Maybe<
+    | CommentUpdateManyWithWhereNestedInput[]
+    | CommentUpdateManyWithWhereNestedInput
+  >;
+}
+
+export interface CommentUpdateWithWhereUniqueNestedInput {
+  where: CommentWhereUniqueInput;
+  data: CommentUpdateDataInput;
+}
+
+export type CommentWhereUniqueInput = AtLeastOne<{
   id: Maybe<ID_Input>;
 }>;
 
-export interface GradeUpdateDataInput {
-  rater?: Maybe<UserUpdateOneRequiredInput>;
-  grade?: Maybe<Int>;
+export interface CommentUpdateDataInput {
+  author?: Maybe<UserUpdateOneRequiredInput>;
+  content?: Maybe<String>;
 }
 
 export interface UserUpdateOneRequiredInput {
@@ -920,7 +944,6 @@ export interface RecipeUpdateWithoutAuthorDataInput {
   method?: Maybe<RecipeUpdatemethodInput>;
   notes?: Maybe<RecipeUpdatenotesInput>;
   tags?: Maybe<RecipeUpdatetagsInput>;
-  source?: Maybe<String>;
   published?: Maybe<Boolean>;
   likedBy?: Maybe<UserUpdateManyWithoutLikedRecipesInput>;
   ratings?: Maybe<GradeUpdateManyInput>;
@@ -1160,36 +1183,115 @@ export interface UserUpsertWithWhereUniqueWithoutLikedRecipesInput {
   create: UserCreateWithoutLikedRecipesInput;
 }
 
-export interface CommentUpdateManyInput {
-  create?: Maybe<CommentCreateInput[] | CommentCreateInput>;
-  update?: Maybe<
-    | CommentUpdateWithWhereUniqueNestedInput[]
-    | CommentUpdateWithWhereUniqueNestedInput
-  >;
-  upsert?: Maybe<
-    | CommentUpsertWithWhereUniqueNestedInput[]
-    | CommentUpsertWithWhereUniqueNestedInput
-  >;
-  delete?: Maybe<CommentWhereUniqueInput[] | CommentWhereUniqueInput>;
-  deleteMany?: Maybe<CommentScalarWhereInput[] | CommentScalarWhereInput>;
-  updateMany?: Maybe<
-    | CommentUpdateManyWithWhereNestedInput[]
-    | CommentUpdateManyWithWhereNestedInput
-  >;
+export interface RecipeUpsertWithWhereUniqueWithoutAuthorInput {
+  where: RecipeWhereUniqueInput;
+  update: RecipeUpdateWithoutAuthorDataInput;
+  create: RecipeCreateWithoutAuthorInput;
 }
 
-export interface CommentUpdateWithWhereUniqueNestedInput {
-  where: CommentWhereUniqueInput;
-  data: CommentUpdateDataInput;
+export interface RecipeScalarWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  category?: Maybe<Category>;
+  category_not?: Maybe<Category>;
+  category_in?: Maybe<Category[] | Category>;
+  category_not_in?: Maybe<Category[] | Category>;
+  title?: Maybe<String>;
+  title_not?: Maybe<String>;
+  title_in?: Maybe<String[] | String>;
+  title_not_in?: Maybe<String[] | String>;
+  title_lt?: Maybe<String>;
+  title_lte?: Maybe<String>;
+  title_gt?: Maybe<String>;
+  title_gte?: Maybe<String>;
+  title_contains?: Maybe<String>;
+  title_not_contains?: Maybe<String>;
+  title_starts_with?: Maybe<String>;
+  title_not_starts_with?: Maybe<String>;
+  title_ends_with?: Maybe<String>;
+  title_not_ends_with?: Maybe<String>;
+  description?: Maybe<String>;
+  description_not?: Maybe<String>;
+  description_in?: Maybe<String[] | String>;
+  description_not_in?: Maybe<String[] | String>;
+  description_lt?: Maybe<String>;
+  description_lte?: Maybe<String>;
+  description_gt?: Maybe<String>;
+  description_gte?: Maybe<String>;
+  description_contains?: Maybe<String>;
+  description_not_contains?: Maybe<String>;
+  description_starts_with?: Maybe<String>;
+  description_not_starts_with?: Maybe<String>;
+  description_ends_with?: Maybe<String>;
+  description_not_ends_with?: Maybe<String>;
+  cookingTime?: Maybe<Int>;
+  cookingTime_not?: Maybe<Int>;
+  cookingTime_in?: Maybe<Int[] | Int>;
+  cookingTime_not_in?: Maybe<Int[] | Int>;
+  cookingTime_lt?: Maybe<Int>;
+  cookingTime_lte?: Maybe<Int>;
+  cookingTime_gt?: Maybe<Int>;
+  cookingTime_gte?: Maybe<Int>;
+  difficulty?: Maybe<Difficulty>;
+  difficulty_not?: Maybe<Difficulty>;
+  difficulty_in?: Maybe<Difficulty[] | Difficulty>;
+  difficulty_not_in?: Maybe<Difficulty[] | Difficulty>;
+  created?: Maybe<DateTimeInput>;
+  created_not?: Maybe<DateTimeInput>;
+  created_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  created_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  created_lt?: Maybe<DateTimeInput>;
+  created_lte?: Maybe<DateTimeInput>;
+  created_gt?: Maybe<DateTimeInput>;
+  created_gte?: Maybe<DateTimeInput>;
+  updated?: Maybe<DateTimeInput>;
+  updated_not?: Maybe<DateTimeInput>;
+  updated_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updated_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updated_lt?: Maybe<DateTimeInput>;
+  updated_lte?: Maybe<DateTimeInput>;
+  updated_gt?: Maybe<DateTimeInput>;
+  updated_gte?: Maybe<DateTimeInput>;
+  published?: Maybe<Boolean>;
+  published_not?: Maybe<Boolean>;
+  AND?: Maybe<RecipeScalarWhereInput[] | RecipeScalarWhereInput>;
+  OR?: Maybe<RecipeScalarWhereInput[] | RecipeScalarWhereInput>;
+  NOT?: Maybe<RecipeScalarWhereInput[] | RecipeScalarWhereInput>;
 }
 
-export type CommentWhereUniqueInput = AtLeastOne<{
-  id: Maybe<ID_Input>;
-}>;
+export interface RecipeUpdateManyWithWhereNestedInput {
+  where: RecipeScalarWhereInput;
+  data: RecipeUpdateManyDataInput;
+}
 
-export interface CommentUpdateDataInput {
-  author?: Maybe<UserUpdateOneRequiredInput>;
-  content?: Maybe<String>;
+export interface RecipeUpdateManyDataInput {
+  category?: Maybe<Category>;
+  title?: Maybe<String>;
+  description?: Maybe<String>;
+  cookingTime?: Maybe<Int>;
+  difficulty?: Maybe<Difficulty>;
+  ingredients?: Maybe<RecipeUpdateingredientsInput>;
+  method?: Maybe<RecipeUpdatemethodInput>;
+  notes?: Maybe<RecipeUpdatenotesInput>;
+  tags?: Maybe<RecipeUpdatetagsInput>;
+  published?: Maybe<Boolean>;
+}
+
+export interface UserUpsertNestedInput {
+  update: UserUpdateDataInput;
+  create: UserCreateInput;
 }
 
 export interface CommentUpsertWithWhereUniqueNestedInput {
@@ -1257,175 +1359,6 @@ export interface CommentUpdateManyDataInput {
   content?: Maybe<String>;
 }
 
-export interface RecipeUpsertWithWhereUniqueWithoutAuthorInput {
-  where: RecipeWhereUniqueInput;
-  update: RecipeUpdateWithoutAuthorDataInput;
-  create: RecipeCreateWithoutAuthorInput;
-}
-
-export interface RecipeScalarWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  category?: Maybe<Category>;
-  category_not?: Maybe<Category>;
-  category_in?: Maybe<Category[] | Category>;
-  category_not_in?: Maybe<Category[] | Category>;
-  title?: Maybe<String>;
-  title_not?: Maybe<String>;
-  title_in?: Maybe<String[] | String>;
-  title_not_in?: Maybe<String[] | String>;
-  title_lt?: Maybe<String>;
-  title_lte?: Maybe<String>;
-  title_gt?: Maybe<String>;
-  title_gte?: Maybe<String>;
-  title_contains?: Maybe<String>;
-  title_not_contains?: Maybe<String>;
-  title_starts_with?: Maybe<String>;
-  title_not_starts_with?: Maybe<String>;
-  title_ends_with?: Maybe<String>;
-  title_not_ends_with?: Maybe<String>;
-  description?: Maybe<String>;
-  description_not?: Maybe<String>;
-  description_in?: Maybe<String[] | String>;
-  description_not_in?: Maybe<String[] | String>;
-  description_lt?: Maybe<String>;
-  description_lte?: Maybe<String>;
-  description_gt?: Maybe<String>;
-  description_gte?: Maybe<String>;
-  description_contains?: Maybe<String>;
-  description_not_contains?: Maybe<String>;
-  description_starts_with?: Maybe<String>;
-  description_not_starts_with?: Maybe<String>;
-  description_ends_with?: Maybe<String>;
-  description_not_ends_with?: Maybe<String>;
-  cookingTime?: Maybe<Int>;
-  cookingTime_not?: Maybe<Int>;
-  cookingTime_in?: Maybe<Int[] | Int>;
-  cookingTime_not_in?: Maybe<Int[] | Int>;
-  cookingTime_lt?: Maybe<Int>;
-  cookingTime_lte?: Maybe<Int>;
-  cookingTime_gt?: Maybe<Int>;
-  cookingTime_gte?: Maybe<Int>;
-  difficulty?: Maybe<Difficulty>;
-  difficulty_not?: Maybe<Difficulty>;
-  difficulty_in?: Maybe<Difficulty[] | Difficulty>;
-  difficulty_not_in?: Maybe<Difficulty[] | Difficulty>;
-  source?: Maybe<String>;
-  source_not?: Maybe<String>;
-  source_in?: Maybe<String[] | String>;
-  source_not_in?: Maybe<String[] | String>;
-  source_lt?: Maybe<String>;
-  source_lte?: Maybe<String>;
-  source_gt?: Maybe<String>;
-  source_gte?: Maybe<String>;
-  source_contains?: Maybe<String>;
-  source_not_contains?: Maybe<String>;
-  source_starts_with?: Maybe<String>;
-  source_not_starts_with?: Maybe<String>;
-  source_ends_with?: Maybe<String>;
-  source_not_ends_with?: Maybe<String>;
-  created?: Maybe<DateTimeInput>;
-  created_not?: Maybe<DateTimeInput>;
-  created_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  created_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  created_lt?: Maybe<DateTimeInput>;
-  created_lte?: Maybe<DateTimeInput>;
-  created_gt?: Maybe<DateTimeInput>;
-  created_gte?: Maybe<DateTimeInput>;
-  updated?: Maybe<DateTimeInput>;
-  updated_not?: Maybe<DateTimeInput>;
-  updated_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  updated_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  updated_lt?: Maybe<DateTimeInput>;
-  updated_lte?: Maybe<DateTimeInput>;
-  updated_gt?: Maybe<DateTimeInput>;
-  updated_gte?: Maybe<DateTimeInput>;
-  published?: Maybe<Boolean>;
-  published_not?: Maybe<Boolean>;
-  AND?: Maybe<RecipeScalarWhereInput[] | RecipeScalarWhereInput>;
-  OR?: Maybe<RecipeScalarWhereInput[] | RecipeScalarWhereInput>;
-  NOT?: Maybe<RecipeScalarWhereInput[] | RecipeScalarWhereInput>;
-}
-
-export interface RecipeUpdateManyWithWhereNestedInput {
-  where: RecipeScalarWhereInput;
-  data: RecipeUpdateManyDataInput;
-}
-
-export interface RecipeUpdateManyDataInput {
-  category?: Maybe<Category>;
-  title?: Maybe<String>;
-  description?: Maybe<String>;
-  cookingTime?: Maybe<Int>;
-  difficulty?: Maybe<Difficulty>;
-  ingredients?: Maybe<RecipeUpdateingredientsInput>;
-  method?: Maybe<RecipeUpdatemethodInput>;
-  notes?: Maybe<RecipeUpdatenotesInput>;
-  tags?: Maybe<RecipeUpdatetagsInput>;
-  source?: Maybe<String>;
-  published?: Maybe<Boolean>;
-}
-
-export interface UserUpsertNestedInput {
-  update: UserUpdateDataInput;
-  create: UserCreateInput;
-}
-
-export interface GradeUpsertWithWhereUniqueNestedInput {
-  where: GradeWhereUniqueInput;
-  update: GradeUpdateDataInput;
-  create: GradeCreateInput;
-}
-
-export interface GradeScalarWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  grade?: Maybe<Int>;
-  grade_not?: Maybe<Int>;
-  grade_in?: Maybe<Int[] | Int>;
-  grade_not_in?: Maybe<Int[] | Int>;
-  grade_lt?: Maybe<Int>;
-  grade_lte?: Maybe<Int>;
-  grade_gt?: Maybe<Int>;
-  grade_gte?: Maybe<Int>;
-  AND?: Maybe<GradeScalarWhereInput[] | GradeScalarWhereInput>;
-  OR?: Maybe<GradeScalarWhereInput[] | GradeScalarWhereInput>;
-  NOT?: Maybe<GradeScalarWhereInput[] | GradeScalarWhereInput>;
-}
-
-export interface GradeUpdateManyWithWhereNestedInput {
-  where: GradeScalarWhereInput;
-  data: GradeUpdateManyDataInput;
-}
-
-export interface GradeUpdateManyDataInput {
-  grade?: Maybe<Int>;
-}
-
 export interface RecipeUpsertWithWhereUniqueWithoutLikedByInput {
   where: RecipeWhereUniqueInput;
   update: RecipeUpdateWithoutLikedByDataInput;
@@ -1447,7 +1380,6 @@ export interface RecipeUpdateManyMutationInput {
   method?: Maybe<RecipeUpdatemethodInput>;
   notes?: Maybe<RecipeUpdatenotesInput>;
   tags?: Maybe<RecipeUpdatetagsInput>;
-  source?: Maybe<String>;
   published?: Maybe<Boolean>;
 }
 
@@ -1504,7 +1436,6 @@ export interface Recipe {
   method: String[];
   notes: String[];
   tags: String[];
-  source?: String;
   created: DateTimeOutput;
   updated: DateTimeOutput;
   published: Boolean;
@@ -1524,7 +1455,6 @@ export interface RecipePromise extends Promise<Recipe>, Fragmentable {
   method: () => Promise<String[]>;
   notes: () => Promise<String[]>;
   tags: () => Promise<String[]>;
-  source: () => Promise<String>;
   created: () => Promise<DateTimeOutput>;
   updated: () => Promise<DateTimeOutput>;
   published: () => Promise<Boolean>;
@@ -1555,7 +1485,6 @@ export interface RecipeSubscription
   method: () => Promise<AsyncIterator<String[]>>;
   notes: () => Promise<AsyncIterator<String[]>>;
   tags: () => Promise<AsyncIterator<String[]>>;
-  source: () => Promise<AsyncIterator<String>>;
   created: () => Promise<AsyncIterator<DateTimeOutput>>;
   updated: () => Promise<AsyncIterator<DateTimeOutput>>;
   published: () => Promise<AsyncIterator<Boolean>>;
@@ -1586,7 +1515,6 @@ export interface RecipeNullablePromise
   method: () => Promise<String[]>;
   notes: () => Promise<String[]>;
   tags: () => Promise<String[]>;
-  source: () => Promise<String>;
   created: () => Promise<DateTimeOutput>;
   updated: () => Promise<DateTimeOutput>;
   published: () => Promise<Boolean>;
@@ -1756,29 +1684,26 @@ export interface UserNullablePromise
 }
 
 export interface Grade {
-  id: ID_Output;
+  user: ID_Output;
   grade: Int;
 }
 
 export interface GradePromise extends Promise<Grade>, Fragmentable {
-  id: () => Promise<ID_Output>;
-  rater: <T = UserPromise>() => T;
+  user: () => Promise<ID_Output>;
   grade: () => Promise<Int>;
 }
 
 export interface GradeSubscription
   extends Promise<AsyncIterator<Grade>>,
     Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  rater: <T = UserSubscription>() => T;
+  user: () => Promise<AsyncIterator<ID_Output>>;
   grade: () => Promise<AsyncIterator<Int>>;
 }
 
 export interface GradeNullablePromise
   extends Promise<Grade | null>,
     Fragmentable {
-  id: () => Promise<ID_Output>;
-  rater: <T = UserPromise>() => T;
+  user: () => Promise<ID_Output>;
   grade: () => Promise<Int>;
 }
 
@@ -2000,7 +1925,6 @@ export interface RecipePreviousValues {
   method: String[];
   notes: String[];
   tags: String[];
-  source?: String;
   created: DateTimeOutput;
   updated: DateTimeOutput;
   published: Boolean;
@@ -2019,7 +1943,6 @@ export interface RecipePreviousValuesPromise
   method: () => Promise<String[]>;
   notes: () => Promise<String[]>;
   tags: () => Promise<String[]>;
-  source: () => Promise<String>;
   created: () => Promise<DateTimeOutput>;
   updated: () => Promise<DateTimeOutput>;
   published: () => Promise<Boolean>;
@@ -2038,7 +1961,6 @@ export interface RecipePreviousValuesSubscription
   method: () => Promise<AsyncIterator<String[]>>;
   notes: () => Promise<AsyncIterator<String[]>>;
   tags: () => Promise<AsyncIterator<String[]>>;
-  source: () => Promise<AsyncIterator<String>>;
   created: () => Promise<AsyncIterator<DateTimeOutput>>;
   updated: () => Promise<AsyncIterator<DateTimeOutput>>;
   published: () => Promise<AsyncIterator<Boolean>>;

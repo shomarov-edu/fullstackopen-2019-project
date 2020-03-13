@@ -3,15 +3,14 @@ import { withRouter } from 'react-router-dom';
 import { useApolloClient, useMutation } from '@apollo/client';
 import useField from '../../hooks/useField';
 import { DELETE_ACCOUNT } from '../../graphql/mutations';
-import Notification from '../Notification';
 
 const DeleteAccount = ({ setCurrentUser, notify, history }) => {
   const client = useApolloClient();
   const passwordField = useField('password');
   const [confirmDelete, setconfirmDelete] = useState(false);
-  const [message, setMessage] = useState(null);
   const [deleteAccount] = useMutation(DELETE_ACCOUNT, {
     onCompleted: () => {
+      passwordField.reset();
       setCurrentUser(null);
       localStorage.clear();
       client.resetStore();
@@ -22,6 +21,7 @@ const DeleteAccount = ({ setCurrentUser, notify, history }) => {
         notify(graphQLErrors[0].message);
       }
       if (networkError) console.log(`[Network error]: ${networkError}`);
+      passwordField.reset();
     }
   });
 

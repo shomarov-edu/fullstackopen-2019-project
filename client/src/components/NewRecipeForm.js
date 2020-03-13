@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useMutation } from '@apollo/client';
 import useField from '../hooks/useField';
 import { CREATE_RECIPE } from '../graphql/mutations';
-import { graphql } from 'graphql';
+import { ME } from '../graphql/queries';
 
-const NewRecipeForm = ({ notify }) => {
+const NewRecipeForm = ({ getCurrentUser, notify }) => {
   const [category, setCategory] = useState('');
   const title = useField('text');
   const description = useField('text');
@@ -15,8 +15,8 @@ const NewRecipeForm = ({ notify }) => {
   const [notes, setNotes] = useState(['']);
   const [tags, setTags] = useState(['']);
 
-  const [createRecipe, createRecipeResult] = useMutation(CREATE_RECIPE, {
-    onCompleted: () => {
+  const [createRecipe] = useMutation(CREATE_RECIPE, {
+    onCompleted: async () => {
       setCategory('');
       title.reset();
       description.reset();
@@ -31,10 +31,20 @@ const NewRecipeForm = ({ notify }) => {
       if (graphQLErrors && graphQLErrors[0].message)
         notify(graphQLErrors[0].message);
       if (networkError) console.log(`[Network error]: ${networkError}`);
+    },
+    update: async (cache, { data: { createRecipe } }) => {
+      const data = cache.readQuery({ query: ME });
+      const newMe = {
+        ...data.me,
+        recipes: data.me.recipes.concat(createRecipe)
+      };
+      await cache.writeQuery({
+        query: ME,
+        data: { me: newMe }
+      });
+      const updatedData = cache.readQuery({ query: ME });
     }
   });
-
-  console.log(createRecipeResult);
 
   const handleSubmit = async event => {
     event.preventDefault();

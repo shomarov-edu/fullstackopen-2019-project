@@ -148,8 +148,7 @@ type Comment {
 }
 
 type Grade {
-  id: ID!
-  rater: User!
+  user: ID!
   grade: Int!
 }
 
@@ -169,6 +168,7 @@ extend type Mutation {
   createRecipe(input: CreateRecipeInput!): Recipe!
   updateRecipe(input: UpdateRecipeInput!): Recipe!
   publishRecipe(input: PublishRecipeInput!): Recipe!
+  unpublishRecipe(input: UnpublishRecipeInput!): Recipe!
   commentRecipe(input: CommentRecipeInput!): Recipe!
   editComment(input: EditCommentInput!): Recipe!
   deleteComment(input: DeleteCommentInput!): Recipe!
@@ -207,6 +207,10 @@ input PublishRecipeInput {
   recipeId: ID!
 }
 
+input UnpublishRecipeInput {
+  recipeId: ID!
+}
+
 input CommentRecipeInput {
   recipeId: ID!
   content: String!
@@ -232,6 +236,7 @@ input UnlikeRecipeInput {
 }
 
 input RateRecipeInput {
+  recipeId: ID!
   grade: Int!
 }
 

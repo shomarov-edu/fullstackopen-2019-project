@@ -46,10 +46,7 @@ const recipeDetails = gql`
       id
     }
     ratings {
-      id
-      rater {
-        id
-      }
+      user
       grade
     }
     comments {
