@@ -1,5 +1,4 @@
 port: 4466
-managementApiSecret: SECRET
 databases:
   default:
     connector: mongo
