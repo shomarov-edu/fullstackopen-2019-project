@@ -18,6 +18,7 @@ const schema = makeExecutableSchema({
 });
 
 const apollo = new ApolloServer({
+  cors: true,
   schema,
   context
 });
