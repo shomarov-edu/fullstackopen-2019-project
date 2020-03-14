@@ -51,6 +51,13 @@ const App = () => {
           <Route exact path="/recipes" render={() => <AllRecipes />} />
           <Route
             exact
+            path="/recipes/:recipeId"
+            render={({ match }) => {
+              return <Recipe recipeId={match.params.recipeId} />;
+            }}
+          />
+          <Route
+            exact
             path="/login"
             render={() => (
               <Login

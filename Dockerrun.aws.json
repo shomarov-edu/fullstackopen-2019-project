@@ -20,19 +20,15 @@
       "image": "shomarov/fullstackopen-2019-project-client",
       "hostname": "client",
       "essential": "false",
-      "memory": 128
-    },
-    {
-      "name": "nginx",
-      "image": "shomarov/fullstackopen-2019-project-nginx",
-      "hostname": "nginx",
-      "essential": "true",
+      "memory": 128,
       "portMappings": [
         {
           "hostPort": 80,
           "containerPort": 80
         }
-      ],
+      ]
+    },
+    {
       "links": ["prisma", "api", "client"],
       "memory": 128
     }

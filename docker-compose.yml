@@ -31,16 +31,12 @@ services:
   api:
     container_name: api
     build:
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
       context: ./api
     image: shomarov/fullstackopen-2019-project-api
-    volumes:
-      - /api/node_modules
-      - ./api:/api
     command: >
       sh -c "./wait-for prisma:4466 --
              echo Connection to Prisma is up. &&
-             prisma deploy -p prisma.dev.yml &&
              npm run dev"
     ports:
       - 4000:4000
@@ -50,25 +46,11 @@ services:
   client:
     container_name: client
     build:
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
       context: ./client
     image: shomarov/fullstackopen-2019-project-client
-    volumes:
-      - /client/node_modules
-      - ./client:/client
     ports:
-      - 3000:3000
+      - 80:80
     depends_on:
       - api
     restart: unless-stopped
-  nginx:
-    container_name: nginx
-    image: shomarov/fullstackopen-2019-project-nginx
-    restart: always
-    build:
-      dockerfile: Dockerfile.dev
-      context: ./nginx
-    ports:
-      - 8080:80
-    depends_on:
-      - client
