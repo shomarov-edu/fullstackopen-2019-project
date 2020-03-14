@@ -10,7 +10,7 @@ before_install:
   - docker build -t shomarov/fullstackopen-2019-project-nginx ./nginx
 
 after_success:
-  - echo "$docker_password" | docker login -u "$docker_id" --password-stdin
+  - echo "$DOKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
   - docker push shomarov/fullstackopen-2019-project-prisma
   - docker push shomarov/fullstackopen-2019-project-api
   - docker push shomarov/fullstackopen-2019-project-client
@@ -18,13 +18,12 @@ after_success:
 
 deploy:
   provider: elasticbeanstalk
-  region: us-east-1
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
+  region: eu-central-1
   app: fullstackopen-2019-project
   env: Fullstackopen2019Project-env
-  bucket_name: elasticbeanstalk-us-east-1-630186264736
+  bucket_name: elasticbeanstalk-eu-central-1-801956187188
   bucket_path: fullstackopen-2019-project
   on:
     branch: master
-  access_key_id: $aws_access_key_id
-  secret_access_key:
-    secure: $aws_secret_access_key

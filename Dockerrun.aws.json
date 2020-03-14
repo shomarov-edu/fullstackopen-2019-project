@@ -2,9 +2,9 @@
   "AWSEBDockerrunVersion": 2,
   "containerDefinitions": [
     {
-      "name": "client",
-      "image": "shomarov/fullstackopen-2019-project-client",
-      "hostname": "client",
+      "name": "prisma",
+      "image": "shomarov/fullstackopen-2019-project-prisma",
+      "hostname": "prisma",
       "essential": "false",
       "memory": 128
     },
@@ -16,9 +16,9 @@
       "memory": 128
     },
     {
-      "name": "prisma",
-      "image": "shomarov/fullstackopen-2019-project-prisma",
-      "hostname": "prisma",
+      "name": "client",
+      "image": "shomarov/fullstackopen-2019-project-client",
+      "hostname": "client",
       "essential": "false",
       "memory": 128
     },
@@ -33,7 +33,7 @@
           "containerPort": 80
         }
       ],
-      "links": ["client", "server", "prisma"],
+      "links": ["prisma", "api", "client"],
       "memory": 128
     }
   ]
