@@ -1,6 +1,6 @@
 const { prisma, query, mutate } = require('./config/testClient');
-const queries = require('../graphql/queries');
-const mutations = require('../graphql/mutations');
+// const { USERS } = require('./graphql/queries');
+const { SIGNUP, LOGIN } = require('./graphql/mutations');
 const getUser = require('./helpers/getUser');
 
 let token;
@@ -12,35 +12,35 @@ beforeAll(async () => {
 
 describe('user is able to signup and login', () => {
   it('signs up', async () => {
-    const variables = {
-      username: 'user',
-      firstname: 'User',
-      lastname: 'Usersson',
-      email: 'user@user.com',
+    const signUpData = {
+      username: 'test',
+      firstname: 'Test',
+      lastname: 'Testinsson',
+      email: 'test@test.com',
       password: 'password'
     };
 
     const result = await mutate({
-      mutation: mutations.signup,
-      variables
+      mutation: SIGNUP,
+      variables: signUpData
     });
 
     expect(result.data.signup).toBe(true);
   });
 
   it('logs in', async () => {
-    const q = await query({
-      query: queries.users
-    });
+    // const q = await query({
+    //   query: USERS
+    // });
 
-    const variables = {
-      usernameOrEmail: 'user@user.com',
+    const credentials = {
+      usernameOrEmail: 'test@test.com',
       password: 'password'
     };
 
     const result = await mutate({
-      mutation: mutations.login,
-      variables
+      mutation: LOGIN,
+      variables: credentials
     });
 
     expect(result.data.login.token).toBeDefined();

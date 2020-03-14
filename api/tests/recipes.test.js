@@ -1,6 +1,5 @@
 const { prisma, query, mutate } = require('./config/testClient');
-const queries = require('../graphql/queries');
-const mutations = require('../graphql/mutations');
+const { SIGNUP, LOGIN, CREATE_RECIPE } = require('./graphql/mutations');
 const getUser = require('./helpers/getUser');
 
 describe('user is able to signup, login, create and save a new recipe', () => {
@@ -21,7 +20,7 @@ describe('user is able to signup, login, create and save a new recipe', () => {
     };
 
     const result = await mutate({
-      mutation: mutations.signup,
+      mutation: SIGNUP,
       variables
     });
 
@@ -35,7 +34,7 @@ describe('user is able to signup, login, create and save a new recipe', () => {
     };
 
     const result = await mutate({
-      mutation: mutations.login,
+      mutation: LOGIN,
       variables
     });
 
@@ -71,7 +70,7 @@ describe('user is able to signup, login, create and save a new recipe', () => {
 
     const result = await mutate({
       auth: { req: { headers: { authorization: `Bearer ${token}` } } },
-      mutation: mutations.createRecipe,
+      mutation: CREATE_RECIPE,
       variables
     });
 

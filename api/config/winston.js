@@ -2,7 +2,7 @@ const winston = require('winston');
 const appRoot = require('app-root-path');
 
 module.exports = winston.createLogger({
-  level: 'silly',
+  level: 'info',
   format: winston.format.combine(
     winston.format.colorize(),
     winston.format.simple()

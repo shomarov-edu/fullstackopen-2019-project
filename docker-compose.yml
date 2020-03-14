@@ -33,7 +33,7 @@ services:
     build:
       dockerfile: Dockerfile.dev
       context: ./api
-    image: shomarov/api
+    image: shomarov/fullstackopen-2019-project-api
     volumes:
       - /api/node_modules
       - ./api:/api
@@ -52,7 +52,7 @@ services:
     build:
       dockerfile: Dockerfile.dev
       context: ./client
-    image: shomarov/client
+    image: shomarov/fullstackopen-2019-project-client
     volumes:
       - /client/node_modules
       - ./client:/client
@@ -63,6 +63,7 @@ services:
     restart: unless-stopped
   nginx:
     container_name: nginx
+    image: shomarov/fullstackopen-2019-project-nginx
     restart: always
     build:
       dockerfile: Dockerfile.dev

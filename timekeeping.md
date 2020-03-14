@@ -65,3 +65,4 @@
 | 11.03 | 4    | frontend development                                     |
 | 12.03 | 4    | backend & frontend development                           |
 | 13.03 | 8    | backend & frontend development                           |
+| 14.03 | 8    | deployment                                               |

@@ -1,11 +1,11 @@
-endpoint: http://prisma:4466/project/dev
+endpoint: http://prisma:4466/
 datamodel: datamodel.graphql
 databaseType: document
 generate:
   - generator: javascript-client
-    output: ./prisma-client-dev
+    output: ./prisma/
 hooks:
   post-deploy:
-    - prisma generate -p prisma.dev.yml
+    - prisma generate -p prisma.yml
     - node ./data/seedUsers.js
     - node ./data/seedRecipes.js

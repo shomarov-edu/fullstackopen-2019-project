@@ -1,6 +1,6 @@
 const { prisma, query, mutate } = require('./config/testClient');
-const queries = require('../graphql/queries');
-const mutations = require('../graphql/mutations');
+const { ME } = require('./graphql/queries');
+const { SIGNUP, LOGIN } = require('./graphql/mutations');
 const getUser = require('./helpers/getUser');
 
 let token;
@@ -11,14 +11,14 @@ beforeAll(async () => {
 });
 
 describe('user is able to signup, login and recive own data', () => {
-  it('makes sure the database does not contain users', async () => {
-    const result = await query({
-      query: queries.users
-    });
+  // it('makes sure the database does not contain users', async () => {
+  //   const result = await query({
+  //     query: USERS
+  //   });
 
-    expect(result.errors).toBeUndefined();
-    expect(result.data.users.length).toBe(0);
-  });
+  //   expect(result.errors).toBeUndefined();
+  //   expect(result.data.users.length).toBe(0);
+  // });
 
   it('signs up without email and fails', async () => {
     const variables = {
@@ -29,7 +29,7 @@ describe('user is able to signup, login and recive own data', () => {
     };
 
     const result = await mutate({
-      mutation: mutations.signup,
+      mutation: SIGNUP,
       variables
     });
 
@@ -47,7 +47,7 @@ describe('user is able to signup, login and recive own data', () => {
     };
 
     const result = await mutate({
-      mutation: mutations.signup,
+      mutation: SIGNUP,
       variables
     });
 
@@ -61,7 +61,7 @@ describe('user is able to signup, login and recive own data', () => {
     };
 
     const result = await mutate({
-      mutation: mutations.login,
+      mutation: LOGIN,
       variables
     });
 
@@ -76,7 +76,7 @@ describe('user is able to signup, login and recive own data', () => {
     };
 
     const result = await mutate({
-      mutation: mutations.login,
+      mutation: LOGIN,
       variables
     });
 
@@ -88,7 +88,7 @@ describe('user is able to signup, login and recive own data', () => {
   it('queries own data with jwt and receives it', async () => {
     const result = await query({
       auth: { req: { headers: { authorization: `Bearer ${token}` } } },
-      query: queries.me
+      query: ME
     });
 
     expect(result.errors).toBeUndefined();

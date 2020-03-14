@@ -1,6 +1,7 @@
 api/node_modules
 api/.env
-api/prisma/
+api/prisma-client-dev/
+api/prisma-client-test/
 
 client/node_modules
 client/build

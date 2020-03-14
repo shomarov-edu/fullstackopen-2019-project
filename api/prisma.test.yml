@@ -3,4 +3,4 @@ datamodel: datamodel.graphql
 databaseType: document
 generate:
   - generator: javascript-client
-    output: ./prisma/
+    output: ./prisma-client-test
