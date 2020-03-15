@@ -1,4 +1,4 @@
-endpoint: http://prisma:4466
+endpoint: http://134.122.79.96:4466
 datamodel: datamodel.graphql
 databaseType: document
 generate:

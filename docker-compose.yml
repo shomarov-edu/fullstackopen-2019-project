@@ -1,14 +1,5 @@
 version: '3.7'
 services:
-  prisma:
-    container_name: prisma
-    build:
-      dockerfile: Dockerfile
-      context: ./prisma
-    image: shomarov/fullstackopen-2019-project-prisma
-    ports:
-      - 4466:4466
-    restart: always
   api:
     container_name: api
     build:
@@ -17,8 +8,6 @@ services:
     image: shomarov/fullstackopen-2019-project-api
     ports:
       - 4000:4000
-    depends_on:
-      - prisma
     restart: unless-stopped
   client:
     container_name: client
