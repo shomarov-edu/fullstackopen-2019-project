@@ -5,14 +5,8 @@
       "name": "prisma",
       "image": "shomarov/fullstackopen-2019-project-prisma",
       "hostname": "prisma",
-      "essential": "false",
-      "memory": 128,
-      "portMappings": [
-        {
-          "hostPort": 4466,
-          "containerPort": 4466
-        }
-      ]
+      "essential": "true",
+      "memory": 128
     },
     {
       "name": "api",
@@ -20,21 +14,23 @@
       "hostname": "api",
       "essential": "false",
       "links": ["prisma"],
-      "memory": 128,
-      "portMappings": [
-        {
-          "hostPort": 4000,
-          "containerPort": 4000
-        }
-      ]
+      "memory": 128
     },
     {
       "name": "client",
       "image": "shomarov/fullstackopen-2019-project-client",
       "hostname": "client",
-      "essential": "true",
-      "memory": 128,
+      "essential": "false",
       "links": ["api"],
+      "memory": 128
+    },
+    {
+      "name": "nginx",
+      "image": "shomarov/fullstackopen-2019-project-nginx",
+      "hostname": "nginx",
+      "essential": "true",
+      "links": ["prisma", "api", "client"],
+      "memory": 128,
       "portMappings": [
         {
           "hostPort": 80,

@@ -5,4 +5,4 @@ RUN npm install && npm install -g serve
 COPY . .
 RUN npm run build
 EXPOSE 5000
-CMD [ "serve", "-s", "build", "-l", "80" ]
+CMD [ "serve", "-s", "build" ]
