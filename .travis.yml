@@ -6,11 +6,13 @@ services:
 before_install:
   - docker build -t shomarov/fullstackopen-2019-project-api ./api
   - docker build -t shomarov/fullstackopen-2019-project-client ./client
+  - docker build -t shomarov/fullstackopen-2019-project-nginx ./nginx
 
 after_success:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
   - docker push shomarov/fullstackopen-2019-project-api
   - docker push shomarov/fullstackopen-2019-project-client
+  - docker push shomarov/fullstackopen-2019-project-nginx
 
 deploy:
   provider: elasticbeanstalk

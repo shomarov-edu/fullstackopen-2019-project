@@ -1,5 +1,0 @@
-port: 4466
-databases:
-  default:
-    connector: mongo
-    uri: mongodb+srv://prisma:prisma@cluster0-vxyqy.mongodb.net/test?retryWrites=true&w=majority
