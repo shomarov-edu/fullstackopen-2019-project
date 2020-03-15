@@ -34,10 +34,6 @@ services:
       dockerfile: Dockerfile
       context: ./api
     image: shomarov/fullstackopen-2019-project-api
-    command: >
-      sh -c "./wait-for prisma:4466 --
-             echo Connection to Prisma is up. &&
-             npm run dev"
     ports:
       - 4000:4000
     depends_on:

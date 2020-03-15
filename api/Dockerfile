@@ -8,4 +8,7 @@ RUN apt-get update && apt-get upgrade -y && \
   npm install
 COPY . .
 EXPOSE 4000
-CMD [ "npm", "run", "start" ]
+CMD sh -c "./wait-for prisma:4466 -- \
+  echo Connection to Prisma is up. && \
+  prisma deploy -p prisma.yml && \
+  npm start"

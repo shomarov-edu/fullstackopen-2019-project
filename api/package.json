@@ -26,7 +26,7 @@
     "jest": "^25.1.0"
   },
   "scripts": {
-    "start": "prisma deploy -p prisma.yml && prisma generate -p prisma.yml && NODE_ENV=production node index.js",
+    "start": "NODE_ENV=production node index.js",
     "dev": "prisma deploy -p prisma.yml && prisma generate -p prisma.yml && NODE_ENV=development nodemon -e js,prisma,graphql index.js",
     "test": "prisma deploy -p prisma.test.yml && prisma generate -p prisma.test.yml && NODE_ENV=test jest --verbose --runInBand && prisma generate -p prisma.dev.yml"
   },
