@@ -32,7 +32,7 @@
       "name": "client",
       "image": "shomarov/fullstackopen-2019-project-client",
       "hostname": "client",
-      "essential": "false",
+      "essential": "true",
       "memory": 128,
       "links": ["api"],
       "portMappings": [
