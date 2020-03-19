@@ -18,7 +18,6 @@ import Notification from './components/Notification';
 import { ME } from './graphql/queries';
 
 const App = () => {
-  // const [currentUser, setCurrentUser] = useState(null);
   const [message, setMessage] = useState(null);
   const [getCurrentUser, { loading, error, data }] = useLazyQuery(ME, {
     onError: error => {
@@ -58,13 +57,13 @@ const App = () => {
           />
           <Route
             exact
+            path="/users/:username"
+            render={({ match }) => <p>Please sign up to for full access</p>}
+          />
+          <Route
+            exact
             path="/login"
-            render={() => (
-              <Login
-                getCurrentUser={getCurrentUser}
-                // setCurrentUser={setCurrentUser}
-              />
-            )}
+            render={() => <Login getCurrentUser={getCurrentUser} />}
           />
           <Route path="/signup" render={() => <SignUp />} />
         </Router>
@@ -76,9 +75,7 @@ const App = () => {
   return (
     <React.Fragment>
       <Router>
-        <Navigation
-          currentUser={currentUser} /* setCurrentUser={setCurrentUser} */
-        />
+        <Navigation currentUser={currentUser} />
         <Notification message={message} />
         <Route exact path="/recipes" render={() => <AllRecipes />} />
         <Route
@@ -152,11 +149,7 @@ const App = () => {
               exact
               path={`/settings`}
               render={() => (
-                <Settings
-                  currentUser={currentUser}
-                  // setCurrentUser={setCurrentUser}
-                  notify={notify}
-                />
+                <Settings currentUser={currentUser} notify={notify} />
               )}
             />
           </React.Fragment>
@@ -164,12 +157,7 @@ const App = () => {
         <Route
           exact
           path="/login"
-          render={() => (
-            <Login
-              getCurrentUser={getCurrentUser}
-              // setCurrentUser={setCurrentUser}
-            />
-          )}
+          render={() => <Login getCurrentUser={getCurrentUser} />}
         />
         <Route path="/signup" render={() => <SignUp />} />
       </Router>
