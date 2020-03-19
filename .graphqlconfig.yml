@@ -1,3 +1,5 @@
+# configuration file for prisma graphql extension for vscode
+
 projects:
   api:
     schemaPath: api/schema.graphql

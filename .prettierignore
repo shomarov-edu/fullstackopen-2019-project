@@ -1,12 +1,16 @@
+# api
 api/node_modules
 api/.env
 api/prisma/
 api/prisma-client-dev/
 api/prisma-client-test/
 
+# client
 client/node_modules
 client/build
 
+# mongo
 mongo/data
 
+# project root
 node_modules

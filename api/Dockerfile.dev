@@ -1,3 +1,4 @@
+
 FROM node
 WORKDIR /api
 COPY ./package.json ./wait-for ./
@@ -7,4 +8,7 @@ RUN apt-get update && apt-get upgrade -y && \
   npm install -g prisma && \
   npm install
 EXPOSE 4000
-CMD [ "npm", "run", "dev" ]
+CMD sh -c "./wait-for prisma:4466/ -- \
+  echo Connection to Prisma is up. && \
+  prisma deploy -p prisma.dev.yml && \
+  npm run dev"

@@ -1,1 +1,18 @@
 # Prisma configuration for DigitalOcean
+
+# TODO: set the management api secret & secure the server
+
+version: '3.7'
+services:
+  prisma:
+    image: prismagraphql/prisma:1.34
+    restart: always
+    ports:
+      - 4466:4466
+    environment:
+      PRISMA_CONFIG: |
+        port: 4466
+        databases:
+          default:
+            connector: mongo
+            uri: mongodb+srv://prisma:prisma@cluster0-vxyqy.mongodb.net/test?retryWrites=true&w=majority

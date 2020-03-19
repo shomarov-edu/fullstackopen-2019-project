@@ -1,27 +1,81 @@
+# docker-compose.yml file for development environment
+
 version: '3.7'
+
+volumes:
+  mongo:
+
 services:
-  api:
-    container_name: api
-    build:
-      dockerfile: Dockerfile
-      context: ./api
-    image: shomarov/fullstackopen-2019-project-api
+  mongo:
+    image: mongo
+    container_name: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: prisma
+      MONGO_INITDB_ROOT_PASSWORD: prisma
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo:/var/lib/mongo
     restart: unless-stopped
-  client:
-    container_name: client
+
+  prisma:
+    image: prismagraphql/prisma:1.34
+    container_name: prisma
+    ports:
+      - 4466:4466
+    environment:
+      PRISMA_CONFIG: |
+        port: 4466
+        databases:
+          default:
+            connector: mongo
+            uri: mongodb://prisma:prisma@mongo/
+    restart: unless-stopped
+    depends_on:
+      - mongo
+
+  api:
     build:
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
+      context: ./api
+    image: shomarov/fullstackopen-2019-project-api-dev
+    container_name: api
+    volumes:
+      - /api/node_modules
+      - ./api:/api
+    ports:
+      - 4000:4000
+    command: >
+      sh -c "./wait-for prisma:4466 --
+             echo Connection to Prisma is up. && \
+             npm run dev"
+    restart: unless-stopped
+    depends_on:
+      - prisma
+
+  client:
+    build:
+      dockerfile: Dockerfile.dev
       context: ./client
-    image: shomarov/fullstackopen-2019-project-client
+    image: shomarov/fullstackopen-2019-project-client-dev
+    container_name: client
+    volumes:
+      - /client/node_modules
+      - ./client:/client
+    ports:
+      - 3000:3000
     depends_on:
       - api
     restart: unless-stopped
+
   nginx:
-    container_name: nginx
     build:
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
       context: ./nginx
-    image: shomarov/fullstackopen-2019-project-nginx
+    image: shomarov/fullstackopen-2019-project-nginx-dev
+    container_name: nginx
+    ports:
+      - 8080:80
+    restart: always
     depends_on:
       - client
-    restart: always

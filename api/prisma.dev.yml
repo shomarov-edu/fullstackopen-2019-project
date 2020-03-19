@@ -6,6 +6,6 @@ generate:
     output: ./prisma-client-dev
 hooks:
   post-deploy:
-    - prisma generate -p prisma.dev.yml
+    - prisma generate -p prisma.test.yml
     - node ./data/seedUsers.js
     - node ./data/seedRecipes.js
